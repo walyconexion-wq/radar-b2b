@@ -1,0 +1,238 @@
+{
+  "brand": {
+    "name": "RADAR B2B",
+    "tagline": "Competitor Intel & Price Pipeline Ops",
+    "emoji": "📡",
+    "version": "v2.4 Stealth"
+  },
+  "contact": {
+    "whatsappPhone": "5493544565656",
+    "whatsappMessage": "Hola Walter! Vi el Radar B2B y quiero activar la prueba gratuita de 48 horas para 3 de mis competidores.",
+    "telegramBotUrl": "https://t.me/Walys2b2_bot",
+    "telegramBotUser": "@Walys2b2_bot"
+  },
+  "hero": {
+    "badge": "CAÑERÍAS DE DATOS EN TIEMPO REAL · CERO INSTALACIÓN EN TU EQUIPO",
+    "titleLine1": "Vigilá a tu competencia",
+    "titleGradient": "24/7 en piloto automático.",
+    "description": "Extraemos los precios, ofertas ocultas y quiebres de stock de tus rivales directos todos los días. Te enviamos la alerta instantánea a tu celular y mantenemos tu Google Sheet actualizado antes de que abras tu negocio.",
+    "ctaPrimary": "Solicitar Prueba Gratis 48hs",
+    "ctaSecondary": "Ver Demostración en Vivo",
+    "badges": [
+      { "icon": "🛡️", "text": "Evasión Cloudflare Stealth" },
+      { "icon": "⚡", "text": "Alertas en menos de 30 seg" },
+      { "icon": "📊", "text": "Sincronización Nativa con Google Sheets" },
+      { "icon": "🔒", "text": "100% Manos Libres y Confidencial" }
+    ]
+  },
+  "stats": [
+    { "value": "< 30s", "label": "Latencia de Detección de Ofertas" },
+    { "value": "15+", "label": "Competidores Simultáneos por Cuenta" },
+    { "value": "99.8%", "label": "Uptime de Extracción Anti-Bloqueo" },
+    { "value": "$0", "label": "Costo de Servidores o Infraestructura para vos" }
+  ],
+  "telegramDemo": {
+    "botName": "Waly_radar_b2b_bot",
+    "status": "En línea 24/7 · Push Directo",
+    "alertTag": "🚨 ALERTA RADAR B2B · COMPETITOR INTEL",
+    "product": "Notebook Lenovo IdeaPad 15.6 FHD Core i5 16GB SSD 512GB",
+    "store": "Amazon Retail / Competidor Líder",
+    "movement": "BAJA DE PRECIO AGRESIVA (-18.0%)",
+    "oldPrice": "$549.99 USD",
+    "newPrice": "$450.99 USD",
+    "diff": "-$99.00 USD",
+    "stock": "✅ DISPONIBLE (Stock Líquido)",
+    "timestamp": "Hoy 07:14 hs",
+    "latency": "0.4s entrega directa a Telegram"
+  },
+  "sheetsDemo": [
+    {
+      "time": "Hoy 07:00",
+      "product": "Lenovo IdeaPad 15.6 FHD",
+      "competitor": "Amazon Retail",
+      "price": "$450.99",
+      "diff": "-18.0%",
+      "diffClass": "text-emerald-400 font-bold",
+      "stock": "OK",
+      "stockClass": "bg-emerald-900/40 text-emerald-300"
+    },
+    {
+      "time": "Hoy 07:00",
+      "product": "Smart TV 50\" 4K UHD HDR",
+      "competitor": "ElectroStore Online",
+      "price": "$378.00",
+      "diff": "-10.0%",
+      "diffClass": "text-emerald-400 font-bold",
+      "stock": "OK",
+      "stockClass": "bg-emerald-900/40 text-emerald-300"
+    },
+    {
+      "time": "Hoy 07:00",
+      "product": "Auriculares Wireless Noise Cancelling",
+      "competitor": "AudioTech Pro",
+      "price": "$129.50",
+      "diff": "0.0%",
+      "diffClass": "text-slate-500",
+      "stock": "OK",
+      "stockClass": "bg-emerald-900/40 text-emerald-300"
+    },
+    {
+      "time": "Hoy 07:00",
+      "product": "Zapatillas Running Carbon Elite",
+      "competitor": "MegaSport Direct",
+      "price": "$189.00",
+      "diff": "AGOTADO",
+      "diffClass": "text-rose-400 font-bold",
+      "stock": "SIN STOCK ⚠️",
+      "stockClass": "bg-rose-900/40 text-rose-300"
+    },
+    {
+      "time": "Hoy 07:00",
+      "product": "Cafetera Espresso Barista Touch",
+      "competitor": "Boutique Hogar",
+      "price": "$299.99",
+      "diff": "+5.0%",
+      "diffClass": "text-amber-400 font-bold",
+      "stock": "OK",
+      "stockClass": "bg-emerald-900/40 text-emerald-300"
+    }
+  ],
+  "features": [
+    {
+      "icon": "🎯",
+      "badge": "PRECISIÓN TOTAL",
+      "title": "Rastreo Quirúrgico a Nivel SKU",
+      "description": "Comparamos productos idénticos o equivalentes en tus competidores directos, aislando variantes de color, tamaño o cuotas sin confusiones."
+    },
+    {
+      "icon": "🛡️",
+      "badge": "TECNOLOGÍA STEALTH",
+      "title": "Evasión Anti-Bot y Cloudflare",
+      "description": "Navegación automatizada con huellas digitales rotativas y proxys residenciales para que las tiendas nunca detecten ni bloqueen la extracción."
+    },
+    {
+      "icon": "📲",
+      "badge": "ALERTAS VIVAS",
+      "title": "Despacho Instantáneo a Telegram",
+      "description": "Recibí en tu celular la notificación en menos de un minuto cuando un competidor baje su precio o active una oferta flash relámpago."
+    },
+    {
+      "icon": "📊",
+      "badge": "CERO PICAR DATOS",
+      "title": "Sincronización con Google Sheets",
+      "description": "Tu equipo comercial abre la planilla todos los días y tiene la tabla ordenada, con semáforos de colores y brechas de precio ya calculadas."
+    },
+    {
+      "icon": "🚨",
+      "badge": "OPORTUNIDAD DE ORO",
+      "title": "Sniper de Quiebre de Stock",
+      "description": "Te avisamos de inmediato cuando tu rival se queda sin existencias de un producto de alta demanda para que subas tu precio o aumentes tu pauta publicitaria."
+    },
+    {
+      "icon": "⚡",
+      "badge": "CONECTORES ERP",
+      "title": "Webhooks para Shopify & WooCommerce",
+      "description": "Conexión directa vía API o Webhook para alimentar tus sistemas internos, herramientas de BI o reglas automáticas de repricing inteligente."
+    }
+  ],
+  "services": [
+    {
+      "id": "radar-standard",
+      "popular": false,
+      "icon": "📡",
+      "badge": "PLAN ESENCIAL",
+      "title": "Radar Esencial de Competencia",
+      "description": "Ideal para e-commerce que compiten en un nicho cerrado y necesitan vigilar hasta 5 tiendas rivales clave.",
+      "price": "$500",
+      "period": "USD / mes",
+      "setup": "Setup inicial bonificado 100% con contrato trimestral",
+      "features": [
+        "Monitoreo de hasta 5 competidores",
+        "Auditoría 2 veces al día (Mañana y Tarde)",
+        "Alertas instantáneas a Telegram",
+        "Planilla viva en Google Sheets",
+        "Soporte prioritario por WhatsApp"
+      ],
+      "cta": "Empezar con Plan Esencial"
+    },
+    {
+      "id": "radar-pro",
+      "popular": true,
+      "icon": "🚀",
+      "badge": "MÁS ELEGIDO · B2B FULL",
+      "title": "Radar Pro Dinámico & Stock",
+      "description": "Para empresas comerciales con catálogos activos que necesitan reacción en tiempo real y detección de quiebres de inventario.",
+      "price": "$650",
+      "period": "USD / mes",
+      "setup": "Setup e integración llave en mano: $250 USD (Única vez)",
+      "features": [
+        "Monitoreo de hasta 15 competidores directos",
+        "Auditorías cada 2 horas (24/7 en rotación)",
+        "Alertas inmediatas a Telegram y Slack",
+        "Alerta Sniper de Quiebre de Stock (Agotados)",
+        "Planilla de Google Sheets con cálculo de márgenes",
+        "Reporte ejecutivo PDF todos los lunes"
+      ],
+      "cta": "Activar Radar Pro Dinámico"
+    },
+    {
+      "id": "radar-enterprise",
+      "popular": false,
+      "icon": "👑",
+      "badge": "ENTERPRISE BEAST",
+      "title": "Infraestructura & Repricing",
+      "description": "Solución corporativa para grandes retailers y distribuidores con miles de SKUs y conexión directa a su plataforma de e-commerce.",
+      "price": "$750",
+      "period": "USD / mes",
+      "setup": "Setup avanzado con Webhooks: $350 USD (Única vez)",
+      "features": [
+        "Monitoreo de competidores ilimitados",
+        "Frecuencia continua en tiempo real",
+        "Conectores Webhook a Shopify / WooCommerce / ERP",
+        "Monitoreo de reseñas y quejas de la competencia",
+        "Servidores dedicados con IP residencial exclusiva",
+        "Canal de comunicación privado y soporte 24/7"
+      ],
+      "cta": "Consultar Solución Enterprise"
+    }
+  ],
+  "addons": [
+    {
+      "title": "Módulo Sniper de Quiebre de Stock",
+      "price": "+$150 USD/mes",
+      "desc": "Detecta en minutos cuando tu competidor líder se queda sin stock para duplicar tus ventas."
+    },
+    {
+      "title": "Extractor de Reseñas & Quejas (Flaw Intel)",
+      "price": "+$150 USD/mes",
+      "desc": "Rastrea las valoraciones de 1 estrella del rival para usarlas como ventaja en tus anuncios."
+    },
+    {
+      "title": "Reglas de Repricing Automático",
+      "price": "+$250 USD/mes",
+      "desc": "Ajuste dinámico de precios en tu catálogo respetando siempre tu margen de beneficio mínimo."
+    }
+  ],
+  "faq": [
+    {
+      "q": "¿Tengo que instalar algún programa o extensión en mi computadora?",
+      "a": "No, absolutamente nada. Toda la infraestructura corre en nuestros servidores de alta disponibilidad. Vos y tu equipo solo reciben los avisos directos en Telegram y acceden a una planilla de Google Sheets que ya conocen y usan todos los días."
+    },
+    {
+      "q": "¿Qué pasa si mis competidores usan bloqueos de Cloudflare o anti-scrapers?",
+      "a": "Nuestro motor utiliza navegación sigilosa (Stealth) con huellas de navegador reales y redes de proxy rotativas. Para el servidor del competidor, las visitas son indistinguibles del tráfico de un cliente normal navegando desde su casa."
+    },
+    {
+      "q": "¿Cómo funciona la prueba gratuita de 48 horas?",
+      "a": "Nos pasás los enlaces de 3 productos y 3 competidores que quieras vigilar. En menos de 24 horas te dejamos el canal de Telegram configurado enviándote alertas en vivo a tu celular. Sin tarjeta de crédito, sin compromiso y sin contratos obligatorios."
+    },
+    {
+      "q": "¿Qué métodos de pago aceptan para los retainers mensuales?",
+      "a": "Aceptamos pagos internacionales a través de Stripe, PayPal, Transferencias bancarias directas de EE.UU. (ACH), transferencias europeas (SEPA) y Criptomonedas estables (USDT/USDC)."
+    },
+    {
+      "q": "¿Puedo cambiar los productos o competidores que monitoreo?",
+      "a": "Sí. Todos los meses podés actualizar la lista de competidores o productos para acompañar el lanzamiento de nuevas temporadas o campañas comerciales de tu negocio."
+    }
+  ]
+}

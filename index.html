@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Radar B2B | Monitoreo de Precios de Competencia & Alertas 24/7</title>
+  <meta name="description" content="Servicio B2B de inteligencia competitiva para E-commerce. Rastreo automatizado de precios, stock y alertas 24/7 directo a Telegram y Google Sheets.">
+  
+  <!-- FAVICON -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📡</text></svg>">
+
+  <!-- GOOGLE FONTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- TAILWIND CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              900: '#064e3b',
+              950: '#022c22',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- KOKONUT UI & GLOW STYLES -->
+  <style>
+    body {
+      background-color: #040608;
+      color: #F8FAFC;
+    }
+    .glass-card {
+      background: rgba(13, 20, 36, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: var(--mouse-y, -1000px);
+      left: var(--mouse-x, -1000px);
+      transform: translate(-50%, -50%);
+      width: 380px;
+      height: 380px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.16) 0%, transparent 70%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .glass-card:hover::before {
+      opacity: 1;
+    }
+    .glow-radar {
+      box-shadow: 0 0 50px -10px rgba(16, 185, 129, 0.22);
+    }
+    .telegram-bg {
+      background: #152232;
+      border: 1px solid #233549;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #040608; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+  </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col bg-[#040608] text-slate-100 selection:bg-emerald-500 selection:text-black">
+
+  <!-- BACKGROUND DECORATION GRADIENT -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div class="absolute -top-[25%] -left-[10%] w-[600px] h-[600px] rounded-full bg-emerald-500/10 blur-[140px]"></div>
+    <div class="absolute top-[40%] -right-[15%] w-[650px] h-[650px] rounded-full bg-teal-500/5 blur-[160px]"></div>
+    <div class="absolute -bottom-[20%] left-[20%] w-[700px] h-[700px] rounded-full bg-emerald-600/5 blur-[180px]"></div>
+  </div>
+
+  <!-- HEADER NAVEGACIÓN -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-[#040608]/85 backdrop-blur-xl border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
+      
+      <!-- LOGO -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 shadow-lg shadow-emerald-500/20 flex items-center justify-center font-mono font-black text-slate-950 text-xl group-hover:scale-105 transition-transform">
+          <span data-brand-emoji>📡</span>
+        </div>
+        <div>
+          <span class="font-extrabold text-base tracking-tight text-white block" data-brand-name>RADAR B2B</span>
+          <span class="text-[10px] text-emerald-400 font-mono tracking-widest uppercase flex items-center gap-1.5" data-brand-tagline>
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            Competitor Intel Ops
+          </span>
+        </div>
+      </a>
+
+      <!-- MENU DESKTOP -->
+      <nav class="hidden md:flex items-center gap-8 text-xs font-semibold text-slate-300">
+        <a href="#como-funciona" class="hover:text-emerald-400 transition-colors">Cómo Funciona</a>
+        <a href="#demo" class="hover:text-emerald-400 transition-colors">Demo en Vivo</a>
+        <a href="#calculadora" class="hover:text-emerald-400 transition-colors">Calculadora ROI</a>
+        <a href="#servicios" class="hover:text-emerald-400 transition-colors">Planes Mensuales</a>
+        <a href="#faq" class="hover:text-emerald-400 transition-colors">Preguntas Frecuentes</a>
+      </nav>
+
+      <!-- CTA BUTTON -->
+      <div class="flex items-center gap-3">
+        <a href="#" data-wa-cta target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/20 transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2">
+          <span>Auditoría Gratis (48hs)</span>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 pt-32 pb-24 px-4 sm:px-6 max-w-7xl mx-auto w-full relative z-10">
+
+    <!-- HERO SECTION -->
+    <section class="text-center max-w-4xl mx-auto mb-20 space-y-6">
+      
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-mono">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span id="hero-badge">CAÑERÍAS DE DATOS EN TIEMPO REAL · CERO INSTALACIÓN EN TU EQUIPO</span>
+      </div>
+
+      <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.12]">
+        <span id="hero-title-1">Vigilá a tu competencia</span> <br>
+        <span id="hero-gradient" class="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">24/7 en piloto automático.</span>
+      </h1>
+
+      <p id="hero-desc" class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed font-light">
+        Extraemos los precios, ofertas ocultas y quiebres de stock de tus rivales directos todos los días. Te enviamos la alerta instantánea a tu celular y mantenemos tu Google Sheet actualizado antes de que abras tu negocio.
+      </p>
+
+      <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
+        <a href="#" data-wa-cta target="_blank" rel="noopener noreferrer" class="px-8 py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm shadow-xl shadow-emerald-500/30 transition-all transform hover:scale-105 flex items-center gap-2">
+          <span>💬 Probar en 3 Tiendas Gratis</span>
+          <span>→</span>
+        </a>
+        <a href="#demo" class="px-8 py-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-sm transition-all">
+          Ver Demostración en Vivo
+        </a>
+      </div>
+
+      <!-- TRUST BADGES -->
+      <div id="hero-badges-container" class="pt-6 flex flex-wrap items-center justify-center gap-3">
+        <!-- Injected from content.json -->
+      </div>
+    </section>
+
+    <!-- STATS STRIP -->
+    <section class="mb-24">
+      <div id="stats-container" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <!-- Injected from content.json -->
+      </div>
+    </section>
+
+    <!-- LIVE DEMO SECTION -->
+    <section id="demo" class="mb-28">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <span class="text-xs font-mono text-emerald-400 tracking-widest uppercase">EVIDENCIA REAL EN TRINCHERA</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Así Funciona tu Alerta Diaria</h2>
+        <p class="text-xs sm:text-sm text-slate-400 mt-2">Sin ingresar a paneles complejos: la data llega a tu celular y a tu Google Sheet lista para actuar.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- CELULAR TELEGRAM MOCKUP (5 COLUMNAS) -->
+        <div class="lg:col-span-5 glass-card rounded-3xl p-6 glow-radar flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base font-mono">
+                  🤖
+                </div>
+                <div>
+                  <div class="font-bold text-sm text-white" id="tele-bot-name">Waly_radar_b2b_bot</div>
+                  <div class="text-[10px] text-emerald-400 font-mono">bot · En línea 24/7</div>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[10px] font-bold">PUSH DIRECTO</span>
+            </div>
+
+            <!-- Burbuja de Mensaje Exacta -->
+            <div id="telegram-live-bubble" class="telegram-bg rounded-2xl p-4 text-xs font-mono space-y-3 shadow-2xl text-slate-200 transition-all duration-300">
+              <div class="text-rose-400 font-bold tracking-wider flex items-center gap-1.5">
+                <span>🚨</span> <span id="tele-alert-tag">ALERTA RADAR B2B · COMPETITOR INTEL</span>
+              </div>
+              <div class="border-t border-white/10 pt-2.5 space-y-1 text-[11px]">
+                <div>🏷️ <b>Producto:</b> <span id="tele-product" class="text-slate-100">Notebook Lenovo IdeaPad 15.6 FHD Core i5 16GB</span></div>
+                <div>🏪 <b>Tienda:</b> <span id="tele-store" class="text-slate-300">Amazon Retail / Competidor Líder</span></div>
+                <div class="text-emerald-400 font-bold">📉 <b>Movimiento:</b> <span id="tele-movement">BAJA DE PRECIO AGRESIVA (-18.0%)</span></div>
+              </div>
+              <div class="bg-black/40 p-3 rounded-xl border border-white/5 space-y-1 text-[11px]">
+                <div class="text-slate-400">💵 Precio Anterior: <span id="tele-old-price">$549.99 USD</span></div>
+                <div class="text-amber-300 font-bold text-xs">🔥 Precio Actual: <span id="tele-new-price">$450.99 USD</span></div>
+                <div class="text-emerald-300">💰 Diferencia: <span id="tele-diff">-$99.00 USD</span></div>
+                <div>📦 Stock: <span id="tele-stock" class="text-emerald-400 font-bold">✅ DISPONIBLE</span></div>
+                <div class="text-[10px] text-slate-500">⏰ Auditoría: <span id="tele-time">Hoy 07:14 hs</span></div>
+              </div>
+              <div class="pt-1 flex items-center justify-between text-[11px]">
+                <span class="text-sky-400 underline cursor-pointer hover:text-sky-300">🔗 Ver Publicación en Tienda Rival</span>
+                <span class="text-[9px] text-slate-500">07:14 ✓✓</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-5 pt-4 border-t border-white/5 flex items-center justify-between">
+            <button id="simulate-alert-btn" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-emerald-300 transition-all">
+              ⚡ Simular Otra Alerta
+            </button>
+            <span class="text-[10px] text-slate-400 font-mono">Latencia 0.4s</span>
+          </div>
+        </div>
+
+        <!-- TABLERO GOOGLE SHEETS LIVE PREVIEW (7 COLUMNAS) -->
+        <div class="lg:col-span-7 glass-card rounded-3xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
+              <div class="flex items-center gap-3">
+                <span class="text-2xl">📊</span>
+                <div>
+                  <h3 class="font-bold text-sm text-white">Google Sheets · Sincronización Automática</h3>
+                  <p class="text-[11px] text-slate-400">Tu equipo abre el archivo y tiene el reporte listo cada mañana a las 8 AM</p>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-300 font-mono text-[10px] border border-emerald-500/20 font-bold">
+                AUTO-REFRESH
+              </span>
+            </div>
+
+            <!-- Tabla Visual Dinámica -->
+            <div class="overflow-x-auto rounded-xl border border-white/10 bg-black/60 shadow-inner">
+              <table class="w-full text-left text-xs font-mono">
+                <thead class="bg-slate-900/90 text-slate-400 border-b border-white/10">
+                  <tr>
+                    <th class="p-3">Hora</th>
+                    <th class="p-3">Producto</th>
+                    <th class="p-3">Tienda Rival</th>
+                    <th class="p-3">Precio</th>
+                    <th class="p-3">Variación</th>
+                    <th class="p-3">Stock</th>
+                  </tr>
+                </thead>
+                <tbody id="sheets-tbody" class="divide-y divide-white/5">
+                  <!-- Injected from content.json -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="mt-6 p-4 rounded-2xl bg-emerald-950/30 border border-emerald-500/20 text-xs flex flex-wrap items-center justify-between gap-3 text-slate-300">
+            <div class="flex items-center gap-2">
+              <span>💡</span>
+              <span>Compatible con <b>PowerBI, Zapier, Webhooks y ERPs internos</b>.</span>
+            </div>
+            <span class="text-emerald-400 font-bold font-mono">100% Manos Libres</span>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CALCULADORA ROI INTERACTIVA -->
+    <section id="calculadora" class="mb-28">
+      <div class="glass-card rounded-3xl p-8 sm:p-10 border border-emerald-500/30 glow-radar max-w-4xl mx-auto">
+        <div class="text-center max-w-xl mx-auto mb-8">
+          <span class="text-xs font-mono text-emerald-400 tracking-widest uppercase">CALCULADORA DE RIESGO COMERCIAL</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">¿Cuánto margen estás perdiendo por no vigilar a tus competidores?</h2>
+          <p class="text-xs text-slate-400 mt-2">Los e-commerce pierden entre un 3% y un 6% de su facturación bruta por no reaccionar a tiempo a ofertas o quiebres de stock del rival.</p>
+        </div>
+
+        <div class="space-y-6 max-w-2xl mx-auto">
+          <div>
+            <div class="flex justify-between items-center text-xs font-mono text-slate-300 mb-2">
+              <span>Facturación mensual aproximada de tu tienda:</span>
+              <span id="calc-revenue-val" class="text-emerald-400 font-bold text-sm">$30,000 USD / mes</span>
+            </div>
+            <input id="calc-slider" type="range" min="10000" max="150000" step="5000" value="30000" class="w-full accent-emerald-500 bg-slate-800 h-2 rounded-lg cursor-pointer">
+            <div class="flex justify-between text-[10px] text-slate-500 font-mono mt-1">
+              <span>$10,000 USD</span>
+              <span>$75,000 USD</span>
+              <span>$150,000 USD</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-white/10">
+            <div class="p-4 rounded-2xl bg-rose-950/20 border border-rose-500/20 text-center">
+              <div class="text-[11px] text-rose-300 font-mono mb-1">Pérdida estimada sin monitoreo:</div>
+              <div id="calc-loss-val" class="text-2xl sm:text-3xl font-black font-mono text-rose-400">-$1,350 USD</div>
+              <div class="text-[10px] text-slate-400 mt-1">Ventas perdidas y clientes que se van al rival</div>
+            </div>
+            <div class="p-4 rounded-2xl bg-emerald-950/30 border border-emerald-500/30 text-center">
+              <div class="text-[11px] text-emerald-300 font-mono mb-1">Recuperación mensual con Radar B2B:</div>
+              <div id="calc-recovery-val" class="text-2xl sm:text-3xl font-black font-mono text-emerald-400">+$1,148 USD</div>
+              <div class="text-[10px] text-slate-400 mt-1">El servicio se paga solo con 2 o 3 alertas aprovechadas</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES SECTION (LAUNCH UI STYLE) -->
+    <section id="como-funciona" class="mb-28">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <span class="text-xs font-mono text-emerald-400 tracking-widest uppercase">ARQUITECTURA DE DATOS</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Tecnología de Grado Militar para tu E-commerce</h2>
+        <p class="text-xs sm:text-sm text-slate-400 mt-2">Construido con cañerías en Python, evasión anti-scraping y sincronización multi-canal.</p>
+      </div>
+
+      <div id="features-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Injected from content.json -->
+      </div>
+    </section>
+
+    <!-- PRICING SERVICES (LAUNCH UI / KOKONUT STYLE) -->
+    <section id="servicios" class="mb-28">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <span class="text-xs font-mono text-emerald-400 tracking-widest uppercase">PLANES Y RETAINERS MENSUALES</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Inversión Fija, Rentabilidad Ilimitada</h2>
+        <p class="text-xs sm:text-sm text-slate-400 mt-2">Sin comisiones sobre tus ventas. Un abono mensual fijo con mantenimiento técnico total incluido.</p>
+      </div>
+
+      <div id="services-container" class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch mb-12">
+        <!-- Injected from content.json -->
+      </div>
+
+      <!-- ADDONS & SÚPER ANZUELOS -->
+      <div class="glass-card rounded-3xl p-6 sm:p-8 max-w-4xl mx-auto">
+        <div class="flex items-center gap-3 mb-6">
+          <span class="text-2xl">🧲</span>
+          <div>
+            <h3 class="font-bold text-base text-white">Módulos Adicionales de Alto Rendimiento (Add-ons)</h3>
+            <p class="text-xs text-slate-400">Sumá superpoderes específicos a tu plan de monitoreo en cualquier momento.</p>
+          </div>
+        </div>
+
+        <div id="addons-container" class="space-y-3">
+          <!-- Injected from content.json -->
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section id="faq" class="mb-28 max-w-3xl mx-auto">
+      <div class="text-center mb-10">
+        <span class="text-xs font-mono text-emerald-400 tracking-widest uppercase">DUDAS RESUELTAS</span>
+        <h2 class="text-3xl font-extrabold text-white mt-1">Preguntas Frecuentes</h2>
+      </div>
+
+      <div id="faq-container" class="space-y-3">
+        <!-- Injected from content.json -->
+      </div>
+    </section>
+
+    <!-- FINAL LEAD MAGNET CTA -->
+    <section class="glass-card rounded-3xl p-8 sm:p-14 text-center max-w-4xl mx-auto border border-emerald-500/50 glow-radar">
+      <div class="max-w-2xl mx-auto space-y-5">
+        <span class="inline-block px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-mono text-xs font-bold border border-emerald-500/20 uppercase tracking-widest">
+          GARANTÍA DE PRUEBA 100% GRATIS
+        </span>
+        <h2 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">
+          Probá el Radar en 3 Tiendas Gratis por 48 Horas
+        </h2>
+        <p class="text-sm text-slate-300 leading-relaxed font-light">
+          Sin tarjeta de crédito ni compromisos. Pasame los 3 links de tus competidores más fuertes y en 24 horas te dejo las alertas vibrando en tu celular para que veas el poder del sistema antes de pagar un solo dólar.
+        </p>
+
+        <div class="pt-4 flex flex-wrap items-center justify-center gap-4">
+          <a href="#" data-wa-cta target="_blank" rel="noopener noreferrer" class="px-9 py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-base shadow-2xl shadow-emerald-500/30 transition-all transform hover:scale-105 flex items-center gap-2">
+            <span>💬 Solicitar Prueba Gratis por WhatsApp</span>
+            <span>→</span>
+          </a>
+        </div>
+
+        <div class="pt-4 flex flex-wrap items-center justify-center gap-4 text-[11px] text-slate-400 font-mono">
+          <span>💳 Stripe / PayPal</span>
+          <span>•</span>
+          <span>🏦 Transferencias ACH (EE.UU.) & SEPA</span>
+          <span>•</span>
+          <span>💎 USDT / Cripto</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-[#020304] border-t border-white/5 py-12 px-4 text-center text-xs text-slate-500 relative z-10">
+    <div class="max-w-4xl mx-auto space-y-3">
+      <div class="flex items-center justify-center gap-2 font-bold text-slate-400">
+        <span data-brand-emoji>📡</span>
+        <span data-brand-name>RADAR B2B</span>
+        <span>·</span>
+        <span data-brand-tagline>Competitor Intel Ops</span>
+      </div>
+      <p class="text-[11px] text-slate-600">
+        Infraestructura agéntica soberana desarrollada por Walter & Luz en Antigravity 2.0. Todos los derechos reservados.
+      </p>
+    </div>
+  </footer>
+
+  <!-- SCRIPT ENGINE -->
+  <script src="app.js"></script>
+</body>
+</html>
