@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BÚNKER B2B · Centro de Cómputos & Operaciones</title>
+  
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
+
+  <!-- GOOGLE FONTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- TAILWIND CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              500: '#10b981',
+              600: '#059669',
+              900: '#064e3b',
+              950: '#022c22',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- SUPABASE JS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    body { background-color: #030508; color: #F8FAFC; }
+    .bunker-panel {
+      background: rgba(10, 16, 28, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .bunker-panel:hover {
+      border-color: rgba(16, 185, 129, 0.25);
+    }
+    .glow-cyan {
+      box-shadow: 0 0 40px -10px rgba(6, 182, 212, 0.2);
+    }
+    .glow-emerald {
+      box-shadow: 0 0 40px -10px rgba(16, 185, 129, 0.2);
+    }
+  </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col bg-[#030508] text-slate-100 selection:bg-emerald-500 selection:text-black">
+
+  <!-- HEADER TÁCTICO -->
+  <header class="border-b border-white/10 bg-[#030508]/90 backdrop-blur-xl sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
+      
+      <div class="flex items-center gap-3.5">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-cyan-400 p-0.5 flex items-center justify-center font-mono font-bold text-slate-950 text-xl shadow-lg shadow-emerald-500/20">
+          🛡️
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-black text-base tracking-wider text-white">BÚNKER B2B</span>
+            <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono text-[10px] font-bold">
+              CENTRO DE CÓMPUTOS
+            </span>
+          </div>
+          <span class="text-[10px] text-slate-400 font-mono">Control de Operaciones & Telemetría en Vivo</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <!-- RELOJ TÁCTICO -->
+        <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 font-mono text-xs text-emerald-300">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="bunker-clock">--:--:--</span>
+        </div>
+
+        <!-- BOTÓN RETORNO AL SITIO PÚBLICO -->
+        <a href="/" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-slate-300 transition-colors flex items-center gap-1.5">
+          <span>←</span>
+          <span>Portal Público</span>
+        </a>
+
+        <!-- USER PROFILE / LOGOUT -->
+        <div id="user-header-profile" class="hidden items-center gap-2 pl-2 border-l border-white/10">
+          <img id="user-avatar" class="w-8 h-8 rounded-full border border-emerald-500/40 object-cover" src="" alt="Walter">
+          <button id="logout-btn" class="px-2.5 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/20 font-mono text-[11px] transition-colors">
+            Salir
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN BODY -->
+  <main class="flex-1 max-w-7xl mx-auto w-full p-4 sm:p-6">
+
+    <!-- PANTALLA DE ACCESO / LOGIN (SI NO ESTÁ AUTENTICADO) -->
+    <div id="bunker-login-screen" class="py-16 flex flex-col items-center justify-center max-w-md mx-auto text-center space-y-6">
+      <div class="w-16 h-16 rounded-3xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-3xl shadow-2xl glow-emerald">
+        🔐
+      </div>
+
+      <div class="space-y-2">
+        <h1 class="text-2xl font-black text-white tracking-tight">Acceso Confidencial al Búnker</h1>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Este centro de cómputos está protegido por autenticación federada y políticas de seguridad RLS de Supabase. Requiere cuenta autorizada del Director de Operaciones.
+        </p>
+      </div>
+
+      <div class="w-full space-y-3 pt-2">
+        <button id="google-login-btn" class="w-full py-3.5 px-4 rounded-2xl bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs shadow-xl flex items-center justify-center gap-2.5 transition-all transform hover:scale-[1.02]">
+          <svg class="w-4 h-4" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.65v3h3.88c2.27-2.09 3.66-5.17 3.66-9.09z"/>
+            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.27v3.09C3.25 21.3 7.33 24 12 24z"/>
+            <path fill="#FBBC05" d="M5.28 14.32c-.25-.72-.38-1.49-.38-2.32s.13-1.6.38-2.32V6.59H1.27C.46 8.21 0 10.05 0 12s.46 3.79 1.27 5.41l4.01-3.09z"/>
+            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.25 2.7 1.27 6.59l4.01 3.09c.95-2.83 3.6-4.93 6.72-4.93z"/>
+          </svg>
+          <span>Ingresar con Google (Supabase Auth)</span>
+        </button>
+
+        <button id="direct-bypass-btn" class="w-full py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 font-mono text-[11px] transition-colors border border-white/5">
+          Modo Local de Emergencia (Ver Leads de Memoria)
+        </button>
+      </div>
+
+      <div class="text-[10px] text-slate-500 font-mono">
+        Host: radarb2b.site · Node: IAD1 (Vercel Edge) · DB: Supabase PostgreSQL
+      </div>
+    </div>
+
+    <!-- PANTALLA PRINCIPAL DEL BÚNKER (CUANDO ESTÁ AUTENTICADO) -->
+    <div id="bunker-dashboard" class="hidden space-y-6">
+      
+      <!-- STATS STRIP DE TELEMETRÍA -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        
+        <div class="bunker-panel rounded-2xl p-4 flex items-center justify-between">
+          <div>
+            <div class="text-[11px] text-slate-400 font-mono">LEADS CAPTURADOS</div>
+            <div id="stat-total-leads" class="text-2xl font-black text-emerald-400 font-mono mt-0.5">0</div>
+          </div>
+          <span class="text-2xl">🎯</span>
+        </div>
+
+        <div class="bunker-panel rounded-2xl p-4 flex items-center justify-between">
+          <div>
+            <div class="text-[11px] text-slate-400 font-mono">CENTINELA TELEGRAM</div>
+            <div class="text-xs font-bold text-emerald-400 font-mono mt-1 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              @Walys2b2_bot ACTIVO
+            </div>
+          </div>
+          <span class="text-2xl">🤖</span>
+        </div>
+
+        <div class="bunker-panel rounded-2xl p-4 flex items-center justify-between">
+          <div>
+            <div class="text-[11px] text-slate-400 font-mono">ESTADO DEL DOMINIO</div>
+            <div class="text-xs font-bold text-cyan-400 font-mono mt-1">radarb2b.site · 200 OK</div>
+          </div>
+          <span class="text-2xl">🌐</span>
+        </div>
+
+        <div class="bunker-panel rounded-2xl p-4 flex items-center justify-between">
+          <div>
+            <div class="text-[11px] text-slate-400 font-mono">BASE DE DATOS</div>
+            <div class="text-xs font-bold text-emerald-400 font-mono mt-1">Supabase Realtime</div>
+          </div>
+          <span class="text-2xl">⚡</span>
+        </div>
+
+      </div>
+
+      <!-- BANDEJA DE ENTRADA DE LEADS (TABLA PRINCIPAL) -->
+      <div class="bunker-panel rounded-3xl p-6 glow-emerald space-y-4">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
+          <div>
+            <h2 class="text-lg font-black text-white flex items-center gap-2">
+              <span>📋</span>
+              <span>Bandeja de Entrada de Prospectos (Leads de Ari)</span>
+            </h2>
+            <p class="text-xs text-slate-400">Clientes que solicitaron la prueba gratuita de 48 horas en radarb2b.site</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="refresh-leads-btn" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-emerald-300 transition-colors">
+              🔄 Actualizar
+            </button>
+            <button id="add-manual-lead-btn" class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-colors">
+              + Cargar Lead Manual
+            </button>
+          </div>
+        </div>
+
+        <!-- TABLA RESPONSIVE -->
+        <div class="overflow-x-auto rounded-2xl border border-white/10 bg-black/40">
+          <table class="w-full text-left text-xs font-mono">
+            <thead class="bg-slate-900/90 text-slate-400 border-b border-white/10 text-[11px]">
+              <tr>
+                <th class="p-3">Fecha/Hora</th>
+                <th class="p-3">Nombre / Empresa</th>
+                <th class="p-3">Contacto</th>
+                <th class="p-3">Competidores Pedidos</th>
+                <th class="p-3">Estado</th>
+                <th class="p-3 text-right">Acción Comercial</th>
+              </tr>
+            </thead>
+            <tbody id="bunker-leads-tbody" class="divide-y divide-white/5">
+              <!-- Inyectado por bunker.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- DISPARADOR MANUAL DE ALERTA TELEGRAM (HERRAMIENTA DE TEST) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <div class="bunker-panel rounded-3xl p-6 space-y-3">
+          <div class="flex items-center gap-2.5">
+            <span class="text-xl">📲</span>
+            <h3 class="font-bold text-sm text-white">Disparador de Alerta de Prueba a Telegram</h3>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Presioná este botón para enviar una alerta de prueba inmediata a tu celular (`@Walys2b2_bot`) y verificar que la cañería push de Telegram responda sin latencia.
+          </p>
+          <div class="pt-2">
+            <button id="test-telegram-btn" class="px-5 py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/30 text-emerald-300 font-mono text-xs font-bold transition-all">
+              ⚡ Enviar Alerta Ping a mi Celular
+            </button>
+            <span id="test-telegram-status" class="ml-3 text-xs font-mono text-slate-400"></span>
+          </div>
+        </div>
+
+        <div class="bunker-panel rounded-3xl p-6 space-y-3">
+          <div class="flex items-center gap-2.5">
+            <span class="text-xl">⚙️</span>
+            <h3 class="font-bold text-sm text-white">Acceso a Repositorios & Configuración</h3>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Enlaces directos a la infraestructura de Walter & Luz para mantenimiento y escalabilidad.
+          </p>
+          <div class="pt-2 flex flex-wrap gap-2 text-xs font-mono">
+            <a href="https://github.com/walyconexion-wq/radar-b2b" target="_blank" class="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300">
+              📂 GitHub Repo
+            </a>
+            <a href="https://vercel.com" target="_blank" class="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300">
+              ▲ Vercel Panel
+            </a>
+            <a href="https://micuenta.donweb.com" target="_blank" class="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300">
+              🌐 DonWeb DNS
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- SCRIPTS DEL BÚNKER -->
+  <script src="bunker.js"></script>
+</body>
+</html>

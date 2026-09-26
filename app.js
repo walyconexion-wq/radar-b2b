@@ -28,6 +28,7 @@ function initApp(data) {
   initKokonutGlow();
   initCalculator();
   initTelegramSimulator();
+  initSecretBunkerTrigger();
 }
 
 function renderBrand(brand, contact) {
@@ -309,3 +310,42 @@ function initTelegramSimulator() {
     }, 1500);
   });
 }
+
+// SECRET BUNKER TRIGGER: 4 CLICKS ON LOGO TO WARP TO BUNKER
+function initSecretBunkerTrigger() {
+  const logo = document.getElementById('secret-bunker-logo');
+  if (!logo) return;
+
+  let clickCount = 0;
+  let timer = null;
+
+  logo.addEventListener('click', (e) => {
+    e.preventDefault();
+    clickCount++;
+
+    // Efecto visual táctico en cada clic
+    logo.style.transition = 'transform 0.15s ease, filter 0.15s ease';
+    logo.style.transform = `scale(${1 + clickCount * 0.05})`;
+    logo.style.filter = `brightness(${1 + clickCount * 0.3}) drop-shadow(0 0 ${clickCount * 6}px #10b981)`;
+
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      clickCount = 0;
+      logo.style.transform = 'scale(1)';
+      logo.style.filter = 'none';
+    }, 1400);
+
+    if (clickCount >= 4) {
+      clearTimeout(timer);
+      clickCount = 0;
+      logo.style.transform = 'scale(1.25)';
+      logo.style.filter = 'brightness(2) drop-shadow(0 0 25px #10b981)';
+
+      // Flash y teleport al Búnker
+      setTimeout(() => {
+        window.location.href = 'bunker.html';
+      }, 150);
+    }
+  });
+}
+
