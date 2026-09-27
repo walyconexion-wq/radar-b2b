@@ -1,49 +1,68 @@
 {
   "brand": {
     "name": "RADAR B2B",
-    "tagline": "Competitor Intel & Price Pipeline Ops",
+    "tagline": "Data Automation & Competitive Intelligence Lab",
+    "subbrand": "Radar Automation Lab",
     "emoji": "📡",
-    "version": "v2.4 Stealth"
+    "version": "v2.5 Enterprise"
   },
   "contact": {
     "whatsappPhone": "5493544565656",
-    "whatsappMessage": "Hola Walter! Vi el Radar B2B y quiero activar la prueba gratuita de 48 horas para 3 de mis competidores.",
+    "whatsappMessage": "Hola Walter! Vi el Radar Automation Lab y quiero consultar por una solución de datos / prueba de 48hs.",
     "telegramBotUrl": "https://t.me/Walys2b2_bot",
     "telegramBotUser": "@Walys2b2_bot"
   },
   "hero": {
-    "badge": "CAÑERÍAS DE DATOS EN TIEMPO REAL · CERO INSTALACIÓN EN TU EQUIPO",
-    "titleLine1": "Vigilá a tu competencia",
-    "titleGradient": "24/7 en piloto automático.",
-    "description": "Extraemos los precios, ofertas ocultas y quiebres de stock de tus rivales directos todos los días. Te enviamos la alerta instantánea a tu celular y mantenemos tu Google Sheet actualizado antes de que abras tu negocio.",
-    "ctaPrimary": "Solicitar Prueba Gratis 48hs",
-    "ctaSecondary": "Ver Demostración en Vivo",
+    "badge": "INGENIERÍA DE DATOS & AUTOMATIZACIÓN COMERCIAL · CERO PICAR DATOS A MANO",
+    "titleLine1": "Convertimos la web en datos",
+    "titleGradient": "que trabajan para vos.",
+    "subtitle": "Scraping · Monitoring · Automation · Competitive Intelligence",
+    "description": "Extraemos precios, stock, catálogos, leads y variaciones de sitios web para convertirlos en datos estructurados y alertas accionables. Sin software que instalar, sin copiar y pegar, y sin planillas manuales.",
+    "ctaPrimary": "Probar en 3 URLs Gratis (48hs)",
+    "ctaSecondary": "Ver Demostración y Planes",
     "badges": [
-      { "icon": "🛡️", "text": "Evasión Cloudflare Stealth" },
-      { "icon": "⚡", "text": "Alertas en menos de 30 seg" },
-      { "icon": "📊", "text": "Sincronización Nativa con Google Sheets" },
-      { "icon": "🔒", "text": "100% Manos Libres y Confidencial" }
+      { "icon": "🛡️", "text": "Extracción Resiliente de Datos" },
+      { "icon": "⚡", "text": "Actualizaciones Programadas & Alertas" },
+      { "icon": "📊", "text": "Sincronización con Google Sheets & APIs" },
+      { "icon": "🔒", "text": "Fuentes Públicas & Datos Verificados" }
     ]
   },
   "stats": [
-    { "value": "< 30s", "label": "Latencia de Detección de Ofertas" },
-    { "value": "15+", "label": "Competidores Simultáneos por Cuenta" },
-    { "value": "99.8%", "label": "Uptime de Extracción Anti-Bloqueo" },
-    { "value": "$0", "label": "Costo de Servidores o Infraestructura para vos" }
+    { "value": "100%", "label": "Automatizado · Cero tareas manuales de copia" },
+    { "value": "Multi-Sitio", "label": "Marketplaces, e-commerce y directorios" },
+    { "value": "Alertas Push", "label": "Avisos inmediatos de bajas de precio y quiebres de stock" },
+    { "value": "Datos Listos", "label": "Google Sheets, Excel, CSV o APIs directas" }
+  ],
+  "frequencyModels": [
+    {
+      "badge": "PROGRAMADO",
+      "title": "Monitoreo Programado",
+      "desc": "Auditorías periódicas (cada 24h, 12h o 2h) para capturar el estado actualizado de catálogos y planillas."
+    },
+    {
+      "badge": "EVENTOS",
+      "title": "Monitoreo por Eventos",
+      "desc": "Detección inteligente de variaciones críticas: rebajas agresivas, cupones o productos que se quedan sin stock."
+    },
+    {
+      "badge": "TIEMPO REAL",
+      "title": "Integración en Tiempo Real",
+      "desc": "Flujos continuos vía Webhook o API directa para alimentar tu ERP o plataformas de e-commerce."
+    }
   ],
   "telegramDemo": {
     "botName": "Waly_radar_b2b_bot",
-    "status": "En línea 24/7 · Push Directo",
-    "alertTag": "🚨 ALERTA RADAR B2B · COMPETITOR INTEL",
+    "status": "Centinela Activo · Alerta por Evento",
+    "alertTag": "🚨 ALERTA RADAR B2B · CAMBIO DE PRECIO DETECTADO",
     "product": "Notebook Lenovo IdeaPad 15.6 FHD Core i5 16GB SSD 512GB",
     "store": "Amazon Retail / Competidor Líder",
-    "movement": "BAJA DE PRECIO AGRESIVA (-18.0%)",
+    "movement": "BAJA DE PRECIO DETECTADA (-18.0%)",
     "oldPrice": "$549.99 USD",
     "newPrice": "$450.99 USD",
     "diff": "-$99.00 USD",
     "stock": "✅ DISPONIBLE (Stock Líquido)",
     "timestamp": "Hoy 07:14 hs",
-    "latency": "0.4s entrega directa a Telegram"
+    "latency": "Alerta enviada en cuanto se detectó el cambio"
   },
   "sheetsDemo": [
     {
@@ -53,7 +72,7 @@
       "price": "$450.99",
       "diff": "-18.0%",
       "diffClass": "text-emerald-400 font-bold",
-      "stock": "OK",
+      "stock": "DISPONIBLE",
       "stockClass": "bg-emerald-900/40 text-emerald-300"
     },
     {
@@ -63,7 +82,7 @@
       "price": "$378.00",
       "diff": "-10.0%",
       "diffClass": "text-emerald-400 font-bold",
-      "stock": "OK",
+      "stock": "DISPONIBLE",
       "stockClass": "bg-emerald-900/40 text-emerald-300"
     },
     {
@@ -73,7 +92,7 @@
       "price": "$129.50",
       "diff": "0.0%",
       "diffClass": "text-slate-500",
-      "stock": "OK",
+      "stock": "DISPONIBLE",
       "stockClass": "bg-emerald-900/40 text-emerald-300"
     },
     {
@@ -81,7 +100,7 @@
       "product": "Zapatillas Running Carbon Elite",
       "competitor": "MegaSport Direct",
       "price": "$189.00",
-      "diff": "AGOTADO",
+      "diff": "QUIEBRE DE STOCK",
       "diffClass": "text-rose-400 font-bold",
       "stock": "SIN STOCK ⚠️",
       "stockClass": "bg-rose-900/40 text-rose-300"
@@ -93,146 +112,168 @@
       "price": "$299.99",
       "diff": "+5.0%",
       "diffClass": "text-amber-400 font-bold",
-      "stock": "OK",
+      "stock": "DISPONIBLE",
       "stockClass": "bg-emerald-900/40 text-emerald-300"
     }
   ],
   "features": [
     {
       "icon": "🎯",
-      "badge": "PRECISIÓN TOTAL",
-      "title": "Rastreo Quirúrgico a Nivel SKU",
-      "description": "Comparamos productos idénticos o equivalentes en tus competidores directos, aislando variantes de color, tamaño o cuotas sin confusiones."
+      "badge": "INTELIGENCIA COMERCIAL",
+      "title": "Monitoreo de Precios y Stock Competitivo",
+      "description": "Rastreamos catálogos de rivales y te alertamos al instante cuando bajan precios o se quedan sin existencias para que aproveches la demanda."
     },
     {
-      "icon": "🛡️",
-      "badge": "TECNOLOGÍA STEALTH",
-      "title": "Evasión Anti-Bot y Cloudflare",
-      "description": "Navegación automatizada con huellas digitales rotativas y proxys residenciales para que las tiendas nunca detecten ni bloqueen la extracción."
+      "icon": "👥",
+      "badge": "LEAD GENERATION",
+      "title": "Extracción y Enriquecimiento de Leads B2B",
+      "description": "Construimos bases de datos calificadas de potenciales clientes: empresas, sitios web, emails corporativos verificados, teléfonos y decisores clave."
     },
     {
-      "icon": "📲",
-      "badge": "ALERTAS VIVAS",
-      "title": "Despacho Instantáneo a Telegram",
-      "description": "Recibí en tu celular la notificación en menos de un minuto cuando un competidor baje su precio o active una oferta flash relámpago."
+      "icon": "🔔",
+      "badge": "DETECCIÓN DE CAMBIOS",
+      "title": "Monitor de Modificaciones Web",
+      "description": "Te avisamos de inmediato si un sitio de tu interés publica un nuevo producto, cambia términos y condiciones, actualiza banners o lanza una promoción."
     },
     {
       "icon": "📊",
       "badge": "CERO PICAR DATOS",
-      "title": "Sincronización con Google Sheets",
-      "description": "Tu equipo comercial abre la planilla todos los días y tiene la tabla ordenada, con semáforos de colores y brechas de precio ya calculadas."
+      "title": "Automatización Web ➔ Google Sheets",
+      "description": "Eliminamos las horas perdidas copiando y pegando datos de páginas a Excel. Tu planilla amanece con los datos limpios y organizados todos los días."
     },
     {
-      "icon": "🚨",
-      "badge": "OPORTUNIDAD DE ORO",
-      "title": "Sniper de Quiebre de Stock",
-      "description": "Te avisamos de inmediato cuando tu rival se queda sin existencias de un producto de alta demanda para que subas tu precio o aumentes tu pauta publicitaria."
+      "icon": "🤖",
+      "badge": "DATA + IA",
+      "title": "Pipeline Inteligente con Resumen IA",
+      "description": "No te inundamos con filas interminables. Procesamos la data con Inteligencia Artificial para enviarte un resumen ejecutivo claro de lo que pasó en el mercado."
     },
     {
       "icon": "⚡",
-      "badge": "CONECTORES ERP",
-      "title": "Webhooks para Shopify & WooCommerce",
-      "description": "Conexión directa vía API o Webhook para alimentar tus sistemas internos, herramientas de BI o reglas automáticas de repricing inteligente."
+      "badge": "INTEGRACIÓN RÁPIDA",
+      "title": "Conectores Webhook & ERP",
+      "description": "Entregamos la información en el formato que tu empresa ya utiliza: Google Sheets, CSV, bases de datos o Webhooks directos a Shopify y WooCommerce."
     }
   ],
   "services": [
     {
-      "id": "radar-standard",
+      "id": "scraper-express",
       "popular": false,
-      "icon": "📡",
-      "badge": "PLAN ESENCIAL",
-      "title": "Radar Esencial de Competencia",
-      "description": "Ideal para e-commerce que compiten en un nicho cerrado y necesitan vigilar hasta 5 tiendas rivales clave.",
-      "price": "$500",
-      "period": "USD / mes",
-      "setup": "Setup inicial bonificado 100% con contrato trimestral",
+      "icon": "⚡",
+      "badge": "ENTRADA FREELANCE · PUNTUAL",
+      "title": "Scraper Express",
+      "description": "Para marcas o negocios que necesitan extraer información puntual de 1 o 2 sitios web con entrega rápida y formato limpio.",
+      "price": "$150 - $350",
+      "period": "USD / Proyecto",
+      "setup": "Entrega única en 24 a 48 hs · Cero abono mensual",
       "features": [
-        "Monitoreo de hasta 5 competidores",
-        "Auditoría 2 veces al día (Mañana y Tarde)",
-        "Alertas instantáneas a Telegram",
-        "Planilla viva en Google Sheets",
-        "Soporte prioritario por WhatsApp"
+        "Extracción completa de 1 o 2 sitios web",
+        "Limpieza, desduplicación y normalización",
+        "Entrega en formato CSV, Excel o JSON",
+        "Documentación del dataset y diccionario de campos",
+        "Ideal para auditorías iniciales de catálogo"
       ],
-      "cta": "Empezar con Plan Esencial"
+      "cta": "Solicitar Scraper Express"
     },
     {
-      "id": "radar-pro",
+      "id": "data-pipeline",
+      "popular": false,
+      "icon": "📊",
+      "badge": "PIPELINE PROGRAMADO",
+      "title": "Data Pipeline Automatizado",
+      "description": "Montamos una cañería que extrae información periódica de múltiples sitios y la mantiene actualizada en tu Google Sheets o base de datos.",
+      "price": "$450 setup + $200/mes",
+      "period": "USD",
+      "setup": "Setup de cañería: $450 USD · Mantenimiento: $200 USD/mes",
+      "features": [
+        "Extracción programada automática (Diaria / Semanal)",
+        "Sincronización directa a Google Sheets o API",
+        "Control de errores y reintentos automáticos",
+        "Mantenimiento continuo ante cambios de diseño web",
+        "Soporte técnico y monitoreo de salud del pipeline"
+      ],
+      "cta": "Montar Data Pipeline"
+    },
+    {
+      "id": "competitor-radar",
       "popular": true,
-      "icon": "🚀",
+      "icon": "📡",
       "badge": "MÁS ELEGIDO · B2B FULL",
-      "title": "Radar Pro Dinámico & Stock",
-      "description": "Para empresas comerciales con catálogos activos que necesitan reacción en tiempo real y detección de quiebres de inventario.",
-      "price": "$650",
+      "title": "Competitor Price & Stock Radar",
+      "description": "Servicio continuo de inteligencia competitiva 'Done for You'. Monitoreo de hasta 15 rivales con alertas instantáneas a Telegram y Google Sheet vivo.",
+      "price": "$450 - $650",
       "period": "USD / mes",
-      "setup": "Setup e integración llave en mano: $250 USD (Única vez)",
+      "setup": "Setup llave en mano bonificado con abono trimestral",
       "features": [
         "Monitoreo de hasta 15 competidores directos",
-        "Auditorías cada 2 horas (24/7 en rotación)",
-        "Alertas inmediatas a Telegram y Slack",
-        "Alerta Sniper de Quiebre de Stock (Agotados)",
-        "Planilla de Google Sheets con cálculo de márgenes",
-        "Reporte ejecutivo PDF todos los lunes"
+        "Auditorías programadas (cada 2h a 12h según catálogo)",
+        "Alertas inmediatas a Telegram y Slack de bajas de precio",
+        "Alerta Sniper de Quiebre de Stock (Agotados en rivales)",
+        "Google Sheet sincronizado con comparativa de márgenes",
+        "Reporte ejecutivo semanal de variaciones de mercado"
       ],
-      "cta": "Activar Radar Pro Dinámico"
+      "cta": "Activar Competitor Radar"
     },
     {
-      "id": "radar-enterprise",
+      "id": "intelligence-enterprise",
       "popular": false,
       "icon": "👑",
-      "badge": "ENTERPRISE BEAST",
-      "title": "Infraestructura & Repricing",
-      "description": "Solución corporativa para grandes retailers y distribuidores con miles de SKUs y conexión directa a su plataforma de e-commerce.",
-      "price": "$750",
+      "badge": "CORPORATIVO A MEDIDA",
+      "title": "Intelligence Pipeline Enterprise",
+      "description": "Solución corporativa para grandes retailers y distribuidores con miles de SKUs, reglas comerciales dinámicas e integración ERP.",
+      "price": "$950 - $1,500+",
       "period": "USD / mes",
-      "setup": "Setup avanzado con Webhooks: $350 USD (Única vez)",
+      "setup": "Arquitectura y conectores a medida",
       "features": [
-        "Monitoreo de competidores ilimitados",
-        "Frecuencia continua en tiempo real",
-        "Conectores Webhook a Shopify / WooCommerce / ERP",
-        "Monitoreo de reseñas y quejas de la competencia",
-        "Servidores dedicados con IP residencial exclusiva",
-        "Canal de comunicación privado y soporte 24/7"
+        "Monitoreo multi-canal y marketplaces a gran escala",
+        "Integración directa con Shopify, WooCommerce o ERP interno",
+        "Reglas automáticas de repricing inteligente con margen protegido",
+        "Resúmenes ejecutivos procesados con Inteligencia Artificial",
+        "Infraestructura dedicada y soporte prioritario 24/7"
       ],
-      "cta": "Consultar Solución Enterprise"
+      "cta": "Cotizar Solución Enterprise"
     }
   ],
   "addons": [
     {
       "title": "Módulo Sniper de Quiebre de Stock",
       "price": "+$150 USD/mes",
-      "desc": "Detecta en minutos cuando tu competidor líder se queda sin stock para duplicar tus ventas."
+      "desc": "Detecta en minutos cuando tu competidor líder se queda sin stock para captar toda su demanda."
     },
     {
-      "title": "Extractor de Reseñas & Quejas (Flaw Intel)",
+      "title": "Extractor de Reseñas & Puntos Débiles (Flaw Intel)",
       "price": "+$150 USD/mes",
-      "desc": "Rastrea las valoraciones de 1 estrella del rival para usarlas como ventaja en tus anuncios."
+      "desc": "Rastrea las valoraciones de 1 estrella del rival para aprovechar sus debilidades en tus campañas."
     },
     {
-      "title": "Reglas de Repricing Automático",
+      "title": "Conector de Repricing Automático a Tienda",
       "price": "+$250 USD/mes",
-      "desc": "Ajuste dinámico de precios en tu catálogo respetando siempre tu margen de beneficio mínimo."
+      "desc": "Ajuste dinámico de precios en tu e-commerce respetando siempre tu margen de beneficio mínimo."
     }
   ],
   "faq": [
     {
-      "q": "¿Tengo que instalar algún programa o extensión en mi computadora?",
-      "a": "No, absolutamente nada. Toda la infraestructura corre en nuestros servidores de alta disponibilidad. Vos y tu equipo solo reciben los avisos directos en Telegram y acceden a una planilla de Google Sheets que ya conocen y usan todos los días."
+      "q": "¿Qué diferencia hay entre contratar un scraper puntual y un abono mensual?",
+      "a": "El Scraper Express resuelve una necesidad concreta: te entregamos una base de datos limpia de 1 o 2 sitios en formato Excel/CSV una sola vez. En cambio, con el Data Pipeline o el Competitor Radar el sistema queda funcionando automáticamente en nuestros servidores, actualizando tus planillas todos los días y avisándote al instante por Telegram cuando hay cambios relevantes."
     },
     {
-      "q": "¿Qué pasa si mis competidores usan bloqueos de Cloudflare o anti-scrapers?",
-      "a": "Nuestro motor utiliza navegación sigilosa (Stealth) con huellas de navegador reales y redes de proxy rotativas. Para el servidor del competidor, las visitas son indistinguibles del tráfico de un cliente normal navegando desde su casa."
+      "q": "¿Tengo que instalar algún programa o extensión en mi computadora?",
+      "a": "No, absolutamente nada. Toda la infraestructura corre en la nube bajo nuestro mantenimiento. Vos y tu equipo solo reciben los avisos directos en Telegram o WhatsApp y acceden a una planilla de Google Sheets que ya conocen y usan todos los días."
+    },
+    {
+      "q": "¿Cómo garantizan la continuidad si un sitio web cambia de diseño?",
+      "a": "Los sitios web evolucionan constantemente. Nuestro servicio incluye el mantenimiento activo de los pipelines: cuando una tienda cambia su maquetación, nuestros ingenieros re-calibran los scripts de extracción para que nunca dejes de recibir tus datos ni se interrumpan tus alertas."
     },
     {
       "q": "¿Cómo funciona la prueba gratuita de 48 horas?",
-      "a": "Nos pasás los enlaces de 3 productos y 3 competidores que quieras vigilar. En menos de 24 horas te dejamos el canal de Telegram configurado enviándote alertas en vivo a tu celular. Sin tarjeta de crédito, sin compromiso y sin contratos obligatorios."
+      "a": "Nos pasás los enlaces de 3 productos o tiendas que quieras vigilar. En menos de 24 horas te dejamos el canal de Telegram configurado enviándote alertas de variaciones en tiempo real a tu celular. Sin tarjeta de crédito, sin compromiso y sin contratos obligatorios."
     },
     {
-      "q": "¿Qué métodos de pago aceptan para los retainers mensuales?",
+      "q": "¿Qué métodos de pago aceptan para proyectos y retainers mensuales?",
       "a": "Aceptamos pagos internacionales a través de Stripe, PayPal, Transferencias bancarias directas de EE.UU. (ACH), transferencias europeas (SEPA) y Criptomonedas estables (USDT/USDC)."
-    },
-    {
-      "q": "¿Puedo cambiar los productos o competidores que monitoreo?",
-      "a": "Sí. Todos los meses podés actualizar la lista de competidores o productos para acompañar el lanzamiento de nuevas temporadas o campañas comerciales de tu negocio."
     }
-  ]
+  ],
+  "footer": {
+    "title": "RADAR B2B · DATA AUTOMATION LAB",
+    "description": "Consultoría e ingeniería de automatización de datos, scraping y monitoreo competitivo. Construido con Python, APIs, automatización en la nube y flujos asistidos por IA. Operado por Walter & equipo especializado."
+  }
 }

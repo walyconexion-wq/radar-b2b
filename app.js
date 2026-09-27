@@ -21,6 +21,7 @@ function initApp(data) {
   renderStats(data.stats);
   renderTelegram(data.telegramDemo, data.contact);
   renderSheets(data.sheetsDemo);
+  renderFrequency(data.frequencyModels);
   renderFeatures(data.features);
   renderServices(data.services, data.contact);
   renderAddons(data.addons);
@@ -133,6 +134,34 @@ function renderSheets(rows) {
         <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold ${r.stockClass}">${r.stock}</span>
       </td>
     </tr>
+  `).join('');
+}
+
+function renderFrequency(models) {
+  const container = document.getElementById('frequency-container');
+  if (!container || !models) return;
+
+  const icons = {
+    'PROGRAMADO': '⏱️',
+    'EVENTOS': '⚡',
+    'TIEMPO REAL': '🔄'
+  };
+
+  container.innerHTML = models.map(m => `
+    <div class="glass-card rounded-3xl p-7 flex flex-col justify-between hover:border-emerald-500/40 transition-all duration-300 group">
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+            ${icons[m.badge] || '📡'}
+          </div>
+          <span class="text-[10px] font-mono tracking-widest text-emerald-400 uppercase bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20 font-bold">
+            ${m.badge}
+          </span>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-2 tracking-tight">${m.title}</h3>
+        <p class="text-xs text-slate-300 leading-relaxed font-light">${m.desc}</p>
+      </div>
+    </div>
   `).join('');
 }
 

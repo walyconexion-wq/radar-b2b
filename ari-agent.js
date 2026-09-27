@@ -24,20 +24,20 @@
   const KNOWLEDGE_BASE = [
     {
       keywords: ['precio', 'costo', 'planes', 'cuanto sale', 'tarifa', 'abono', 'mensualidad', 'pagar'],
-      reply: 'Tenemos 3 planes mensuales adaptados a tu escala comercial:\n\n• **Plan Esencial ($500 USD/mes):** Hasta 5 competidores clave, 2 auditorías diarias y alertas a Telegram.\n• **Plan Pro Dinámico ($650 USD/mes):** Hasta 15 competidores, auditorías cada 2 horas, alertas inmediatas de quiebres de stock y Google Sheets vivo.\n• **Plan Enterprise ($750 USD/mes):** Monitoreo ilimitado, Webhooks a Shopify/WooCommerce y servidores dedicados.\n\n¿Querés que te active la **prueba gratuita de 48 horas** para 3 de tus competidores?'
+      reply: 'Ofrecemos una escalera de soluciones adaptada a tu escala comercial:\n\n• **⚡ Scraper Express ($150 - $350 USD):** Extracción puntual de 1 o 2 sitios web, entrega en 24-48h en CSV/Excel/JSON.\n• **📊 Data Pipeline ($450 setup + $200/mes):** Cañería automatizada y programada con sincronización periódica a Google Sheets o API.\n• **📡 Competitor Radar ($450 - $650 USD/mes):** Servicio estrella Done-for-You. Monitoreo continuo de hasta 15 rivales con alertas a Telegram y Google Sheet vivo.\n• **👑 Intelligence Enterprise ($950 - $1,500+ USD/mes):** Monitoreo a gran escala, repricing inteligente dinámico e integración ERP.\n\n¿Querés que te active la **prueba gratuita de 48 horas en 3 URLs** sin ningún compromiso?'
     },
     {
       keywords: ['prueba', 'gratis', '48 horas', '48hs', 'test', 'demo', 'probar', 'empezar'],
-      reply: '¡Exacto! Podés probar el Radar en **3 tiendas de tu competencia 100% gratis por 48 horas**.\n\nSin tarjetas de crédito, sin contratos y sin instalar nada en tu computadora. Te llegan las alertas a tu Telegram o WhatsApp. ¿Te gustaría dejar tus datos para que lo dejemos conectado hoy mismo?',
+      reply: '¡Exacto! Podés probar el Radar en **3 tiendas o productos de tu interés 100% gratis por 48 horas**.\n\nSin tarjetas de crédito, sin contratos y sin instalar nada en tu computadora. Te llegan las alertas a tu Telegram o WhatsApp. ¿Te gustaría dejar tus datos para que lo dejemos conectado hoy mismo?',
       showForm: true
     },
     {
       keywords: ['como funciona', 'que hace', 'sistema', 'radar', 'servicio', 'que es'],
-      reply: 'El Radar B2B es una **cañería de datos automatizada** que vigila los precios, rebajas y stock de tus rivales todos los días.\n\n1. Nuestros centinelas extraen la data en tiempo real sin ser bloqueados.\n2. Si un rival baja un precio o se queda sin stock, te llega una alerta a Telegram en < 30 segundos.\n3. Tu planilla de Google Sheets se actualiza sola todas las mañanas antes de que abras tu negocio.'
+      reply: 'Convertimos la web en datos estructurados que trabajan para vos:\n\n1. **Extracción Resiliente:** Rastreamos catálogos, precios, stock o leads de los sitios web que definas.\n2. **Automatización:** Los datos se limpian y vuelcan directo a tu Google Sheets o sistema interno sin que tengas que picar datos a mano.\n3. **Alertas Inteligentes:** Si un competidor baja sus precios o entra en quiebre de stock, recibís una alerta inmediata en Telegram para aprovechar la oportunidad.'
     },
     {
-      keywords: ['bloqueo', 'cloudflare', 'ban', 'anti-bot', 'seguridad', 'detectar'],
-      reply: 'Utilizamos tecnología **Stealth de navegación indetectable** con rotación de huellas digitales de navegadores reales y proxys residenciales. Para el servidor del competidor, las visitas son indistinguibles del tráfico de un cliente normal.'
+      keywords: ['bloqueo', 'cloudflare', 'ban', 'anti-bot', 'seguridad', 'detectar', 'resiliente'],
+      reply: 'Implementamos **ingeniería de extracción resiliente** sobre fuentes públicas y accesos autorizados. Gestionamos tasas de solicitud inteligentes y rotación de encabezados para garantizar flujos de datos limpios, estables y sin interrupciones en la entrega.'
     },
     {
       keywords: ['contacto', 'hablar', 'humano', 'walter', 'whatsapp', 'telefono'],
@@ -118,7 +118,7 @@
               💰 Planes y Precios
             </button>
             <button class="ari-chip px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-[11px] transition-colors">
-              🛡️ ¿Cómo evitan bloqueos?
+              🛡️ Extracción Resiliente
             </button>
           </div>
         </div>
