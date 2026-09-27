@@ -32,6 +32,14 @@
               600: '#059669',
               900: '#064e3b',
               950: '#022c22',
+            },
+            cyber: {
+              cyan: '#00F2FE',
+              indigo: '#6366F1',
+              violet: '#8B5CF6',
+              navy: '#060813',
+              card: '#0C1021',
+              border: 'rgba(255, 255, 255, 0.08)'
             }
           }
         }
@@ -39,21 +47,34 @@
     }
   </script>
 
-  <!-- KOKONUT UI & GLOW STYLES -->
+  <!-- DARK SAAS ANALYTICS SYSTEM STYLES -->
   <style>
     body {
-      background-color: #040608;
+      background-color: #060813;
       color: #F8FAFC;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 25%, rgba(6, 182, 212, 0.10) 0%, transparent 45%),
+        radial-gradient(circle at 50% 65%, rgba(99, 102, 241, 0.08) 0%, transparent 50%);
+      background-attachment: fixed;
     }
-    .glass-card {
-      background: rgba(13, 20, 36, 0.65);
+    .dark-saas-panel {
+      background: rgba(12, 16, 33, 0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 35px -10px rgba(99, 102, 241, 0.15);
+    }
+    .dark-saas-card, .glass-card {
+      background: rgba(13, 18, 38, 0.65);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.07);
       position: relative;
       overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .glass-card::before {
+    .dark-saas-card::before, .glass-card::before {
       content: '';
       position: absolute;
       top: var(--mouse-y, -1000px);
@@ -61,35 +82,65 @@
       transform: translate(-50%, -50%);
       width: 380px;
       height: 380px;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.16) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.18) 0%, transparent 70%);
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.3s;
     }
-    .glass-card:hover::before {
+    .dark-saas-card:hover::before, .glass-card:hover::before {
       opacity: 1;
     }
+    .dark-saas-card:hover, .glass-card:hover {
+      border-color: rgba(99, 102, 241, 0.4);
+      box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.2);
+    }
+    .glow-cyan {
+      box-shadow: 0 0 40px -5px rgba(6, 182, 212, 0.25);
+    }
+    .glow-violet {
+      box-shadow: 0 0 40px -5px rgba(99, 102, 241, 0.25);
+    }
     .glow-radar {
-      box-shadow: 0 0 50px -10px rgba(16, 185, 129, 0.22);
+      box-shadow: 0 0 50px -10px rgba(6, 182, 212, 0.22);
     }
     .telegram-bg {
-      background: #152232;
-      border: 1px solid #233549;
+      background: #111a28;
+      border: 1px solid #1f2f45;
+    }
+    .tab-btn {
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: rgba(99, 102, 241, 0.25);
+      color: #ffffff;
+      border-color: rgba(99, 102, 241, 0.6);
+      box-shadow: 0 0 20px -3px rgba(99, 102, 241, 0.4);
+    }
+    .chart-pill {
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .chart-pill.active {
+      background: rgba(0, 242, 254, 0.15) !important;
+      color: #00F2FE !important;
+      border-color: rgba(0, 242, 254, 0.45) !important;
+      box-shadow: 0 0 15px -3px rgba(0, 242, 254, 0.3) !important;
     }
     /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-track { background: #040608; }
-    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+    ::-webkit-scrollbar-track { background: #060813; }
+    ::-webkit-scrollbar-thumb { background: #1e2640; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #313d66; }
   </style>
 </head>
-<body class="font-sans antialiased min-h-screen flex flex-col bg-[#040608] text-slate-100 selection:bg-emerald-500 selection:text-black">
+<body class="font-sans antialiased min-h-screen flex flex-col bg-[#060813] text-slate-100 selection:bg-cyan-400 selection:text-black">
 
   <!-- BACKGROUND DECORATION GRADIENT -->
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-    <div class="absolute -top-[25%] -left-[10%] w-[600px] h-[600px] rounded-full bg-emerald-500/10 blur-[140px]"></div>
-    <div class="absolute top-[40%] -right-[15%] w-[650px] h-[650px] rounded-full bg-teal-500/5 blur-[160px]"></div>
-    <div class="absolute -bottom-[20%] left-[20%] w-[700px] h-[700px] rounded-full bg-emerald-600/5 blur-[180px]"></div>
+    <div class="absolute -top-[25%] -left-[10%] w-[600px] h-[600px] rounded-full bg-indigo-500/10 blur-[140px]"></div>
+    <div class="absolute top-[35%] -right-[15%] w-[650px] h-[650px] rounded-full bg-cyan-500/10 blur-[160px]"></div>
+    <div class="absolute -bottom-[20%] left-[20%] w-[700px] h-[700px] rounded-full bg-violet-600/8 blur-[180px]"></div>
   </div>
 
   <!-- HEADER NAVEGACIÓN -->
@@ -134,16 +185,16 @@
   <main class="flex-1 pt-32 pb-24 px-4 sm:px-6 max-w-7xl mx-auto w-full relative z-10">
 
     <!-- HERO SECTION -->
-    <section class="text-center max-w-4xl mx-auto mb-20 space-y-6">
+    <section class="text-center max-w-5xl mx-auto mb-16 space-y-6">
       
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-mono">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono">
+        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
         <span id="hero-badge">INGENIERÍA DE DATOS & AUTOMATIZACIÓN COMERCIAL · CERO PICAR DATOS A MANO</span>
       </div>
 
       <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.12]">
         <span id="hero-title-1">Convertimos la web en datos</span> <br>
-        <span id="hero-gradient" class="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">que trabajan para vos.</span>
+        <span id="hero-gradient" class="bg-gradient-to-r from-cyan-400 via-indigo-300 to-violet-400 bg-clip-text text-transparent">que trabajan para vos.</span>
       </h1>
 
       <p id="hero-desc" class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed font-light">
@@ -151,12 +202,13 @@
       </p>
 
       <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
-        <a href="#" data-wa-cta target="_blank" rel="noopener noreferrer" class="px-8 py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm shadow-xl shadow-emerald-500/30 transition-all transform hover:scale-105 flex items-center gap-2">
+        <a href="#" data-wa-cta target="_blank" rel="noopener noreferrer" class="px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-950 font-black text-sm shadow-xl shadow-cyan-500/20 transition-all transform hover:scale-105 flex items-center gap-2">
           <span>💬 Probar en 3 URLs Gratis (48hs)</span>
           <span>→</span>
         </a>
-        <a href="#demo" class="px-8 py-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-sm transition-all">
-          Ver Demostración y Planes
+        <a href="#demo" class="px-8 py-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-sm transition-all flex items-center gap-2">
+          <span>Ver Consola en Vivo</span>
+          <span class="text-cyan-400">↓</span>
         </a>
       </div>
 
@@ -166,124 +218,325 @@
       </div>
     </section>
 
-    <!-- STATS STRIP -->
-    <section class="mb-24">
-      <div id="stats-container" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <!-- Injected from content.json -->
-      </div>
-    </section>
-
-    <!-- LIVE DEMO SECTION -->
-    <section id="demo" class="mb-28">
-      <div class="text-center max-w-2xl mx-auto mb-12">
-        <span class="text-xs font-mono text-emerald-400 tracking-widest uppercase">EVIDENCIA REAL EN TRINCHERA</span>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Así Funciona tu Alerta Diaria</h2>
-        <p class="text-xs sm:text-sm text-slate-400 mt-2">Sin ingresar a paneles complejos: la data llega a tu celular y a tu Google Sheet lista para actuar.</p>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <!-- HERO SHOWCASE CONSOLE (DARK SAAS ANALYTICS PLATFORM) -->
+    <section id="demo" class="mb-28 max-w-6xl mx-auto">
+      
+      <!-- WINDOW CONTAINER -->
+      <div class="dark-saas-panel rounded-3xl p-6 sm:p-8 glow-violet relative">
         
-        <!-- CELULAR TELEGRAM MOCKUP (5 COLUMNAS) -->
-        <div class="lg:col-span-5 glass-card rounded-3xl p-6 glow-radar flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
-              <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base font-mono">
-                  🤖
-                </div>
-                <div>
-                  <div class="font-bold text-sm text-white" id="tele-bot-name">Waly_radar_b2b_bot</div>
-                  <div class="text-[10px] text-emerald-400 font-mono">bot · En línea 24/7</div>
-                </div>
-              </div>
-              <span class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[10px] font-bold">PUSH DIRECTO</span>
+        <!-- HEADER BAR OF CONSOLE -->
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-white/[0.08] mb-6">
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-1.5">
+              <span class="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
+              <span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
+              <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
             </div>
-
-            <!-- Burbuja de Mensaje Exacta -->
-            <div id="telegram-live-bubble" class="telegram-bg rounded-2xl p-4 text-xs font-mono space-y-3 shadow-2xl text-slate-200 transition-all duration-300">
-              <div class="text-rose-400 font-bold tracking-wider flex items-center gap-1.5">
-                <span>🚨</span> <span id="tele-alert-tag">ALERTA RADAR B2B · COMPETITOR INTEL</span>
-              </div>
-              <div class="border-t border-white/10 pt-2.5 space-y-1 text-[11px]">
-                <div>🏷️ <b>Producto:</b> <span id="tele-product" class="text-slate-100">Notebook Lenovo IdeaPad 15.6 FHD Core i5 16GB</span></div>
-                <div>🏪 <b>Tienda:</b> <span id="tele-store" class="text-slate-300">Amazon Retail / Competidor Líder</span></div>
-                <div class="text-emerald-400 font-bold">📉 <b>Movimiento:</b> <span id="tele-movement">BAJA DE PRECIO AGRESIVA (-18.0%)</span></div>
-              </div>
-              <div class="bg-black/40 p-3 rounded-xl border border-white/5 space-y-1 text-[11px]">
-                <div class="text-slate-400">💵 Precio Anterior: <span id="tele-old-price">$549.99 USD</span></div>
-                <div class="text-amber-300 font-bold text-xs">🔥 Precio Actual: <span id="tele-new-price">$450.99 USD</span></div>
-                <div class="text-emerald-300">💰 Diferencia: <span id="tele-diff">-$99.00 USD</span></div>
-                <div>📦 Stock: <span id="tele-stock" class="text-emerald-400 font-bold">✅ DISPONIBLE</span></div>
-                <div class="text-[10px] text-slate-500">⏰ Auditoría: <span id="tele-time">Hoy 07:14 hs</span></div>
-              </div>
-              <div class="pt-1 flex items-center justify-between text-[11px]">
-                <span class="text-sky-400 underline cursor-pointer hover:text-sky-300">🔗 Ver Publicación en Tienda Rival</span>
-                <span class="text-[9px] text-slate-500">07:14 ✓✓</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-5 pt-4 border-t border-white/5 flex items-center justify-between">
-            <button id="simulate-alert-btn" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-emerald-300 transition-all">
-              ⚡ Simular Otra Alerta
-            </button>
-            <span class="text-[10px] text-slate-400 font-mono">Alerta Inmediata</span>
-          </div>
-        </div>
-
-        <!-- TABLERO GOOGLE SHEETS LIVE PREVIEW (7 COLUMNAS) -->
-        <div class="lg:col-span-7 glass-card rounded-3xl p-6 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
-              <div class="flex items-center gap-3">
-                <span class="text-2xl">📊</span>
-                <div>
-                  <h3 class="font-bold text-sm text-white">Google Sheets · Sincronización Automática</h3>
-                  <p class="text-[11px] text-slate-400">Tu equipo abre el archivo y tiene el reporte listo cada mañana a las 8 AM</p>
-                </div>
-              </div>
-              <span class="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-300 font-mono text-[10px] border border-emerald-500/20 font-bold">
-                AUTO-REFRESH
+            <div class="h-4 w-[1px] bg-white/10 mx-1"></div>
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-xs font-bold text-white tracking-wider">RADAR ANALYTICS PLATFORM</span>
+              <span class="px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 font-mono text-[9px] border border-cyan-500/30 flex items-center gap-1 font-bold">
+                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                v3.0 LIVE
               </span>
             </div>
+          </div>
 
-            <!-- Tabla Visual Dinámica -->
-            <div class="overflow-x-auto rounded-xl border border-white/10 bg-black/60 shadow-inner">
-              <table class="w-full text-left text-xs font-mono">
-                <thead class="bg-slate-900/90 text-slate-400 border-b border-white/10">
-                  <tr>
-                    <th class="p-3">Hora</th>
-                    <th class="p-3">Producto</th>
-                    <th class="p-3">Tienda Rival</th>
-                    <th class="p-3">Precio</th>
-                    <th class="p-3">Variación</th>
-                    <th class="p-3">Stock</th>
-                  </tr>
-                </thead>
-                <tbody id="sheets-tbody" class="divide-y divide-white/5">
-                  <!-- Injected from content.json -->
-                </tbody>
-              </table>
+          <!-- TABS SWITCHER -->
+          <div class="flex items-center gap-1.5 bg-[#080C1A] p-1 rounded-2xl border border-white/10 text-xs font-medium">
+            <button id="tab-btn-chart" class="tab-btn active px-4 py-2 rounded-xl flex items-center gap-2 text-slate-300">
+              <span>📈</span>
+              <span class="hidden sm:inline">Curvas de Mercado</span>
+            </button>
+            <button id="tab-btn-telegram" class="tab-btn px-4 py-2 rounded-xl flex items-center gap-2 text-slate-300">
+              <span>🤖</span>
+              <span class="hidden sm:inline">Alerta Telegram</span>
+            </button>
+            <button id="tab-btn-sheets" class="tab-btn px-4 py-2 rounded-xl flex items-center gap-2 text-slate-300">
+              <span>📊</span>
+              <span class="hidden sm:inline">Google Sheets</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 KPI CARDS STRIP -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          
+          <!-- KPI 1 -->
+          <div class="dark-saas-card rounded-2xl p-4.5 group">
+            <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium mb-1">
+              <span>SKUs Monitoreados</span>
+              <span class="px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-300 font-mono text-[10px] font-bold">+12.4% hoy</span>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-white font-mono tracking-tight mb-2">
+              1,420
+            </div>
+            <svg class="w-full h-8 stroke-cyan-400" fill="none" viewBox="0 0 100 25">
+              <path d="M0,20 Q15,10 30,15 T60,8 T80,14 T100,5" stroke-width="2" stroke-linecap="round"/>
+              <path d="M0,20 Q15,10 30,15 T60,8 T80,14 T100,5 L100,25 L0,25 Z" fill="url(#cyan-grad)" opacity="0.15"/>
+              <defs>
+                <linearGradient id="cyan-grad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#00F2FE"/>
+                  <stop offset="100%" stop-color="#00F2FE" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+
+          <!-- KPI 2 -->
+          <div class="dark-saas-card rounded-2xl p-4.5 group">
+            <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium mb-1">
+              <span>Variaciones de Precio</span>
+              <span class="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-300 font-mono text-[10px] font-bold">-18.0% max</span>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-white font-mono tracking-tight mb-2">
+              84 <span class="text-xs font-normal text-slate-400">alertas</span>
+            </div>
+            <svg class="w-full h-8 stroke-emerald-400" fill="none" viewBox="0 0 100 25">
+              <path d="M0,8 Q20,18 40,10 T70,22 T100,7" stroke-width="2" stroke-linecap="round"/>
+              <path d="M0,8 Q20,18 40,10 T70,22 T100,7 L100,25 L0,25 Z" fill="url(#emerald-grad)" opacity="0.15"/>
+              <defs>
+                <linearGradient id="emerald-grad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#10B981"/>
+                  <stop offset="100%" stop-color="#10B981" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+
+          <!-- KPI 3 -->
+          <div class="dark-saas-card rounded-2xl p-4.5 group">
+            <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium mb-1">
+              <span>Quiebres de Stock Rival</span>
+              <span class="px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-300 font-mono text-[10px] font-bold">ALERTA SNIPER</span>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-white font-mono tracking-tight mb-2">
+              14 <span class="text-xs font-normal text-slate-400">agotados</span>
+            </div>
+            <svg class="w-full h-8 stroke-rose-400" fill="none" viewBox="0 0 100 25">
+              <path d="M0,18 Q25,22 50,14 T75,8 T100,3" stroke-width="2" stroke-linecap="round"/>
+              <path d="M0,18 Q25,22 50,14 T75,8 T100,3 L100,25 L0,25 Z" fill="url(#rose-grad)" opacity="0.15"/>
+              <defs>
+                <linearGradient id="rose-grad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#F43F5E"/>
+                  <stop offset="100%" stop-color="#F43F5E" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+
+          <!-- KPI 4 -->
+          <div class="dark-saas-card rounded-2xl p-4.5 group">
+            <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium mb-1">
+              <span>Margen Protegido</span>
+              <span class="px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-300 font-mono text-[10px] font-bold">ROI 28x</span>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-white font-mono tracking-tight mb-2">
+              +$18,450 <span class="text-xs font-normal text-slate-400">USD</span>
+            </div>
+            <svg class="w-full h-8 stroke-indigo-400" fill="none" viewBox="0 0 100 25">
+              <path d="M0,22 Q20,16 40,18 T65,8 T85,12 T100,4" stroke-width="2" stroke-linecap="round"/>
+              <path d="M0,22 Q20,16 40,18 T65,8 T85,12 T100,4 L100,25 L0,25 Z" fill="url(#indigo-grad)" opacity="0.15"/>
+              <defs>
+                <linearGradient id="indigo-grad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#6366F1"/>
+                  <stop offset="100%" stop-color="#6366F1" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+
+        </div>
+
+        <!-- TAB CONTENT AREA -->
+        <div class="min-h-[360px]">
+          
+          <!-- TAB 1: CHART ANALYTICS VIEW -->
+          <div id="view-chart" class="space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-3 bg-black/40 p-3.5 rounded-2xl border border-white/5">
+              <div class="flex items-center gap-3">
+                <span class="text-xs font-mono text-slate-400">SKU Activo:</span>
+                <span id="chart-product-title" class="font-bold text-xs text-white">Notebook Lenovo IdeaPad 15.6 FHD Core i5 16GB</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="inline-flex items-center gap-1.5 text-[11px] font-mono text-rose-400">
+                  <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Competidor Líder
+                </span>
+                <span class="inline-flex items-center gap-1.5 text-[11px] font-mono text-cyan-400 ml-3">
+                  <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span> Tu Precio Recomendado
+                </span>
+              </div>
+            </div>
+
+            <!-- CURVE GRAPH CONTAINER -->
+            <div class="relative bg-[#070B18] rounded-2xl p-6 border border-white/[0.06] overflow-hidden">
+              <div class="flex justify-between text-[11px] font-mono text-slate-500 mb-2">
+                <span>Día 1</span>
+                <span>Día 7</span>
+                <span>Día 14</span>
+                <span>Día 21</span>
+                <span class="text-rose-400 font-bold">Hoy 07:14 hs (Caída -18%)</span>
+              </div>
+
+              <!-- Interactive Multi-Curve SVG -->
+              <div class="relative h-56 w-full">
+                <svg class="w-full h-full" viewBox="0 0 600 200" preserveAspectRatio="none">
+                  <!-- Grid horizontal lines -->
+                  <line x1="0" y1="40" x2="600" y2="40" stroke="rgba(255,255,255,0.05)" stroke-dasharray="4"/>
+                  <line x1="0" y1="90" x2="600" y2="90" stroke="rgba(255,255,255,0.05)" stroke-dasharray="4"/>
+                  <line x1="0" y1="140" x2="600" y2="140" stroke="rgba(255,255,255,0.05)" stroke-dasharray="4"/>
+
+                  <!-- Curve 1: Competitor Drop (Rose) -->
+                  <path id="curve-competitor" d="M 0,50 Q 150,55 300,52 T 450,60 T 550,150 T 600,155" fill="none" stroke="#F43F5E" stroke-width="3" stroke-linecap="round" class="transition-all duration-500 ease-out"/>
+                  <!-- Area under competitor curve -->
+                  <path id="curve-competitor-area" d="M 0,50 Q 150,55 300,52 T 450,60 T 550,150 T 600,155 L 600,200 L 0,200 Z" fill="url(#chart-rose-grad)" opacity="0.12" class="transition-all duration-500 ease-out"/>
+
+                  <!-- Curve 2: Your Target Price (Cyan) -->
+                  <path id="curve-ours" d="M 0,90 Q 150,88 300,90 T 450,92 T 550,105 T 600,110" fill="none" stroke="#00F2FE" stroke-width="2.5" stroke-dasharray="6" stroke-linecap="round" class="transition-all duration-500 ease-out"/>
+
+                  <!-- Interactive Alert Point -->
+                  <circle id="alert-dot-ping" cx="550" cy="150" r="7" fill="#F43F5E" stroke="#ffffff" stroke-width="2" class="animate-ping transition-all duration-500" opacity="0.75"/>
+                  <circle id="alert-dot" cx="550" cy="150" r="5" fill="#F43F5E" stroke="#ffffff" stroke-width="2" class="transition-all duration-500"/>
+
+                  <defs>
+                    <linearGradient id="chart-rose-grad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#F43F5E"/>
+                      <stop offset="100%" stop-color="#F43F5E" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+
+                <!-- Floating Tooltip Box over SVG Point -->
+                <div id="chart-tooltip-box" class="absolute top-8 right-2 sm:right-14 bg-[#0E1528] border border-rose-500/40 p-3 rounded-xl shadow-2xl text-xs font-mono space-y-1 transition-all duration-300">
+                  <div class="text-rose-400 font-bold flex items-center gap-1.5">
+                    <span>🚨</span> <span id="tooltip-alert-title">BAJA DETECTADA (-$99.00 USD)</span>
+                  </div>
+                  <div class="text-slate-300 text-[11px]" id="tooltip-alert-desc">Rival bajó de <b>$549.99</b> a <b class="text-amber-300">$450.99</b></div>
+                  <div class="text-[10px] text-cyan-300" id="tooltip-alert-latency">⚡ Alerta enviada a Telegram en 24s</div>
+                </div>
+              </div>
+
+              <!-- Product selector pills -->
+              <div class="mt-4 pt-4 border-t border-white/[0.06] flex flex-wrap items-center justify-between gap-3 text-xs">
+                <span class="text-slate-400 font-mono text-[11px]">Seleccionar producto para simular:</span>
+                <div class="flex flex-wrap gap-2" id="chart-product-pills">
+                  <button data-sku="lenovo" class="chart-pill active px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 text-xs font-mono font-bold">
+                    Lenovo IdeaPad 15.6"
+                  </button>
+                  <button data-sku="tv" class="chart-pill px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-xs font-mono">
+                    Smart TV 50" 4K UHD
+                  </button>
+                  <button data-sku="headphone" class="chart-pill px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-xs font-mono">
+                    Auriculares Carbon Elite
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="mt-6 p-4 rounded-2xl bg-emerald-950/30 border border-emerald-500/20 text-xs flex flex-wrap items-center justify-between gap-3 text-slate-300">
-            <div class="flex items-center gap-2">
-              <span>💡</span>
-              <span>Compatible con <b>PowerBI, Zapier, Webhooks y ERPs internos</b>.</span>
+          <!-- TAB 2: TELEGRAM VIEW (Hidden by default, toggleable) -->
+          <div id="view-telegram" class="hidden">
+            <div class="max-w-2xl mx-auto dark-saas-card rounded-3xl p-6 glow-radar">
+              <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-base font-mono">
+                    🤖
+                  </div>
+                  <div>
+                    <div class="font-bold text-sm text-white" id="tele-bot-name">Waly_radar_b2b_bot</div>
+                    <div class="text-[10px] text-cyan-400 font-mono">bot · En línea 24/7</div>
+                  </div>
+                </div>
+                <span class="px-2.5 py-1 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[10px] font-bold">PUSH DIRECTO</span>
+              </div>
+
+              <!-- Burbuja de Mensaje Exacta -->
+              <div id="telegram-live-bubble" class="telegram-bg rounded-2xl p-4 text-xs font-mono space-y-3 shadow-2xl text-slate-200 transition-all duration-300">
+                <div class="text-rose-400 font-bold tracking-wider flex items-center gap-1.5">
+                  <span>🚨</span> <span id="tele-alert-tag">ALERTA RADAR B2B · CAMBIO DE PRECIO DETECTADO</span>
+                </div>
+                <div class="border-t border-white/10 pt-2.5 space-y-1 text-[11px]">
+                  <div>🏷️ <b>Producto:</b> <span id="tele-product" class="text-slate-100">Notebook Lenovo IdeaPad 15.6 FHD Core i5 16GB</span></div>
+                  <div>🏪 <b>Tienda:</b> <span id="tele-store" class="text-slate-300">Amazon Retail / Competidor Líder</span></div>
+                  <div class="text-emerald-400 font-bold">📉 <b>Movimiento:</b> <span id="tele-movement">BAJA DE PRECIO AGRESIVA (-18.0%)</span></div>
+                </div>
+                <div class="bg-black/40 p-3 rounded-xl border border-white/5 space-y-1 text-[11px]">
+                  <div class="text-slate-400">💵 Precio Anterior: <span id="tele-old-price">$549.99 USD</span></div>
+                  <div class="text-amber-300 font-bold text-xs">🔥 Precio Actual: <span id="tele-new-price">$450.99 USD</span></div>
+                  <div class="text-emerald-300">💰 Diferencia: <span id="tele-diff">-$99.00 USD</span></div>
+                  <div>📦 Stock: <span id="tele-stock" class="text-emerald-400 font-bold">✅ DISPONIBLE</span></div>
+                  <div class="text-[10px] text-slate-500">⏰ Auditoría: <span id="tele-time">Hoy 07:14 hs</span></div>
+                </div>
+                <div class="pt-1 flex items-center justify-between text-[11px]">
+                  <span class="text-sky-400 underline cursor-pointer hover:text-sky-300">🔗 Ver Publicación en Tienda Rival</span>
+                  <span class="text-[9px] text-slate-500">07:14 ✓✓</span>
+                </div>
+              </div>
+
+              <div class="mt-5 pt-4 border-t border-white/5 flex items-center justify-between">
+                <button id="simulate-alert-btn" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-cyan-300 transition-all">
+                  ⚡ Simular Otra Alerta
+                </button>
+                <span class="text-[10px] text-slate-400 font-mono">Alerta en Segundos</span>
+              </div>
             </div>
-            <span class="text-emerald-400 font-bold font-mono">100% Manos Libres</span>
+          </div>
+
+          <!-- TAB 3: GOOGLE SHEETS VIEW (Hidden by default, toggleable) -->
+          <div id="view-sheets" class="hidden">
+            <div class="dark-saas-card rounded-2xl p-6">
+              <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
+                <div class="flex items-center gap-3">
+                  <span class="text-2xl">📊</span>
+                  <div>
+                    <h3 class="font-bold text-sm text-white">Google Sheets · Sincronización Automática</h3>
+                    <p class="text-[11px] text-slate-400">Tu equipo abre el archivo y tiene el reporte listo cada mañana a las 8 AM</p>
+                  </div>
+                </div>
+                <span class="px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-300 font-mono text-[10px] border border-cyan-500/20 font-bold">
+                  AUTO-REFRESH
+                </span>
+              </div>
+
+              <!-- Tabla Visual Dinámica -->
+              <div class="overflow-x-auto rounded-xl border border-white/10 bg-black/60 shadow-inner">
+                <table class="w-full text-left text-xs font-mono">
+                  <thead class="bg-slate-900/90 text-slate-400 border-b border-white/10">
+                    <tr>
+                      <th class="p-3">Hora</th>
+                      <th class="p-3">Producto</th>
+                      <th class="p-3">Tienda Rival</th>
+                      <th class="p-3">Precio</th>
+                      <th class="p-3">Variación</th>
+                      <th class="p-3">Stock</th>
+                    </tr>
+                  </thead>
+                  <tbody id="sheets-tbody" class="divide-y divide-white/5">
+                    <!-- Injected from content.json -->
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="mt-6 p-4 rounded-2xl bg-cyan-950/20 border border-cyan-500/20 text-xs flex flex-wrap items-center justify-between gap-3 text-slate-300">
+                <div class="flex items-center gap-2">
+                  <span>💡</span>
+                  <span>Compatible con <b>PowerBI, Zapier, Webhooks y ERPs internos</b>.</span>
+                </div>
+                <span class="text-cyan-400 font-bold font-mono">100% Manos Libres</span>
+              </div>
+            </div>
           </div>
 
         </div>
 
       </div>
+
     </section>
 
     <!-- FREQUENCY ARCHITECTURE SECTION -->
     <section id="frecuencias" class="mb-28">
       <div class="text-center max-w-2xl mx-auto mb-12">
-        <span class="text-xs font-mono text-emerald-400 tracking-widest uppercase">ARQUITECTURA DE ENTREGA</span>
+        <span class="text-xs font-mono text-cyan-400 tracking-widest uppercase">ARQUITECTURA DE ENTREGA</span>
         <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Tres Modelos de Frecuencia Adaptados a tu Negocio</h2>
         <p class="text-xs sm:text-sm text-slate-400 mt-2">Desde auditorías programadas en planillas hasta flujos de eventos inmediatos para tu equipo y tus sistemas.</p>
       </div>
@@ -295,9 +548,9 @@
 
     <!-- CALCULADORA ROI INTERACTIVA -->
     <section id="calculadora" class="mb-28">
-      <div class="glass-card rounded-3xl p-8 sm:p-10 border border-emerald-500/30 glow-radar max-w-4xl mx-auto">
+      <div class="dark-saas-panel rounded-3xl p-8 sm:p-10 border border-cyan-500/30 glow-cyan max-w-4xl mx-auto">
         <div class="text-center max-w-xl mx-auto mb-8">
-          <span class="text-xs font-mono text-emerald-400 tracking-widest uppercase">CALCULADORA DE RIESGO COMERCIAL</span>
+          <span class="text-xs font-mono text-cyan-400 tracking-widest uppercase">CALCULADORA DE RIESGO COMERCIAL</span>
           <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">¿Cuánto margen estás perdiendo por no vigilar a tus competidores?</h2>
           <p class="text-xs text-slate-400 mt-2">Los e-commerce pierden entre un 3% y un 6% de su facturación bruta por no reaccionar a tiempo a ofertas o quiebres de stock del rival.</p>
         </div>
@@ -306,9 +559,9 @@
           <div>
             <div class="flex justify-between items-center text-xs font-mono text-slate-300 mb-2">
               <span>Facturación mensual aproximada de tu tienda:</span>
-              <span id="calc-revenue-val" class="text-emerald-400 font-bold text-sm">$30,000 USD / mes</span>
+              <span id="calc-revenue-val" class="text-cyan-400 font-bold text-sm">$30,000 USD / mes</span>
             </div>
-            <input id="calc-slider" type="range" min="10000" max="150000" step="5000" value="30000" class="w-full accent-emerald-500 bg-slate-800 h-2 rounded-lg cursor-pointer">
+            <input id="calc-slider" type="range" min="10000" max="150000" step="5000" value="30000" class="w-full accent-cyan-400 bg-slate-800 h-2 rounded-lg cursor-pointer">
             <div class="flex justify-between text-[10px] text-slate-500 font-mono mt-1">
               <span>$10,000 USD</span>
               <span>$75,000 USD</span>
@@ -322,9 +575,9 @@
               <div id="calc-loss-val" class="text-2xl sm:text-3xl font-black font-mono text-rose-400">-$1,350 USD</div>
               <div class="text-[10px] text-slate-400 mt-1">Ventas perdidas y clientes que se van al rival</div>
             </div>
-            <div class="p-4 rounded-2xl bg-emerald-950/30 border border-emerald-500/30 text-center">
-              <div class="text-[11px] text-emerald-300 font-mono mb-1">Recuperación mensual con Radar B2B:</div>
-              <div id="calc-recovery-val" class="text-2xl sm:text-3xl font-black font-mono text-emerald-400">+$1,148 USD</div>
+            <div class="p-4 rounded-2xl bg-cyan-950/30 border border-cyan-500/30 text-center">
+              <div class="text-[11px] text-cyan-300 font-mono mb-1">Recuperación mensual con Radar B2B:</div>
+              <div id="calc-recovery-val" class="text-2xl sm:text-3xl font-black font-mono text-cyan-400">+$1,148 USD</div>
               <div class="text-[10px] text-slate-400 mt-1">El servicio se paga solo con 2 o 3 alertas aprovechadas</div>
             </div>
           </div>
@@ -335,7 +588,7 @@
     <!-- FEATURES SECTION (LAUNCH UI STYLE) -->
     <section id="como-funciona" class="mb-28">
       <div class="text-center max-w-2xl mx-auto mb-12">
-        <span class="text-xs font-mono text-emerald-400 tracking-widest uppercase">INGENIERÍA DE DATOS & INTEGRACIONES</span>
+        <span class="text-xs font-mono text-cyan-400 tracking-widest uppercase">INGENIERÍA DE DATOS & INTEGRACIONES</span>
         <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Convertimos la Web en tu Base de Datos Central</h2>
         <p class="text-xs sm:text-sm text-slate-400 mt-2">Pipelines resilientes en Python, automatización en la nube y sincronización directa con tus sistemas.</p>
       </div>
@@ -348,7 +601,7 @@
     <!-- PRICING SERVICES (LAUNCH UI / KOKONUT STYLE) -->
     <section id="servicios" class="mb-28">
       <div class="text-center max-w-2xl mx-auto mb-12">
-        <span class="text-xs font-mono text-emerald-400 tracking-widest uppercase">ESCALERA DE VALOR Y SOLUCIONES</span>
+        <span class="text-xs font-mono text-cyan-400 tracking-widest uppercase">ESCALERA DE VALOR Y SOLUCIONES</span>
         <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Desde Proyectos Puntuales hasta Infraestructura Dedicada</h2>
         <p class="text-xs sm:text-sm text-slate-400 mt-2">Soluciones adaptadas al tamaño de tu operación comercial. Sin sorpresas ni comisiones sobre ventas.</p>
       </div>
@@ -358,7 +611,7 @@
       </div>
 
       <!-- ADDONS & SÚPER ANZUELOS -->
-      <div class="glass-card rounded-3xl p-6 sm:p-8 max-w-4xl mx-auto">
+      <div class="dark-saas-card rounded-3xl p-6 sm:p-8 max-w-4xl mx-auto border border-white/10">
         <div class="flex items-center gap-3 mb-6">
           <span class="text-2xl">🧲</span>
           <div>
@@ -376,7 +629,7 @@
     <!-- FAQ SECTION -->
     <section id="faq" class="mb-28 max-w-3xl mx-auto">
       <div class="text-center mb-10">
-        <span class="text-xs font-mono text-emerald-400 tracking-widest uppercase">DUDAS RESUELTAS</span>
+        <span class="text-xs font-mono text-cyan-400 tracking-widest uppercase">DUDAS RESUELTAS</span>
         <h2 class="text-3xl font-extrabold text-white mt-1">Preguntas Frecuentes</h2>
       </div>
 
@@ -386,9 +639,9 @@
     </section>
 
     <!-- FINAL LEAD MAGNET CTA -->
-    <section class="glass-card rounded-3xl p-8 sm:p-14 text-center max-w-4xl mx-auto border border-emerald-500/50 glow-radar">
+    <section class="dark-saas-panel rounded-3xl p-8 sm:p-14 text-center max-w-4xl mx-auto border border-cyan-500/40 glow-cyan">
       <div class="max-w-2xl mx-auto space-y-5">
-        <span class="inline-block px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-mono text-xs font-bold border border-emerald-500/20 uppercase tracking-widest">
+        <span class="inline-block px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 font-mono text-xs font-bold border border-cyan-500/20 uppercase tracking-widest">
           GARANTÍA DE PRUEBA 100% GRATIS
         </span>
         <h2 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">
@@ -399,7 +652,7 @@
         </p>
 
         <div class="pt-4 flex flex-wrap items-center justify-center gap-4">
-          <a href="#" data-wa-cta target="_blank" rel="noopener noreferrer" class="px-9 py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-base shadow-2xl shadow-emerald-500/30 transition-all transform hover:scale-105 flex items-center gap-2">
+          <a href="#" data-wa-cta target="_blank" rel="noopener noreferrer" class="px-9 py-4 rounded-2xl bg-gradient-to-r from-cyan-500 via-teal-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-950 font-black text-base shadow-2xl shadow-cyan-500/30 transition-all transform hover:scale-105 flex items-center gap-2">
             <span>💬 Solicitar Prueba Gratis por WhatsApp</span>
             <span>→</span>
           </a>

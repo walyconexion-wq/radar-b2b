@@ -1,6 +1,6 @@
 /**
  * RADAR B2B - CLIENT ENGINE & DYNAMIC RENDERER
- * Architecture: Landy JSON Pattern + Kokonut UI Micro-interactions
+ * Architecture: Dark SaaS Analytics Platform + Landy JSON Pattern + Kokonut UI Micro-interactions
  * Authors: Walter & Luz (Antigravity Ops)
  */
 
@@ -26,6 +26,8 @@ function initApp(data) {
   renderServices(data.services, data.contact);
   renderAddons(data.addons);
   renderFaq(data.faq);
+  initDashboardTabs();
+  initChartPills();
   initKokonutGlow();
   initCalculator();
   initTelegramSimulator();
@@ -78,8 +80,8 @@ function renderStats(stats) {
   if (!container || !stats) return;
 
   container.innerHTML = stats.map(s => `
-    <div class="glass-card rounded-2xl p-5 text-center relative overflow-hidden group">
-      <div class="text-3xl sm:text-4xl font-black text-white font-mono tracking-tight bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent mb-1">
+    <div class="dark-saas-card rounded-2xl p-5 text-center relative overflow-hidden group">
+      <div class="text-3xl sm:text-4xl font-black text-white font-mono tracking-tight bg-gradient-to-r from-cyan-400 to-indigo-300 bg-clip-text text-transparent mb-1">
         ${s.value}
       </div>
       <div class="text-xs text-slate-400 font-medium">
@@ -148,13 +150,13 @@ function renderFrequency(models) {
   };
 
   container.innerHTML = models.map(m => `
-    <div class="glass-card rounded-3xl p-7 flex flex-col justify-between hover:border-emerald-500/40 transition-all duration-300 group">
+    <div class="dark-saas-card rounded-3xl p-7 flex flex-col justify-between hover:border-cyan-500/40 transition-all duration-300 group">
       <div>
         <div class="flex items-center justify-between mb-4">
-          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+          <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
             ${icons[m.badge] || '📡'}
           </div>
-          <span class="text-[10px] font-mono tracking-widest text-emerald-400 uppercase bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20 font-bold">
+          <span class="text-[10px] font-mono tracking-widest text-cyan-400 uppercase bg-cyan-500/10 px-2.5 py-0.5 rounded-full border border-cyan-500/20 font-bold">
             ${m.badge}
           </span>
         </div>
@@ -170,12 +172,12 @@ function renderFeatures(features) {
   if (!container || !features) return;
 
   container.innerHTML = features.map(f => `
-    <div class="glass-card rounded-3xl p-6 sm:p-8 flex flex-col justify-between group hover:border-emerald-500/40 transition-all duration-300">
+    <div class="dark-saas-card rounded-3xl p-6 sm:p-8 flex flex-col justify-between group hover:border-cyan-500/40 transition-all duration-300">
       <div class="space-y-4">
-        <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+        <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
           ${f.icon}
         </div>
-        <span class="inline-block text-[10px] font-mono tracking-widest text-emerald-400 uppercase bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+        <span class="inline-block text-[10px] font-mono tracking-widest text-cyan-400 uppercase bg-cyan-500/10 px-2.5 py-0.5 rounded-full border border-cyan-500/20">
           ${f.badge}
         </span>
         <h3 class="text-lg font-bold text-white tracking-tight">${f.title}</h3>
@@ -194,15 +196,15 @@ function renderServices(services, contact) {
   container.innerHTML = services.map(s => {
     const isPop = s.popular;
     const borderStyle = isPop 
-      ? 'border-emerald-500/50 shadow-2xl shadow-emerald-500/10 relative scale-[1.02]' 
+      ? 'border-cyan-500/50 shadow-2xl shadow-cyan-500/15 relative scale-[1.02] bg-[#0E1328]/80' 
       : 'border-white/10 hover:border-white/20';
     const msg = encodeURIComponent(`Hola Walter! Me interesa contratar el ${s.title} (${s.price} ${s.period}).`);
 
     return `
-      <div class="glass-card rounded-3xl p-7 flex flex-col justify-between ${borderStyle} transition-all duration-300">
+      <div class="dark-saas-card rounded-3xl p-7 flex flex-col justify-between ${borderStyle} transition-all duration-300">
         <div>
           ${isPop ? `
-            <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-emerald-500 text-slate-950 font-bold font-mono text-[10px] tracking-wider uppercase shadow-lg shadow-emerald-500/40">
+            <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-cyan-500 to-indigo-500 text-slate-950 font-bold font-mono text-[10px] tracking-wider uppercase shadow-lg shadow-cyan-500/30">
               ${s.badge}
             </div>
           ` : ''}
@@ -224,14 +226,14 @@ function renderServices(services, contact) {
               <span class="text-3xl font-black text-white font-mono">${s.price}</span>
               <span class="text-xs text-slate-400">${s.period}</span>
             </div>
-            <div class="text-[11px] text-emerald-400/90 font-mono mt-1">${s.setup}</div>
+            <div class="text-[11px] text-cyan-400/90 font-mono mt-1">${s.setup}</div>
           </div>
 
           <div class="space-y-2.5 mb-8">
             <div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">Incluye:</div>
             ${s.features.map(feat => `
               <div class="flex items-start gap-2.5 text-xs text-slate-300">
-                <span class="text-emerald-400 font-bold">✓</span>
+                <span class="text-cyan-400 font-bold">✓</span>
                 <span>${feat}</span>
               </div>
             `).join('')}
@@ -240,7 +242,7 @@ function renderServices(services, contact) {
 
         <a href="${waBase}${msg}" target="_blank" rel="noopener noreferrer" class="w-full py-3.5 px-4 rounded-xl text-center font-bold text-xs transition-all ${
           isPop 
-            ? 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-lg shadow-emerald-500/20 transform hover:scale-[1.02]' 
+            ? 'bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-950 shadow-lg shadow-cyan-500/20 transform hover:scale-[1.02]' 
             : 'bg-white/5 hover:bg-white/10 text-white border border-white/10'
         }">
           ${s.cta}
@@ -255,12 +257,12 @@ function renderAddons(addons) {
   if (!container || !addons) return;
 
   container.innerHTML = addons.map(a => `
-    <div class="p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-emerald-500/20 transition-colors flex items-center justify-between gap-4">
+    <div class="dark-saas-card p-4 rounded-2xl border border-white/5 hover:border-cyan-500/30 transition-all flex items-center justify-between gap-4 group">
       <div>
         <div class="font-bold text-xs text-white">${a.title}</div>
         <div class="text-[11px] text-slate-400 mt-0.5">${a.desc}</div>
       </div>
-      <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-300 font-mono text-xs font-bold whitespace-nowrap border border-emerald-500/20">
+      <span class="px-2.5 py-1 rounded-lg bg-cyan-500/10 text-cyan-300 font-mono text-xs font-bold whitespace-nowrap border border-cyan-500/20">
         ${a.price}
       </span>
     </div>
@@ -272,10 +274,10 @@ function renderFaq(faq) {
   if (!container || !faq) return;
 
   container.innerHTML = faq.map((item, idx) => `
-    <details class="glass-card rounded-2xl group border border-white/5 hover:border-white/10 transition-all overflow-hidden" ${idx === 0 ? 'open' : ''}>
+    <details class="dark-saas-card rounded-2xl group border border-white/5 hover:border-cyan-500/20 transition-all overflow-hidden" ${idx === 0 ? 'open' : ''}>
       <summary class="p-5 text-sm font-semibold text-white flex items-center justify-between cursor-pointer select-none">
         <span>${item.q}</span>
-        <span class="text-emerald-400 transition-transform duration-300 group-open:rotate-180">↓</span>
+        <span class="text-cyan-400 transition-transform duration-300 group-open:rotate-180">↓</span>
       </summary>
       <div class="px-5 pb-5 text-xs text-slate-400 leading-relaxed font-light border-t border-white/5 pt-3">
         ${item.a}
@@ -284,9 +286,109 @@ function renderFaq(faq) {
   `).join('');
 }
 
+// DASHBOARD TABS SWITCHER (CHART / TELEGRAM / SHEETS)
+function initDashboardTabs() {
+  const tabs = [
+    { btn: document.getElementById('tab-btn-chart'), view: document.getElementById('view-chart') },
+    { btn: document.getElementById('tab-btn-telegram'), view: document.getElementById('view-telegram') },
+    { btn: document.getElementById('tab-btn-sheets'), view: document.getElementById('view-sheets') }
+  ];
+
+  tabs.forEach(({ btn, view }) => {
+    if (!btn || !view) return;
+    btn.addEventListener('click', () => {
+      tabs.forEach(t => {
+        if (t.btn) t.btn.classList.remove('active');
+        if (t.view) t.view.classList.add('hidden');
+      });
+      btn.classList.add('active');
+      view.classList.remove('hidden');
+    });
+  });
+}
+
+// INTERACTIVE SVG CHART PRODUCT PILLS
+const CHART_PRESETS = {
+  lenovo: {
+    title: 'Notebook Lenovo IdeaPad 15.6 FHD Core i5 16GB',
+    competitorCurve: 'M 0,50 Q 150,55 300,52 T 450,60 T 550,150 T 600,155',
+    competitorArea: 'M 0,50 Q 150,55 300,52 T 450,60 T 550,150 T 600,155 L 600,200 L 0,200 Z',
+    ourCurve: 'M 0,90 Q 150,88 300,90 T 450,92 T 550,105 T 600,110',
+    alertX: 550,
+    alertY: 150,
+    alertTitle: 'BAJA DETECTADA (-$99.00 USD)',
+    alertDesc: 'Rival bajó de <b>$549.99</b> a <b class="text-amber-300">$450.99</b>',
+    alertLatency: '⚡ Alerta enviada a Telegram en 24s'
+  },
+  tv: {
+    title: 'Smart TV Samsung 50" Crystal UHD 4K HDR10',
+    competitorCurve: 'M 0,70 Q 150,65 300,80 T 420,75 T 530,165 T 600,170',
+    competitorArea: 'M 0,70 Q 150,65 300,80 T 420,75 T 530,165 T 600,170 L 600,200 L 0,200 Z',
+    ourCurve: 'M 0,110 Q 150,115 300,110 T 420,112 T 530,130 T 600,135',
+    alertX: 530,
+    alertY: 165,
+    alertTitle: 'QUIEBRE DE PRECIO FLASH (-$140.00 USD)',
+    alertDesc: 'Rival bajó de <b>$489.00</b> a <b class="text-amber-300">$349.00</b>',
+    alertLatency: '⚡ Alerta enviada a Telegram en 18s'
+  },
+  headphone: {
+    title: 'Auriculares Sony WH-1000XM5 Noise Cancelling',
+    competitorCurve: 'M 0,40 Q 140,45 280,42 T 440,50 T 540,140 T 600,145',
+    competitorArea: 'M 0,40 Q 140,45 280,42 T 440,50 T 540,140 T 600,145 L 600,200 L 0,200 Z',
+    ourCurve: 'M 0,75 Q 140,78 280,75 T 440,80 T 540,95 T 600,98',
+    alertX: 540,
+    alertY: 140,
+    alertTitle: 'DESCUENTO NOCTURNO (-$70.00 USD)',
+    alertDesc: 'Rival bajó de <b>$399.00</b> a <b class="text-amber-300">$329.00</b>',
+    alertLatency: '⚡ Alerta enviada a Telegram en 31s'
+  }
+};
+
+function initChartPills() {
+  const pills = document.querySelectorAll('#chart-product-pills button');
+  const titleEl = document.getElementById('chart-product-title');
+  const compCurve = document.getElementById('curve-competitor');
+  const compArea = document.getElementById('curve-competitor-area');
+  const ourCurve = document.getElementById('curve-ours');
+  const dot = document.getElementById('alert-dot');
+  const dotPing = document.getElementById('alert-dot-ping');
+  const tooltipTitle = document.getElementById('tooltip-alert-title');
+  const tooltipDesc = document.getElementById('tooltip-alert-desc');
+  const tooltipLatency = document.getElementById('tooltip-alert-latency');
+
+  if (!pills.length) return;
+
+  pills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      pills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+
+      const sku = pill.getAttribute('data-sku') || 'lenovo';
+      const preset = CHART_PRESETS[sku];
+      if (!preset) return;
+
+      if (titleEl) titleEl.textContent = preset.title;
+      if (compCurve) compCurve.setAttribute('d', preset.competitorCurve);
+      if (compArea) compArea.setAttribute('d', preset.competitorArea);
+      if (ourCurve) ourCurve.setAttribute('d', preset.ourCurve);
+      if (dot) {
+        dot.setAttribute('cx', preset.alertX);
+        dot.setAttribute('cy', preset.alertY);
+      }
+      if (dotPing) {
+        dotPing.setAttribute('cx', preset.alertX);
+        dotPing.setAttribute('cy', preset.alertY);
+      }
+      if (tooltipTitle) tooltipTitle.textContent = preset.alertTitle;
+      if (tooltipDesc) tooltipDesc.innerHTML = preset.alertDesc;
+      if (tooltipLatency) tooltipLatency.textContent = preset.alertLatency;
+    });
+  });
+}
+
 // KOKONUT UI: MOUSE MAGNETIC GLOW ON CARDS
 function initKokonutGlow() {
-  const cards = document.querySelectorAll('.glass-card');
+  const cards = document.querySelectorAll('.glass-card, .dark-saas-card');
   cards.forEach(card => {
     card.addEventListener('mousemove', e => {
       const rect = card.getBoundingClientRect();
@@ -331,11 +433,11 @@ function initTelegramSimulator() {
   if (!btn || !bubble) return;
 
   btn.addEventListener('click', () => {
-    bubble.classList.add('ring-2', 'ring-emerald-400', 'scale-[1.02]');
+    bubble.classList.add('ring-2', 'ring-cyan-400', 'scale-[1.02]');
     btn.textContent = '⚡ ¡Alerta Recibida!';
     setTimeout(() => {
-      bubble.classList.remove('ring-2', 'ring-emerald-400', 'scale-[1.02]');
-      btn.textContent = 'Simular Otra Alerta';
+      bubble.classList.remove('ring-2', 'ring-cyan-400', 'scale-[1.02]');
+      btn.textContent = '⚡ Simular Otra Alerta';
     }, 1500);
   });
 }
@@ -355,7 +457,7 @@ function initSecretBunkerTrigger() {
     // Efecto visual táctico en cada clic
     logo.style.transition = 'transform 0.15s ease, filter 0.15s ease';
     logo.style.transform = `scale(${1 + clickCount * 0.05})`;
-    logo.style.filter = `brightness(${1 + clickCount * 0.3}) drop-shadow(0 0 ${clickCount * 6}px #10b981)`;
+    logo.style.filter = `brightness(${1 + clickCount * 0.3}) drop-shadow(0 0 ${clickCount * 6}px #00F2FE)`;
 
     clearTimeout(timer);
     timer = setTimeout(() => {
@@ -368,7 +470,7 @@ function initSecretBunkerTrigger() {
       clearTimeout(timer);
       clickCount = 0;
       logo.style.transform = 'scale(1.25)';
-      logo.style.filter = 'brightness(2) drop-shadow(0 0 25px #10b981)';
+      logo.style.filter = 'brightness(2) drop-shadow(0 0 25px #00F2FE)';
 
       // Flash y teleport al Búnker
       setTimeout(() => {
@@ -377,4 +479,3 @@ function initSecretBunkerTrigger() {
     }
   });
 }
-
