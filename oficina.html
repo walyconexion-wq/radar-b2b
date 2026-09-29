@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0">
+  <title>Oficina Virtual de Agentes · Radar B2B Ops</title>
+  
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏢</text></svg>">
+
+  <!-- GOOGLE FONTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- TAILWIND CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            cyber: {
+              cyan: '#00F2FE',
+              indigo: '#6366F1',
+              violet: '#8B5CF6',
+              navy: '#050713',
+              card: '#0B0F20',
+              border: 'rgba(255, 255, 255, 0.08)'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #04060E;
+      color: #F8FAFC;
+      overflow: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* Grid pattern for high-tech tactical floor */
+    .floor-grid {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+
+    /* Isometric Room Platforms */
+    .iso-room {
+      background: rgba(11, 16, 33, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 25px -5px rgba(99, 102, 241, 0.15);
+      border-radius: 28px;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+    .iso-room:hover {
+      border-color: rgba(0, 242, 254, 0.35);
+      box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.9), 0 0 35px -5px rgba(0, 242, 254, 0.25);
+    }
+
+    /* Desk Workstation */
+    .desk-card {
+      background: rgba(16, 22, 44, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 20px;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      position: relative;
+    }
+    .desk-card:hover {
+      transform: translateY(-4px);
+      background: rgba(22, 30, 60, 0.85);
+      border-color: rgba(0, 242, 254, 0.5);
+      box-shadow: 0 12px 25px -5px rgba(0, 242, 254, 0.2);
+    }
+    .desk-card.active-desk {
+      border-color: #00F2FE;
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.4);
+    }
+
+    /* Monitor Screens Glow */
+    .screen-glow {
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.6);
+    }
+    .screen-glow-indigo {
+      box-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
+    }
+    .screen-glow-emerald {
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+    }
+
+    /* Custom Floating Pill */
+    .agent-pill {
+      box-shadow: 0 8px 16px -2px rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      transition: all 0.2s ease;
+    }
+    .agent-pill:hover {
+      transform: scale(1.05);
+    }
+
+    /* Navigation button active */
+    .dept-tab.active {
+      background: rgba(0, 242, 254, 0.15);
+      color: #00F2FE;
+      border-color: rgba(0, 242, 254, 0.4);
+      box-shadow: 0 0 20px -3px rgba(0, 242, 254, 0.25);
+    }
+
+    /* Pulse wave for active task */
+    @keyframes taskPulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.08); opacity: 0.8; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .executing-task {
+      animation: taskPulse 1.2s infinite ease-in-out;
+      border-color: #10B981 !important;
+      box-shadow: 0 0 30px rgba(16, 185, 129, 0.5) !important;
+    }
+  </style>
+</head>
+<body class="h-full flex flex-col font-sans">
+
+  <!-- TOP HEADER / CONTROL BAR -->
+  <header class="h-20 bg-[#060814]/90 backdrop-blur-xl border-b border-white/[0.08] px-4 sm:px-8 flex items-center justify-between z-30 shrink-0">
+    
+    <!-- BRAND / TITLE -->
+    <div class="flex items-center gap-4">
+      <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-cyan-500 to-indigo-500 p-0.5 shadow-lg shadow-cyan-500/20 flex items-center justify-center text-xl">
+        🏢
+      </div>
+      <div>
+        <div class="flex items-center gap-2.5">
+          <span class="font-extrabold text-base tracking-tight text-white font-mono">RADAR B2B</span>
+          <span class="px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 font-mono text-[10px] border border-cyan-500/30 font-bold flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+            OFICINA VIRTUAL LIVE
+          </span>
+        </div>
+        <p class="text-[11px] text-slate-400 font-mono">Centro de Comando & Orquestación de Agentes de IA</p>
+      </div>
+    </div>
+
+    <!-- DEPARTMENT TABS (ROOM SELECTOR) -->
+    <nav class="hidden lg:flex items-center gap-1.5 bg-[#090D1C] p-1.5 rounded-2xl border border-white/10 text-xs font-medium">
+      <button data-dept="all" class="dept-tab active px-4 py-2 rounded-xl flex items-center gap-2 text-slate-300 transition-all">
+        <span>🏢</span>
+        <span>Toda la Oficina</span>
+        <span class="px-1.5 py-0.2 text-[10px] font-mono bg-white/10 rounded-full">12</span>
+      </button>
+      <button data-dept="dept-director" class="dept-tab px-4 py-2 rounded-xl flex items-center gap-2 text-slate-300 transition-all">
+        <span>👑</span>
+        <span>Dirección</span>
+        <span class="px-1.5 py-0.2 text-[10px] font-mono bg-white/10 rounded-full">2</span>
+      </button>
+      <button data-dept="dept-scraping" class="dept-tab px-4 py-2 rounded-xl flex items-center gap-2 text-slate-300 transition-all">
+        <span>⚡</span>
+        <span>Scraping Lab</span>
+        <span class="px-1.5 py-0.2 text-[10px] font-mono bg-white/10 rounded-full">4</span>
+      </button>
+      <button data-dept="dept-ops" class="dept-tab px-4 py-2 rounded-xl flex items-center gap-2 text-slate-300 transition-all">
+        <span>📡</span>
+        <span>Operaciones</span>
+        <span class="px-1.5 py-0.2 text-[10px] font-mono bg-white/10 rounded-full">4</span>
+      </button>
+      <button data-dept="dept-sales" class="dept-tab px-4 py-2 rounded-xl flex items-center gap-2 text-slate-300 transition-all">
+        <span>💼</span>
+        <span>Comercial</span>
+        <span class="px-1.5 py-0.2 text-[10px] font-mono bg-white/10 rounded-full">2</span>
+      </button>
+    </nav>
+
+    <!-- RIGHT QUICK ACTIONS -->
+    <div class="flex items-center gap-3">
+      <a href="bunker.html" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-slate-300 transition-colors flex items-center gap-1.5">
+        <span>🛡️</span>
+        <span class="hidden sm:inline">Búnker</span>
+      </a>
+      <a href="index.html" class="px-4 py-2 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-xs font-mono text-cyan-300 font-bold transition-colors flex items-center gap-1.5">
+        <span>←</span>
+        <span class="hidden sm:inline">Portal Web</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN CANVAS VIEWPORT (PAN & ZOOM CONTAINER) -->
+  <main id="viewport-container" class="flex-1 relative overflow-hidden cursor-grab active:cursor-grabbing floor-grid bg-[#04060E]">
+    
+    <!-- SUB-HEADER ON MOBILE FOR DEPARTMENTS -->
+    <div class="lg:hidden absolute top-3 left-3 right-3 z-20 flex gap-1.5 overflow-x-auto p-1.5 rounded-2xl bg-black/80 backdrop-blur-md border border-white/10 text-xs">
+      <button data-dept="all" class="dept-tab active px-3 py-1.5 rounded-xl whitespace-nowrap text-slate-300">Toda la Oficina (12)</button>
+      <button data-dept="dept-director" class="dept-tab px-3 py-1.5 rounded-xl whitespace-nowrap text-slate-300">👑 Dirección (2)</button>
+      <button data-dept="dept-scraping" class="dept-tab px-3 py-1.5 rounded-xl whitespace-nowrap text-slate-300">⚡ Scraping (4)</button>
+      <button data-dept="dept-ops" class="dept-tab px-3 py-1.5 rounded-xl whitespace-nowrap text-slate-300">📡 Ops (4)</button>
+      <button data-dept="dept-sales" class="dept-tab px-3 py-1.5 rounded-xl whitespace-nowrap text-slate-300">💼 Comercial (2)</button>
+    </div>
+
+    <!-- TRANSFORMABLE WORKSPACE (SCALED & PANNED VIA JS) -->
+    <div id="office-stage" class="absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-out" style="transform: translate(0px, 0px) scale(1);">
+      
+      <!-- 2.5D ISOMETRIC OFFICE MAP CONTAINER (1400px x 920px) -->
+      <div id="office-map" class="relative w-[1380px] h-[900px] shrink-0 p-8 grid grid-cols-12 grid-rows-12 gap-6">
+
+        <!-- ============================================== -->
+        <!-- SALA 1: DESPACHO DE DIRECCIÓN (Top Left) -->
+        <!-- ============================================== -->
+        <div id="dept-director" class="iso-room col-span-5 row-span-6 p-6 flex flex-col justify-between border-t-2 border-t-cyan-400">
+          
+          <!-- Header de Sala -->
+          <div class="flex items-center justify-between border-b border-white/[0.08] pb-3 mb-4">
+            <div class="flex items-center gap-2.5">
+              <span class="text-xl">🏛️</span>
+              <div>
+                <h2 class="font-extrabold text-sm text-white tracking-wide font-mono">DESPACHO DE DIRECCIÓN GENERAL</h2>
+                <p class="text-[10px] text-cyan-400 font-mono">Toma de Decisiones, Ecuación X & Orquestación</p>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 text-[9px] font-mono font-bold">2 LÍDERES</span>
+          </div>
+
+          <!-- Pizarra Ejecutiva de Estrategia -->
+          <div class="bg-black/40 border border-white/5 rounded-2xl p-3 mb-4 flex items-center justify-between gap-3 text-xs font-mono">
+            <div class="flex items-center gap-2">
+              <span>📋</span>
+              <span class="text-slate-300 text-[11px]">Meta Q4: <b>Ecuación X</b> ($1,500 USD / mes con 4h/día)</span>
+            </div>
+            <span class="text-cyan-400 text-[10px] font-bold">RETAINERS: $450-$650</span>
+          </div>
+
+          <!-- Puestos Ejecutivos (Walter & Luz) -->
+          <div class="grid grid-cols-2 gap-4 flex-1">
+            
+            <!-- Puesto 1: Comandante Walter -->
+            <div class="desk-card p-4 flex flex-col justify-between group" data-agent-id="walter">
+              <div class="flex items-start justify-between">
+                <span class="text-3xl">👨‍💻</span>
+                <span class="agent-pill px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-[10px] font-mono text-emerald-300 font-bold flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  COMANDANTE
+                </span>
+              </div>
+              <div class="space-y-1 my-2">
+                <div class="font-bold text-xs text-white group-hover:text-cyan-300 transition-colors">Walter C.</div>
+                <div class="text-[10px] text-slate-400 font-mono">Dirección General & Estrategia</div>
+              </div>
+              <!-- Estación de Trabajo Visual -->
+              <div class="bg-black/50 p-2.5 rounded-xl border border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-300">
+                <span>🖥️ Dual Monitor 4K</span>
+                <span class="text-emerald-400 font-bold">SUPERVISANDO</span>
+              </div>
+            </div>
+
+            <!-- Puesto 2: Socia Luz (Orquestadora) -->
+            <div class="desk-card p-4 flex flex-col justify-between group" data-agent-id="luz">
+              <div class="flex items-start justify-between">
+                <span class="text-3xl">🤖</span>
+                <span class="agent-pill px-2 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-[10px] font-mono text-cyan-300 font-bold flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                  SOCIA IA
+                </span>
+              </div>
+              <div class="space-y-1 my-2">
+                <div class="font-bold text-xs text-white group-hover:text-cyan-300 transition-colors">Luz (Antigravity Ops)</div>
+                <div class="text-[10px] text-cyan-400 font-mono">Orquestadora Central de Agentes</div>
+              </div>
+              <!-- Estación de Trabajo Visual -->
+              <div class="bg-black/50 p-2.5 rounded-xl border border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-300">
+                <span>🧠 Tool Router Core</span>
+                <span class="text-cyan-400 font-bold">24/7 EN LÍNEA</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Decoración Planta Oficina -->
+          <div class="mt-3 pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-500">
+            <span>🪴 Planta Ficus Robusta</span>
+            <span>☕ Café Táctico Listo</span>
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- SALA 2: LABORATORIO DE SCRAPING & INTELIGENCIA (Top Right) -->
+        <!-- ============================================== -->
+        <div id="dept-scraping" class="iso-room col-span-7 row-span-6 p-6 flex flex-col justify-between border-t-2 border-t-indigo-400">
+          
+          <!-- Header de Sala -->
+          <div class="flex items-center justify-between border-b border-white/[0.08] pb-3 mb-4">
+            <div class="flex items-center gap-2.5">
+              <span class="text-xl">⚡</span>
+              <div>
+                <h2 class="font-extrabold text-sm text-white tracking-wide font-mono">LABORATORIO DE SCRAPING & INTELIGENCIA</h2>
+                <p class="text-[10px] text-indigo-400 font-mono">Heavy Stack: Crawl4AI, Playwright, Scrapy, Python 3.12</p>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 text-[9px] font-mono font-bold">4 AGENTES LAB</span>
+          </div>
+
+          <!-- 4 Escritorios de Scraping -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 flex-1">
+            
+            <!-- Agente 1: Crawl4AI Sentinel -->
+            <div class="desk-card p-3 flex flex-col justify-between group" data-agent-id="crawl4ai">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-2xl">🕷️</span>
+                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+              </div>
+              <div class="space-y-0.5 mb-2">
+                <div class="font-bold text-xs text-white group-hover:text-cyan-300 transition-colors">Crawl4AI Sentinel</div>
+                <div class="text-[9px] text-slate-400 font-mono">Bypass Anti-Bot & Markdown</div>
+              </div>
+              <div class="bg-black/50 p-2 rounded-lg border border-white/5 text-[9px] font-mono text-slate-400">
+                <div>SKUs: <b class="text-white">1,420</b></div>
+                <div>Status: <b class="text-emerald-400">Vigilando</b></div>
+              </div>
+            </div>
+
+            <!-- Agente 2: Playwright Stealth Engine -->
+            <div class="desk-card p-3 flex flex-col justify-between group" data-agent-id="playwright">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-2xl">🎭</span>
+                <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+              </div>
+              <div class="space-y-0.5 mb-2">
+                <div class="font-bold text-xs text-white group-hover:text-indigo-300 transition-colors">Playwright Stealth</div>
+                <div class="text-[9px] text-slate-400 font-mono">SPAs, Clics & Carritos</div>
+              </div>
+              <div class="bg-black/50 p-2 rounded-lg border border-white/5 text-[9px] font-mono text-slate-400">
+                <div>Headless: <b class="text-white">Activo</b></div>
+                <div>Sesiones: <b class="text-indigo-300">Limpias</b></div>
+              </div>
+            </div>
+
+            <!-- Agente 3: Tool Router Dispatcher -->
+            <div class="desk-card p-3 flex flex-col justify-between group" data-agent-id="tool-router">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-2xl">🔀</span>
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              </div>
+              <div class="space-y-0.5 mb-2">
+                <div class="font-bold text-xs text-white group-hover:text-emerald-300 transition-colors">Tool Router Core</div>
+                <div class="text-[9px] text-slate-400 font-mono">Selector Óptimo Python</div>
+              </div>
+              <div class="bg-black/50 p-2 rounded-lg border border-white/5 text-[9px] font-mono text-slate-400">
+                <div>Decisión: <b class="text-white">0.02s</b></div>
+                <div>Modo: <b class="text-emerald-300">Automático</b></div>
+              </div>
+            </div>
+
+            <!-- Agente 4: Scrapy & BS4 Pipeline -->
+            <div class="desk-card p-3 flex flex-col justify-between group" data-agent-id="scrapy">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-2xl">⚡</span>
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+              </div>
+              <div class="space-y-0.5 mb-2">
+                <div class="font-bold text-xs text-white group-hover:text-amber-300 transition-colors">Scrapy Pipeline</div>
+                <div class="text-[9px] text-slate-400 font-mono">Extracción Masiva Veloz</div>
+              </div>
+              <div class="bg-black/50 p-2 rounded-lg border border-white/5 text-[9px] font-mono text-slate-400">
+                <div>Rendimiento: <b class="text-white">50 req/s</b></div>
+                <div>Lote: <b class="text-amber-300">En cola</b></div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Racks de Servidores de Fondo -->
+          <div class="mt-3 pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-500">
+            <span>🖥️ Racks de Servidores Python 3.12 (UV Virtualenv)</span>
+            <span class="text-cyan-400 font-bold">100% OPERATIVO</span>
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- SALA 3: OPERACIONES & ALERTAS EN VIVO (Bottom Left) -->
+        <!-- ============================================== -->
+        <div id="dept-ops" class="iso-room col-span-7 row-span-6 p-6 flex flex-col justify-between border-t-2 border-t-emerald-400">
+          
+          <!-- Header de Sala -->
+          <div class="flex items-center justify-between border-b border-white/[0.08] pb-3 mb-4">
+            <div class="flex items-center gap-2.5">
+              <span class="text-xl">📡</span>
+              <div>
+                <h2 class="font-extrabold text-sm text-white tracking-wide font-mono">OPERACIONES, ALERTAS & ENTREGA CONTINUA</h2>
+                <p class="text-[10px] text-emerald-400 font-mono">Telegram Bot Push, Sincronización Google Sheets, Ari Web</p>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 text-[9px] font-mono font-bold">4 AGENTES OPS</span>
+          </div>
+
+          <!-- 4 Escritorios de Operaciones -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 flex-1">
+            
+            <!-- Agente 1: Telegram Bot Dispatcher -->
+            <div class="desk-card p-3 flex flex-col justify-between group" data-agent-id="telegram-bot">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-2xl">🤖</span>
+                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+              </div>
+              <div class="space-y-0.5 mb-2">
+                <div class="font-bold text-xs text-white group-hover:text-cyan-300 transition-colors">Telegram Dispatcher</div>
+                <div class="text-[9px] text-slate-400 font-mono">@Walys2b2_bot Alertas</div>
+              </div>
+              <div class="bg-black/50 p-2 rounded-lg border border-white/5 text-[9px] font-mono text-slate-400">
+                <div>Push: <b class="text-cyan-300">&lt;24s</b></div>
+                <div>Canal: <b class="text-white">Privado</b></div>
+              </div>
+            </div>
+
+            <!-- Agente 2: Google Sheets Sync -->
+            <div class="desk-card p-3 flex flex-col justify-between group" data-agent-id="sheets-sync">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-2xl">📊</span>
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              </div>
+              <div class="space-y-0.5 mb-2">
+                <div class="font-bold text-xs text-white group-hover:text-emerald-300 transition-colors">Sheets Auto-Sync</div>
+                <div class="text-[9px] text-slate-400 font-mono">Reportes Vivos 8 AM</div>
+              </div>
+              <div class="bg-black/50 p-2 rounded-lg border border-white/5 text-[9px] font-mono text-slate-400">
+                <div>Filas: <b class="text-white">Auto-fill</b></div>
+                <div>Sync: <b class="text-emerald-300">Sin fallos</b></div>
+              </div>
+            </div>
+
+            <!-- Agente 3: Price War Sentinel -->
+            <div class="desk-card p-3 flex flex-col justify-between group" data-agent-id="price-sentinel">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-2xl">📉</span>
+                <span class="w-2 h-2 rounded-full bg-rose-400 animate-pulse"></span>
+              </div>
+              <div class="space-y-0.5 mb-2">
+                <div class="font-bold text-xs text-white group-hover:text-rose-300 transition-colors">Price War Sentinel</div>
+                <div class="text-[9px] text-slate-400 font-mono">Detección Quiebres & Bajas</div>
+              </div>
+              <div class="bg-black/50 p-2 rounded-lg border border-white/5 text-[9px] font-mono text-slate-400">
+                <div>Alertas: <b class="text-rose-400">84 hoy</b></div>
+                <div>Margen: <b class="text-white">+$18.4k</b></div>
+              </div>
+            </div>
+
+            <!-- Agente 4: Ari Web Assistant -->
+            <div class="desk-card p-3 flex flex-col justify-between group" data-agent-id="ari-agent">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-2xl">💬</span>
+                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+              </div>
+              <div class="space-y-0.5 mb-2">
+                <div class="font-bold text-xs text-white group-hover:text-cyan-300 transition-colors">Ari Assistant</div>
+                <div class="text-[9px] text-slate-400 font-mono">Atención Web & Leads</div>
+              </div>
+              <div class="bg-black/50 p-2 rounded-lg border border-white/5 text-[9px] font-mono text-slate-400">
+                <div>Web: <b class="text-white">radarb2b.site</b></div>
+                <div>Pruebas: <b class="text-cyan-300">48hs Free</b></div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Telemetría de Operaciones -->
+          <div class="mt-3 pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-500">
+            <span>🌐 Red de Webhooks y APIs Seguras</span>
+            <span class="text-emerald-400 font-bold">LATENCIA MÍNIMA</span>
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- SALA 4: HUB COMERCIAL & CRECIMIENTO (Bottom Right) -->
+        <!-- ============================================== -->
+        <div id="dept-sales" class="iso-room col-span-5 row-span-6 p-6 flex flex-col justify-between border-t-2 border-t-amber-400">
+          
+          <!-- Header de Sala -->
+          <div class="flex items-center justify-between border-b border-white/[0.08] pb-3 mb-4">
+            <div class="flex items-center gap-2.5">
+              <span class="text-xl">💼</span>
+              <div>
+                <h2 class="font-extrabold text-sm text-white tracking-wide font-mono">HUB COMERCIAL & PROSPECCIÓN</h2>
+                <p class="text-[10px] text-amber-400 font-mono">Upwork, Contra & Captura B2B Internacional</p>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 text-[9px] font-mono font-bold">2 AGENTES VENTAS</span>
+          </div>
+
+          <!-- 2 Escritorios Comerciales -->
+          <div class="grid grid-cols-2 gap-4 flex-1">
+            
+            <!-- Agente 1: Upwork Job Hunter -->
+            <div class="desk-card p-4 flex flex-col justify-between group" data-agent-id="upwork-hunter">
+              <div class="flex items-start justify-between">
+                <span class="text-3xl">🎯</span>
+                <span class="agent-pill px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-[10px] font-mono text-amber-300 font-bold">
+                  RADAR CLIENTES
+                </span>
+              </div>
+              <div class="space-y-1 my-2">
+                <div class="font-bold text-xs text-white group-hover:text-amber-300 transition-colors">Upwork Job Hunter</div>
+                <div class="text-[10px] text-slate-400 font-mono">Filtro de Trabajos $45-$65/hr</div>
+              </div>
+              <div class="bg-black/50 p-2.5 rounded-xl border border-white/5 text-[10px] font-mono text-slate-300">
+                <div>Contratos: <b class="text-amber-300">Python Scraping</b></div>
+                <div>Propuestas: <b class="text-emerald-400">&lt;5 postulantes</b></div>
+              </div>
+            </div>
+
+            <!-- Agente 2: Proposal Architect -->
+            <div class="desk-card p-4 flex flex-col justify-between group" data-agent-id="proposal-architect">
+              <div class="flex items-start justify-between">
+                <span class="text-3xl">✍️</span>
+                <span class="agent-pill px-2 py-0.5 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-[10px] font-mono text-indigo-300 font-bold">
+                  COPY TÁCTICO
+                </span>
+              </div>
+              <div class="space-y-1 my-2">
+                <div class="font-bold text-xs text-white group-hover:text-indigo-300 transition-colors">Proposal Architect</div>
+                <div class="text-[10px] text-slate-400 font-mono">Pitch de 48hs & ROI Link</div>
+              </div>
+              <div class="bg-black/50 p-2.5 rounded-xl border border-white/5 text-[10px] font-mono text-slate-300">
+                <div>Hook: <b class="text-indigo-300">Prueba 3 URLs Gratis</b></div>
+                <div>Cierre: <b class="text-cyan-400">radarb2b.site</b></div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Tablero de Metas Comerciales -->
+          <div class="mt-3 pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-500">
+            <span>📈 Ticket Promedio: $150 - $650 USD</span>
+            <span class="text-amber-400 font-bold">ALTA CONVERSIÓN</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- FLOATING ZOOM & CAMERA CONTROLS (BOTTOM RIGHT) -->
+    <div class="absolute bottom-6 right-6 z-20 flex items-center gap-2 bg-[#090E21]/90 backdrop-blur-xl p-2 rounded-2xl border border-white/10 shadow-2xl">
+      <button id="zoom-out-btn" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 flex items-center justify-center font-mono font-bold text-base transition-colors" title="Zoom Out">
+        -
+      </button>
+      <span id="zoom-level-text" class="px-2 text-xs font-mono font-bold text-cyan-300 min-w-[50px] text-center">
+        100%
+      </span>
+      <button id="zoom-in-btn" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 flex items-center justify-center font-mono font-bold text-base transition-colors" title="Zoom In">
+        +
+      </button>
+      <div class="w-[1px] h-5 bg-white/10 mx-1"></div>
+      <button id="center-view-btn" class="px-3 h-9 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-mono flex items-center gap-1.5 transition-colors" title="Centrar Vista">
+        <span>🎯</span>
+        <span class="hidden sm:inline">Centrar</span>
+      </button>
+      <button id="fullscreen-btn" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 flex items-center justify-center text-sm transition-colors" title="Pantalla Completa">
+        ⛶
+      </button>
+    </div>
+
+    <!-- FLOATING HINT PILL (BOTTOM LEFT) -->
+    <div class="hidden sm:flex absolute bottom-6 left-6 z-20 items-center gap-2 bg-[#090E21]/90 backdrop-blur-xl px-4 py-2.5 rounded-2xl border border-white/10 shadow-2xl text-xs font-mono text-slate-400">
+      <span class="text-cyan-400">💡 Arrastrá el mouse para explorar el plano</span>
+      <span>•</span>
+      <span>Hacé clic en cualquier escritorio para inspeccionar el agente</span>
+    </div>
+
+  </main>
+
+  <!-- ============================================== -->
+  <!-- SLIDE-IN AGENT CONTROL DRAWER (RIGHT PANEL) -->
+  <!-- ============================================== -->
+  <aside id="agent-drawer" class="fixed top-0 right-0 bottom-0 w-full sm:w-[460px] bg-[#080C1E]/95 backdrop-blur-2xl border-l border-white/10 p-6 sm:p-8 z-50 flex flex-col justify-between transform translate-x-full transition-transform duration-300 ease-in-out shadow-2xl">
+    
+    <!-- Top Bar of Drawer -->
+    <div>
+      <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
+          <span class="text-xs font-mono font-bold text-cyan-400 tracking-wider">PANEL DE CONTROL DEL AGENTE</span>
+        </div>
+        <button id="close-drawer-btn" class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center text-sm transition-colors">
+          ✕
+        </button>
+      </div>
+
+      <!-- Agent Profile Card -->
+      <div class="flex items-center gap-4 mb-6">
+        <div id="drawer-agent-icon" class="w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-3xl shadow-lg shadow-cyan-500/10">
+          🤖
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h3 id="drawer-agent-name" class="font-extrabold text-lg text-white font-mono">Agente</h3>
+            <span id="drawer-agent-badge" class="px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 text-[9px] font-mono font-bold">
+              ACTIVO
+            </span>
+          </div>
+          <p id="drawer-agent-role" class="text-xs text-slate-400 font-mono mt-0.5">Rol en el Ecosistema</p>
+          <div id="drawer-agent-dept" class="text-[10px] text-cyan-400 font-mono mt-1 font-bold">DEPARTAMENTO</div>
+        </div>
+      </div>
+
+      <!-- Misión Operativa -->
+      <div class="space-y-4 mb-6">
+        <div class="bg-black/40 rounded-2xl p-4 border border-white/5">
+          <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider block mb-1">Misión Principal:</span>
+          <p id="drawer-agent-mission" class="text-xs text-slate-200 leading-relaxed font-light">
+            Descripción de lo que hace este agente dentro del laboratorio.
+          </p>
+        </div>
+
+        <!-- Stack Tecnológico -->
+        <div>
+          <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider block mb-2">Stack Tecnológico & Herramientas:</span>
+          <div id="drawer-agent-stack" class="flex flex-wrap gap-1.5">
+            <!-- Badges dynamically injected -->
+          </div>
+        </div>
+
+        <!-- Métricas en Tiempo Real -->
+        <div>
+          <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider block mb-2">Telemetría & Rendimiento:</span>
+          <div class="grid grid-cols-2 gap-2.5">
+            <div class="bg-white/[0.03] p-3 rounded-xl border border-white/5">
+              <div class="text-[10px] text-slate-400 font-mono" id="drawer-metric-label-1">Métrica 1</div>
+              <div class="text-base font-bold text-white font-mono mt-0.5" id="drawer-metric-val-1">--</div>
+            </div>
+            <div class="bg-white/[0.03] p-3 rounded-xl border border-white/5">
+              <div class="text-[10px] text-slate-400 font-mono" id="drawer-metric-label-2">Métrica 2</div>
+              <div class="text-base font-bold text-cyan-400 font-mono mt-0.5" id="drawer-metric-val-2">--</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Log Terminal Simulator -->
+      <div class="bg-black/60 rounded-xl p-3 border border-white/10 font-mono text-[11px] space-y-1">
+        <div class="text-slate-500 text-[9px] border-b border-white/5 pb-1 flex items-center justify-between">
+          <span>TERMINAL DE TAREAS</span>
+          <span class="text-emerald-400">READY</span>
+        </div>
+        <div id="drawer-terminal-log" class="text-slate-300 pt-1 text-[10px] leading-tight">
+          > Sistema en reposo esperando instrucciones del Comandante Walter.
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Action Button -->
+    <div class="pt-6 border-t border-white/10 space-y-3">
+      <button id="trigger-agent-task-btn" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-950 font-bold text-xs font-mono shadow-lg shadow-cyan-500/20 transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2">
+        <span>⚡</span>
+        <span>Simular Disparo de Tarea</span>
+      </button>
+      <div class="text-[10px] text-slate-500 font-mono text-center">
+        Conectado a la API de Radar B2B & Motor de Agentes
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- OVERLAY BACKGROUND WHEN DRAWER IS OPEN ON MOBILE -->
+  <div id="drawer-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden transition-opacity"></div>
+
+  <!-- ============================================== -->
+  <!-- INTERACTIVE LOGIC ENGINE -->
+  <!-- ============================================== -->
+  <script>
+    // AGENT DATABASE SPECIFICATION
+    const AGENTS = {
+      'walter': {
+        name: 'Walter C.',
+        role: 'Comandante & Dirección General',
+        dept: 'DIRECCIÓN & ESTRATEGIA',
+        badge: 'HUMAN LEAD',
+        icon: '👨‍💻',
+        mission: 'Liderazgo supremo del laboratorio Radar B2B. Aprobación de presupuestos, cierre de clientes clave, validación de calidad de datasets y guardian de la Ecuación X ($1,500 USD/mes con 4h/día).',
+        stack: ['Dirección General', 'Validación Humana', 'Ecuación X', 'Upwork Enterprise', 'Negociación B2B'],
+        metric1Label: 'Objetivo Q4',
+        metric1Val: '$1,500 USD',
+        metric2Label: 'Jornada Foco',
+        metric2Val: '4h / día',
+        taskLog: 'Supervisando la orquestación general. Todos los departamentos reportando al 100% de operatividad.'
+      },
+      'luz': {
+        name: 'Luz (Antigravity Ops)',
+        role: 'Chief AI Officer & Socia Co-Piloto',
+        dept: 'DIRECCIÓN & ORQUESTACIÓN',
+        badge: 'AI ORCHESTRATOR',
+        icon: '🤖',
+        mission: 'Co-piloto estratégica y orquestadora central. Traduce las visiones de Walter en código ejecutable, selecciona las mejores herramientas open-source (Tool Router) y supervisa a los subagentes 24/7.',
+        stack: ['DeepMind Antigravity', 'Python 3.12', 'Tool Router', 'Memanto Memory', 'Codebase Memory', 'Prompt Engineering'],
+        metric1Label: 'Agentes a Cargo',
+        metric1Val: '10 Subagentes',
+        metric2Label: 'Disponibilidad',
+        metric2Val: '24/7 Activa',
+        taskLog: 'Orquestando pipeline de extracción y sincronización con Telegram. Memoria persistente sincronizada.'
+      },
+      'crawl4ai': {
+        name: 'Crawl4AI Sentinel',
+        role: 'Agente Centinela de Extracción Resiliente',
+        dept: 'LABORATORIO DE SCRAPING',
+        badge: 'ANTI-BOT BYPASS',
+        icon: '🕷️',
+        mission: 'Extracción profunda y sigilosa de catálogos web complejos. Convierte sitios caóticos en Markdown estructurado limpio para que los modelos LLM extraigan precios y stock sin alucinaciones.',
+        stack: ['crawl4ai 0.9.4', 'Chromium Headless', 'Proxy Rotation', 'Markdown Cleaner', 'Python 3.12'],
+        metric1Label: 'SKUs Raspados',
+        metric1Val: '1,420 hoy',
+        metric2Label: 'Tasa Bypass',
+        metric2Val: '99.4%',
+        taskLog: 'Auditoría completada en catálogo de retail competidor. 84 cambios de precio catalogados en 3.2s.'
+      },
+      'playwright': {
+        name: 'Playwright Stealth',
+        role: 'Agente de Navegación & Automatización SPA',
+        dept: 'LABORATORIO DE SCRAPING',
+        badge: 'BROWSER ENGINE',
+        icon: '🎭',
+        mission: 'Manejo de sitios con JavaScript pesado, simulación de clics en carritos de compra, selección de variantes (talles/colores) y descarga de datos dinámicos simulando navegación humana.',
+        stack: ['Playwright 1.63', 'Patchright Stealth', 'Async Python', 'Cookie Session Injector'],
+        metric1Label: 'Interacciones SPA',
+        metric1Val: '450 / hora',
+        metric2Label: 'Detección Bot',
+        metric2Val: '0%',
+        taskLog: 'Navegando checkout de marketplace rival. Validando existencia física de stock en depósito.'
+      },
+      'tool-router': {
+        name: 'Tool Router Core',
+        role: 'Router Inteligente de Herramientas Heavy Stack',
+        dept: 'LABORATORIO DE SCRAPING',
+        badge: 'OPTIMIZER',
+        icon: '🔀',
+        mission: 'Evalúa la dificultad del sitio objetivo y selecciona automáticamente el arma más eficiente: Requests para sitios estáticos, Crawl4AI para LLMs o Playwright para aplicaciones interactivas complejas.',
+        stack: ['Python Tool Router', 'Benchmarking Heurístico', 'UncleCode LiteLLM', 'Cost Optimizer'],
+        metric1Label: 'Latencia Decisión',
+        metric1Val: '0.02s',
+        metric2Label: 'Ahorro Cómputo',
+        metric2Val: '68%',
+        taskLog: 'Ruta asignada: Sitio estático detectado -> Despachado a Scrapy para máxima velocidad.'
+      },
+      'scrapy': {
+        name: 'Scrapy Pipeline',
+        role: 'Extractor Masivo a Alta Velocidad',
+        dept: 'LABORATORIO DE SCRAPING',
+        badge: 'BULK EXTRACTOR',
+        icon: '⚡',
+        mission: 'Descarga y procesamiento paralelo de miles de páginas por minuto. Limpia texto sucio, elimina duplicados y normaliza monedas (ARS, USD, EUR) directo a CSV o JSON.',
+        stack: ['Scrapy Twisted', 'BeautifulSoup4', 'Regex Engine', 'JSONL Streamer'],
+        metric1Label: 'Velocidad',
+        metric1Val: '50 req / seg',
+        metric2Label: 'Calidad Data',
+        metric2Val: '100% Clean',
+        taskLog: 'Procesando dump masivo de 12,000 URLs de repuestos industriales. Exportación a CSV completada.'
+      },
+      'telegram-bot': {
+        name: 'Telegram Dispatcher',
+        role: 'Despachador Inmediato de Alertas Push',
+        dept: 'OPERACIONES & ALERTAS',
+        badge: 'PUSH DISPATCHER',
+        icon: '🤖',
+        mission: 'Conectado a @Walys2b2_bot para avisarle a Walter y a sus clientes al instante en su celular cuando un rival baja el precio o se queda sin stock, en menos de 24 segundos.',
+        stack: ['Telegram Bot API', 'Python Asyncio', 'Webhook Dispatcher', 'Rich Markdown Formatter'],
+        metric1Label: 'Tiempo Alerta',
+        metric1Val: '< 24 segundos',
+        metric2Label: 'Alertas Enviadas',
+        metric2Val: '154 este mes',
+        taskLog: 'Alerta enviada a Walter: "Notebook Lenovo bajó -$99 USD en Amazon Retail". Entregada con 2 ticks.'
+      },
+      'sheets-sync': {
+        name: 'Sheets Auto-Sync',
+        role: 'Sincronizador Continuo con Google Sheets',
+        dept: 'OPERACIONES & ALERTAS',
+        badge: 'ZERO DATA ENTRY',
+        icon: '📊',
+        mission: 'Elimina para siempre el copiar y pegar a mano. Cada mañana a las 8 AM la planilla de Google Sheets del cliente amanece con los precios, stock y competidores auditados.',
+        stack: ['Google Sheets API v4', 'OAuth Service Account', 'Pandas DataFrame', 'Auto-Formatting'],
+        metric1Label: 'Sincronización',
+        metric1Val: 'Diaria 08:00 AM',
+        metric2Label: 'Horas Ahorradas',
+        metric2Val: '45h / cliente',
+        taskLog: 'Sincronización matutina exitosa: 5 columnas formateadas, colores condicionales aplicados en Sheets.'
+      },
+      'price-sentinel': {
+        name: 'Price War Sentinel',
+        role: 'Auditor de Guerras de Precios & Margen',
+        dept: 'OPERACIONES & ALERTAS',
+        badge: 'PROFIT DEFENDER',
+        icon: '📉',
+        mission: 'Monitorea las variaciones matemáticas entre tiendas rivales. Calcula el margen de ganancia protegido y proyecta pérdidas potenciales antes de que el cliente pierda ventas.',
+        stack: ['Algoritmo Delta %', 'Protección de Margen', 'Alerta Sniper Quiebre', 'Calculadora ROI'],
+        metric1Label: 'Margen Protegido',
+        metric1Val: '+$18,450 USD',
+        metric2Label: 'Quiebres Rival',
+        metric2Val: '14 detectados',
+        taskLog: 'Alerta Sniper disparada: Rival líder se quedó sin stock en Smart TV 50". Oportunidad de captura abierta.'
+      },
+      'ari-agent': {
+        name: 'Ari Web Assistant',
+        role: 'Asistente de Inteligencia & Conversión Web',
+        dept: 'OPERACIONES & CLIENTES',
+        badge: 'LEAD MAGNET',
+        icon: '💬',
+        mission: 'Reside en radarb2b.site. Atiende visitantes, responde dudas técnicas en lenguaje claro, cotiza según la escalera de 4 precios y capta solicitudes para la prueba gratis de 48 horas.',
+        stack: ['JavaScript Vanilla', 'Telegram Lead Forwarder', 'Landy Knowledge Base', 'Session Storage'],
+        metric1Label: 'Conversaciones',
+        metric1Val: '38 esta semana',
+        metric2Label: 'Pruebas 48h',
+        metric2Val: '7 solicitadas',
+        taskLog: 'Visitante consultó por monitoreo de 5 tiendas de calzado. Datos capturados y enviados a Telegram.'
+      },
+      'upwork-hunter': {
+        name: 'Upwork Job Hunter',
+        role: 'Rastreador de Contratos Internacionales',
+        dept: 'HUB COMERCIAL & UPWORK',
+        badge: 'OPPORTUNITY RADAR',
+        icon: '🎯',
+        mission: 'Escanea cada 30 minutos las publicaciones de Upwork y Contra filtrando clientes con pago verificado, presupuestos superiores a $45/hr o proyectos de $150-$650 con menos de 5 propuestas.',
+        stack: ['Upwork RSS / Scraping', 'Filtro Semántico', 'Scoring de Clientes', 'Notificador Táctico'],
+        metric1Label: 'Trabajos Filtrados',
+        metric1Val: '12 / día',
+        metric2Label: 'Calidad Match',
+        metric2Val: '92%',
+        taskLog: 'Nueva oportunidad detectada en Upwork: "Python Web Scraping for E-commerce Price Comparison ($500 USD)".'
+      },
+      'proposal-architect': {
+        name: 'Proposal Architect',
+        role: 'Redactor Táctico de Propuestas & Cold Pitch',
+        dept: 'HUB COMERCIAL & UPWORK',
+        badge: 'COPY EXPERT',
+        icon: '✍️',
+        mission: 'Redacta propuestas personalizadas usando el "Anzuelo Irresistible": ofrece la prueba gratis de 48hs en 3 URLs y linkea a radarb2b.site como respaldo de autoridad técnica.',
+        stack: ['Copywriting B2B', 'Plantillas de Conversión', 'Personalización Dinámica', 'Anzuelo 48hs'],
+        metric1Label: 'Tasa Respuesta',
+        metric1Val: '28%',
+        metric2Label: 'Tiempo Redacción',
+        metric2Val: '15 segundos',
+        taskLog: 'Propuesta generada para cliente de EE.UU. enfocada en monitoreo continuo con prueba de 3 URLs.'
+      }
+    };
+
+    // PAN & ZOOM MOTOR
+    let scale = 1;
+    let panX = 0;
+    let panY = 0;
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let activeAgentId = null;
+
+    const viewportContainer = document.getElementById('viewport-container');
+    const officeStage = document.getElementById('office-stage');
+    const zoomLevelText = document.getElementById('zoom-level-text');
+
+    function updateTransform() {
+      officeStage.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+      if (zoomLevelText) zoomLevelText.textContent = `${Math.round(scale * 100)}%`;
+    }
+
+    // Mouse drag
+    viewportContainer.addEventListener('mousedown', (e) => {
+      // Don't drag if clicking a desk or button
+      if (e.target.closest('.desk-card') || e.target.closest('button')) return;
+      isDragging = true;
+      startX = e.clientX - panX;
+      startY = e.clientY - panY;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      panX = e.clientX - startX;
+      panY = e.clientY - startY;
+      updateTransform();
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    // Touch drag for mobile
+    let touchStartX = 0;
+    let touchStartY = 0;
+    viewportContainer.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        if (e.target.closest('.desk-card') || e.target.closest('button')) return;
+        isDragging = true;
+        touchStartX = e.touches[0].clientX - panX;
+        touchStartY = e.touches[0].clientY - panY;
+      }
+    });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!isDragging || e.touches.length !== 1) return;
+      panX = e.touches[0].clientX - touchStartX;
+      panY = e.touches[0].clientY - touchStartY;
+      updateTransform();
+    });
+
+    window.addEventListener('touchend', () => {
+      isDragging = false;
+    });
+
+    // Scroll wheel zoom
+    viewportContainer.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const zoomFactor = e.deltaY < 0 ? 1.08 : 0.92;
+      const newScale = Math.min(Math.max(scale * zoomFactor, 0.45), 2.2);
+      scale = newScale;
+      updateTransform();
+    }, { passive: false });
+
+    // Zoom Buttons
+    document.getElementById('zoom-in-btn').addEventListener('click', () => {
+      scale = Math.min(scale * 1.15, 2.2);
+      updateTransform();
+    });
+
+    document.getElementById('zoom-out-btn').addEventListener('click', () => {
+      scale = Math.max(scale * 0.85, 0.45);
+      updateTransform();
+    });
+
+    document.getElementById('center-view-btn').addEventListener('click', () => {
+      scale = window.innerWidth < 768 ? 0.65 : 1;
+      panX = 0;
+      panY = 0;
+      updateTransform();
+    });
+
+    // Fullscreen toggle
+    document.getElementById('fullscreen-btn').addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    });
+
+    // DEPARTMENT FILTER TABS (FLY TO ROOM)
+    const deptTabs = document.querySelectorAll('.dept-tab');
+    deptTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        deptTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        const dept = tab.getAttribute('data-dept');
+        if (dept === 'all') {
+          scale = window.innerWidth < 768 ? 0.65 : 1;
+          panX = 0;
+          panY = 0;
+        } else if (dept === 'dept-director') {
+          scale = 1.35;
+          panX = 260;
+          panY = 160;
+        } else if (dept === 'dept-scraping') {
+          scale = 1.25;
+          panX = -260;
+          panY = 160;
+        } else if (dept === 'dept-ops') {
+          scale = 1.25;
+          panX = 180;
+          panY = -180;
+        } else if (dept === 'dept-sales') {
+          scale = 1.35;
+          panX = -260;
+          panY = -180;
+        }
+        updateTransform();
+      });
+    });
+
+    // AGENT DRAWER CONTROLLER
+    const drawer = document.getElementById('agent-drawer');
+    const backdrop = document.getElementById('drawer-backdrop');
+    const closeBtn = document.getElementById('close-drawer-btn');
+    const deskCards = document.querySelectorAll('.desk-card');
+
+    function openAgentDrawer(agentId) {
+      const data = AGENTS[agentId];
+      if (!data) return;
+
+      activeAgentId = agentId;
+
+      // Update Desk visual state
+      deskCards.forEach(d => d.classList.remove('active-desk'));
+      const activeDesk = document.querySelector(`[data-agent-id="${agentId}"]`);
+      if (activeDesk) activeDesk.classList.add('active-desk');
+
+      // Populate Drawer
+      document.getElementById('drawer-agent-icon').textContent = data.icon;
+      document.getElementById('drawer-agent-name').textContent = data.name;
+      document.getElementById('drawer-agent-role').textContent = data.role;
+      document.getElementById('drawer-agent-dept').textContent = data.dept;
+      document.getElementById('drawer-agent-badge').textContent = data.badge;
+      document.getElementById('drawer-agent-mission').textContent = data.mission;
+
+      document.getElementById('drawer-metric-label-1').textContent = data.metric1Label;
+      document.getElementById('drawer-metric-val-1').textContent = data.metric1Val;
+      document.getElementById('drawer-metric-label-2').textContent = data.metric2Label;
+      document.getElementById('drawer-metric-val-2').textContent = data.metric2Val;
+
+      document.getElementById('drawer-terminal-log').textContent = `> ${data.taskLog}`;
+
+      // Stack Badges
+      const stackContainer = document.getElementById('drawer-agent-stack');
+      stackContainer.innerHTML = data.stack.map(s => `
+        <span class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-mono text-cyan-300">
+          ${s}
+        </span>
+      `).join('');
+
+      // Open Drawer
+      drawer.classList.remove('translate-x-full');
+      backdrop.classList.remove('hidden');
+    }
+
+    function closeAgentDrawer() {
+      drawer.classList.add('translate-x-full');
+      backdrop.classList.add('hidden');
+      deskCards.forEach(d => d.classList.remove('active-desk'));
+      activeAgentId = null;
+    }
+
+    deskCards.forEach(desk => {
+      desk.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = desk.getAttribute('data-agent-id');
+        openAgentDrawer(id);
+      });
+    });
+
+    closeBtn.addEventListener('click', closeAgentDrawer);
+    backdrop.addEventListener('click', closeAgentDrawer);
+
+    // ESC key closes drawer
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeAgentDrawer();
+    });
+
+    // TRIGGER AGENT TASK SIMULATION
+    const triggerBtn = document.getElementById('trigger-agent-task-btn');
+    triggerBtn.addEventListener('click', () => {
+      if (!activeAgentId) return;
+
+      const activeDesk = document.querySelector(`[data-agent-id="${activeAgentId}"]`);
+      const terminalLog = document.getElementById('drawer-terminal-log');
+
+      triggerBtn.disabled = true;
+      triggerBtn.innerHTML = `<span>⏳</span><span>Ejecutando Tarea...</span>`;
+      
+      if (activeDesk) {
+        activeDesk.classList.add('executing-task');
+      }
+
+      terminalLog.innerHTML = `<span class="text-amber-400">> [${new Date().toLocaleTimeString()}] Tarea iniciada por Comandante Walter...</span>`;
+
+      setTimeout(() => {
+        terminalLog.innerHTML += `<br><span class="text-cyan-300">> [${new Date().toLocaleTimeString()}] Procesando flujo con stack pesado...</span>`;
+      }, 700);
+
+      setTimeout(() => {
+        if (activeDesk) {
+          activeDesk.classList.remove('executing-task');
+        }
+        triggerBtn.disabled = false;
+        triggerBtn.innerHTML = `<span>⚡</span><span>Simular Otra Tarea</span>`;
+        terminalLog.innerHTML += `<br><span class="text-emerald-400 font-bold">> [${new Date().toLocaleTimeString()}] ¡Misión cumplida! Datos procesados y sincronizados sin errores.</span>`;
+      }, 1600);
+    });
+
+    // Initial responsive setup
+    window.addEventListener('load', () => {
+      if (window.innerWidth < 768) {
+        scale = 0.62;
+        panY = -30;
+        updateTransform();
+      }
+    });
+  </script>
+</body>
+</html>
