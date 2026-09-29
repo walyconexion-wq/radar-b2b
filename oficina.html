@@ -690,6 +690,8 @@
     let interactiveObjects = [];
     let characterMeshes = {};
     let selectionRing = null;
+    let conduitCurve = null;
+    let conduitParticles = [];
     let labelsVisible = true;
     let audioEnabled = true;
 
@@ -912,13 +914,109 @@
       // 3. Stairs & Walkways
       buildStairsAndWalkways();
 
-      // 4. Plants
+      // 4. Department 3D Illuminated Signage (Prominent Wall Boards)
+      createDepartmentSign(-14, 5.4, -18.8, 0, "👑 DIRECCIÓN GENERAL", "Estrategia & Orquestación", "#ffaa44");
+      createDepartmentSign(13, 5.4, -20.3, 0, "⚡ LABORATORIO DE SCRAPING", "Heavy Stack: Crawl4AI · Playwright · Scrapy", "#00f2fe");
+      createDepartmentSign(-13, 4.2, 4.1, 0, "📡 OPERACIONES & ALERTAS", "Telegram Push · Sheets Sync · Ari", "#10b981");
+      createDepartmentSign(14, 4.2, 4.1, 0, "💼 HUB COMERCIAL & VENTAS", "Upwork Enterprise · Propuestas 48hs", "#f59e0b");
+
+      // 5. Live Collaboration Conduit (Ari -> Tool Router)
+      buildCollaborationConduit();
+
+      // 6. Plants
       createPlant(-23, 0.6, -18);
       createPlant(-5, 0.6, -18);
       createPlant(23, 0.6, -19);
       createPlant(3, 0.6, -19);
       createPlant(-23, -0.6, 21);
       createPlant(23, -0.6, 21);
+    }
+
+    // 3D ILLUMINATED DEPARTMENT SIGNAGE
+    function createDepartmentSign(x, y, z, rotY, title, subtitle, colorHex) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 512;
+      canvas.height = 128;
+      const ctx = canvas.getContext('2d');
+
+      const grad = ctx.createLinearGradient(0, 0, 512, 128);
+      grad.addColorStop(0, '#070b1a');
+      grad.addColorStop(1, '#0e162e');
+      ctx.fillStyle = grad;
+      
+      ctx.beginPath();
+      if (ctx.roundRect) {
+        ctx.roundRect(4, 4, 504, 120, 18);
+      } else {
+        ctx.rect(4, 4, 504, 120);
+      }
+      ctx.fill();
+
+      ctx.strokeStyle = colorHex;
+      ctx.lineWidth = 5;
+      ctx.stroke();
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 32px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(title, 256, 52);
+
+      ctx.fillStyle = colorHex;
+      ctx.font = 'bold 18px "JetBrains Mono", monospace';
+      ctx.fillText(subtitle, 256, 92);
+
+      const tex = new THREE.CanvasTexture(canvas);
+      const signGeo = new THREE.PlaneGeometry(8.2, 2.05);
+      const signMat = new THREE.MeshBasicMaterial({
+        map: tex,
+        transparent: true,
+        side: THREE.DoubleSide
+      });
+      const signMesh = new THREE.Mesh(signGeo, signMat);
+      signMesh.position.set(x, y, z);
+      signMesh.rotation.y = rotY;
+      scene.add(signMesh);
+      return signMesh;
+    }
+
+    // LIVE COLLABORATION CONDUIT (Ari -> Tool Router)
+    function buildCollaborationConduit() {
+      // Connects Ari Web Assistant [-9, 1.8, 16] in Operaciones to Tool Router Core [9, 2.5, -6.5] in Scraping
+      const p0 = new THREE.Vector3(-9, 1.8, 16.0);
+      const p1 = new THREE.Vector3(-4, 6.8, 6.0);
+      const p2 = new THREE.Vector3(4, 7.2, -1.0);
+      const p3 = new THREE.Vector3(9, 2.5, -6.5);
+
+      conduitCurve = new THREE.CubicBezierCurve3(p0, p1, p2, p3);
+
+      const tubeGeo = new THREE.TubeGeometry(conduitCurve, 64, 0.08, 8, false);
+      const tubeMat = new THREE.MeshBasicMaterial({
+        color: 0x00f2fe,
+        transparent: true,
+        opacity: 0.65
+      });
+      const tube = new THREE.Mesh(tubeGeo, tubeMat);
+      scene.add(tube);
+
+      const haloGeo = new THREE.TubeGeometry(conduitCurve, 64, 0.18, 8, false);
+      const haloMat = new THREE.MeshBasicMaterial({
+        color: 0x8b5cf6,
+        transparent: true,
+        opacity: 0.2
+      });
+      const halo = new THREE.Mesh(haloGeo, haloMat);
+      scene.add(halo);
+
+      conduitParticles = [];
+      const particleGeo = new THREE.SphereGeometry(0.22, 10, 10);
+      for (let i = 0; i < 5; i++) {
+        const particleMat = new THREE.MeshBasicMaterial({
+          color: i % 2 === 0 ? 0xffffff : 0x00f2fe
+        });
+        const orb = new THREE.Mesh(particleGeo, particleMat);
+        scene.add(orb);
+        conduitParticles.push(orb);
+      }
     }
 
     function createPlatform(x, y, z, width, depth, height, glowColor, style) {
@@ -1246,7 +1344,7 @@
       createDesk(cx + 4, cy, cz, 0, 'proposal-architect', 0x6366f1);
     }
 
-    // 3D CHARACTER AVATAR GENERATOR
+    // 3D CHARACTER AVATAR GENERATOR (PLAYMOBIL STYLED)
     function createCharacter(agentId, config) {
       const char = new THREE.Group();
       const pos = config.pos3d;
@@ -1261,29 +1359,98 @@
       char.add(hitBox);
       interactiveObjects.push(hitBox);
 
-      // Head
-      const headGeo = new THREE.SphereGeometry(0.38, 12, 12);
+      // 1. PLAYMOBIL CYLINDRICAL HEAD & CHIN DOME
+      const skinColor = config.skinColor || 0xffd5b8;
       const skinMat = new THREE.MeshStandardMaterial({
-        color: config.skinColor || 0xffd5b8,
-        roughness: 0.6
+        color: skinColor,
+        roughness: 0.5
       });
-      const head = new THREE.Mesh(headGeo, skinMat);
+      const head = new THREE.Mesh(new THREE.CylinderGeometry(0.33, 0.30, 0.44, 16), skinMat);
       head.position.y = 2.45;
       head.castShadow = true;
       char.add(head);
 
-      // Hair
-      const hairGeo = new THREE.SphereGeometry(0.41, 10, 10);
-      const hairMat = new THREE.MeshStandardMaterial({
-        color: config.hairColor || 0x1e293b,
-        roughness: 0.4
-      });
-      const hair = new THREE.Mesh(hairGeo, hairMat);
-      hair.position.set(0, 2.52, -0.05);
-      hair.scale.set(1.02, 0.95, 1.05);
-      char.add(hair);
+      const chinDome = new THREE.Mesh(new THREE.SphereGeometry(0.33, 12, 8), skinMat);
+      chinDome.position.y = 0.22;
+      head.add(chinDome);
 
-      // Torso
+      // 2. FACIAL FEATURES & ACCESSORIES
+      const eyeMat = new THREE.MeshBasicMaterial({ color: 0x111827 });
+      const eyeHighlightMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+
+      if (agentId === 'luz') {
+        // Luz: Glowing Cybernetic Cyan Visor
+        const visorGeo = new THREE.BoxGeometry(0.54, 0.12, 0.12);
+        const visorMat = new THREE.MeshBasicMaterial({ color: 0x00f2fe });
+        const visor = new THREE.Mesh(visorGeo, visorMat);
+        visor.position.set(0, 0.05, 0.28);
+        head.add(visor);
+      } else if (agentId === 'walter') {
+        // Walter: Smart Executive Glasses / Confident Eyes
+        const glassesGeo = new THREE.BoxGeometry(0.56, 0.14, 0.14);
+        const glassesMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.8, roughness: 0.2 });
+        const glasses = new THREE.Mesh(glassesGeo, glassesMat);
+        glasses.position.set(0, 0.05, 0.27);
+        head.add(glasses);
+      } else {
+        // Standard Playmobil Cute Big Eyes with Highlights
+        for (let side of [-1, 1]) {
+          const eyeGeo = new THREE.SphereGeometry(0.045, 8, 8);
+          const eye = new THREE.Mesh(eyeGeo, eyeMat);
+          eye.position.set(side * 0.12, 0.04, 0.31);
+          head.add(eye);
+
+          const shineGeo = new THREE.SphereGeometry(0.016, 6, 6);
+          const shine = new THREE.Mesh(shineGeo, eyeHighlightMat);
+          shine.position.set(side * 0.12 + 0.012, 0.052, 0.34);
+          head.add(shine);
+
+          const browGeo = new THREE.BoxGeometry(0.09, 0.02, 0.02);
+          const brow = new THREE.Mesh(browGeo, eyeMat);
+          brow.position.set(side * 0.12, 0.12, 0.31);
+          brow.rotation.z = side * -0.15;
+          head.add(brow);
+        }
+      }
+
+      // Smile
+      const smileGeo = new THREE.TorusGeometry(0.07, 0.016, 6, 12, Math.PI);
+      const smileMat = new THREE.MeshBasicMaterial({ color: 0x854d0e });
+      const smile = new THREE.Mesh(smileGeo, smileMat);
+      smile.rotation.x = Math.PI / 2;
+      smile.rotation.z = Math.PI;
+      smile.position.set(0, -0.10, 0.31);
+      head.add(smile);
+
+      // Over-Ear Tech Headphones for Scraping & Ops Specialists
+      if (['crawl4ai', 'playwright', 'scrapy', 'telegram-bot'].includes(agentId)) {
+        const hpColor = agentId === 'crawl4ai' ? 0x00f2fe : (agentId === 'playwright' ? 0x6366f1 : 0x10b981);
+        const hpMat = new THREE.MeshStandardMaterial({ color: hpColor, metalness: 0.6 });
+        const bandGeo = new THREE.TorusGeometry(0.36, 0.04, 8, 16, Math.PI);
+        const band = new THREE.Mesh(bandGeo, hpMat);
+        band.rotation.z = Math.PI;
+        band.position.set(0, 0.16, 0);
+        head.add(band);
+
+        for (let side of [-1, 1]) {
+          const cupGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.08, 12);
+          const cup = new THREE.Mesh(cupGeo, hpMat);
+          cup.rotation.z = Math.PI / 2;
+          cup.position.set(side * 0.34, 0.02, 0);
+          head.add(cup);
+        }
+      }
+
+      // 3. PLAYMOBIL HAIR
+      const hairColor = config.hairColor || 0x1e293b;
+      const hairMat = new THREE.MeshStandardMaterial({ color: hairColor, roughness: 0.4 });
+      const hairGeo = new THREE.SphereGeometry(0.38, 12, 10);
+      const hair = new THREE.Mesh(hairGeo, hairMat);
+      hair.position.set(0, 0.18, -0.04);
+      hair.scale.set(1.05, 0.9, 1.05);
+      head.add(hair);
+
+      // 4. TORSO
       const torsoGeo = new THREE.BoxGeometry(0.85, 1.05, 0.55);
       const jacketMat = new THREE.MeshStandardMaterial({
         color: config.jacketColor || 0x0f172a,
@@ -1294,7 +1461,90 @@
       torso.castShadow = true;
       char.add(torso);
 
-      // Legs
+      // 5. ARTICULATED ARMS & PLAYMOBIL C-HANDS
+      const isSeated = agentId !== 'walter' && agentId !== 'luz';
+      const armMat = new THREE.MeshStandardMaterial({ color: config.jacketColor || 0x0f172a });
+      const handMat = new THREE.MeshStandardMaterial({ color: skinColor, roughness: 0.4 });
+
+      // Left Arm
+      const leftArm = new THREE.Group();
+      leftArm.position.set(-0.52, 2.05, 0);
+      
+      const upperArmL = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.10, 0.55, 8), armMat);
+      upperArmL.position.y = -0.25;
+      leftArm.add(upperArmL);
+
+      const foreArmL = new THREE.Group();
+      foreArmL.position.set(0, -0.5, 0);
+      const foreArmLMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.08, 0.45, 8), armMat);
+      foreArmLMesh.position.y = -0.2;
+      foreArmL.add(foreArmLMesh);
+
+      // Playmobil C-Hand Left
+      const handL = new THREE.Mesh(new THREE.TorusGeometry(0.07, 0.026, 6, 12, Math.PI * 1.5), handMat);
+      handL.position.set(0, -0.42, 0);
+      handL.rotation.y = Math.PI / 2;
+      foreArmL.add(handL);
+      leftArm.add(foreArmL);
+      char.add(leftArm);
+
+      // Right Arm
+      const rightArm = new THREE.Group();
+      rightArm.position.set(0.52, 2.05, 0);
+
+      const upperArmR = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.10, 0.55, 8), armMat);
+      upperArmR.position.y = -0.25;
+      rightArm.add(upperArmR);
+
+      const foreArmR = new THREE.Group();
+      foreArmR.position.set(0, -0.5, 0);
+      const foreArmRMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.08, 0.45, 8), armMat);
+      foreArmRMesh.position.y = -0.2;
+      foreArmR.add(foreArmRMesh);
+
+      // Playmobil C-Hand Right
+      const handR = new THREE.Mesh(new THREE.TorusGeometry(0.07, 0.026, 6, 12, Math.PI * 1.5), handMat);
+      handR.position.set(0, -0.42, 0);
+      handR.rotation.y = Math.PI / 2;
+      foreArmR.add(handR);
+      rightArm.add(foreArmR);
+      char.add(rightArm);
+
+      // Default Poses
+      if (isSeated) {
+        // Seated typing pose: hands positioned on keyboard
+        leftArm.rotation.x = -1.15;
+        leftArm.rotation.z = 0.22;
+        foreArmL.rotation.x = -0.4;
+
+        rightArm.rotation.x = -1.15;
+        rightArm.rotation.z = -0.22;
+        foreArmR.rotation.x = -0.4;
+      } else if (agentId === 'walter') {
+        leftArm.rotation.x = 0.2;
+        leftArm.rotation.z = -0.25;
+        rightArm.rotation.x = -0.4;
+        rightArm.rotation.z = 0.3;
+      } else if (agentId === 'luz') {
+        leftArm.rotation.x = -0.8;
+        leftArm.rotation.z = -0.2;
+        rightArm.rotation.x = -0.5;
+        rightArm.rotation.z = 0.25;
+
+        // Halo
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(0.48, 0.04, 8, 24), new THREE.MeshBasicMaterial({ color: 0x00f2fe }));
+        ring.rotation.x = Math.PI / 2;
+        ring.position.y = 2.95;
+        char.add(ring);
+
+        // Hologram Tablet
+        const tab = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.35, 0.04), new THREE.MeshBasicMaterial({ color: 0x00f2fe }));
+        tab.position.set(0.4, 1.5, 0.35);
+        tab.rotation.x = 0.4;
+        char.add(tab);
+      }
+
+      // 6. LEGS & SHOES
       const legGeo = new THREE.BoxGeometry(0.28, 1.1, 0.32);
       const pantsMat = new THREE.MeshStandardMaterial({
         color: config.pantsColor || 0x1e293b,
@@ -1311,7 +1561,6 @@
       rightLeg.castShadow = true;
       char.add(rightLeg);
 
-      // Shoes
       const shoeGeo = new THREE.BoxGeometry(0.3, 0.18, 0.48);
       const shoeMat = new THREE.MeshStandardMaterial({ color: 0x050711 });
       
@@ -1323,26 +1572,15 @@
       rightShoe.position.set(0.22, 0.09, 0.08);
       char.add(rightShoe);
 
-      if (agentId === 'luz') {
-        const ringGeo = new THREE.TorusGeometry(0.48, 0.04, 8, 24);
-        const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f2fe });
-        const ring = new THREE.Mesh(ringGeo, ringMat);
-        ring.rotation.x = Math.PI / 2;
-        ring.position.y = 2.95;
-        char.add(ring);
-
-        const tabGeo = new THREE.BoxGeometry(0.5, 0.35, 0.04);
-        const tabMat = new THREE.MeshBasicMaterial({ color: 0x00f2fe });
-        const tab = new THREE.Mesh(tabGeo, tabMat);
-        tab.position.set(0.5, 1.5, 0.4);
-        tab.rotation.x = 0.4;
-        char.add(tab);
-      }
-
       scene.add(char);
       characterMeshes[agentId] = {
         mesh: char,
         head: head,
+        leftArm: leftArm,
+        rightArm: rightArm,
+        foreArmL: foreArmL,
+        foreArmR: foreArmR,
+        isSeated: isSeated,
         initialY: pos.y,
         seed: Math.random() * 10
       };
@@ -1423,6 +1661,21 @@
 
         overlay.appendChild(badge);
       }
+
+      // Floating Live Collaboration Badge over Conduit Arch
+      const conduitBadge = document.createElement('div');
+      conduitBadge.className = 'badge-3d';
+      conduitBadge.id = 'badge-conduit';
+      conduitBadge.innerHTML = `
+        <div class="badge-pill" style="border-color: rgba(0, 242, 254, 0.7); box-shadow: 0 0 20px rgba(0, 242, 254, 0.45); background: rgba(7, 11, 26, 0.92);">
+          <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
+          <div class="flex flex-col text-left">
+            <span class="text-[10px] font-bold text-cyan-300 font-mono leading-none">⚡ ARI ➔ TOOL ROUTER</span>
+            <span class="text-[8px] text-slate-300 font-mono mt-0.5 leading-none">Colaboración: Enrutando Lead Calificado</span>
+          </div>
+        </div>
+      `;
+      overlay.appendChild(conduitBadge);
     }
 
     const tempV = new THREE.Vector3();
@@ -1448,6 +1701,22 @@
           badge.style.opacity = '1';
         } else {
           badge.style.opacity = '0';
+        }
+      }
+
+      // Position Live Collaboration Conduit Badge
+      const cBadge = document.getElementById('badge-conduit');
+      if (cBadge && conduitCurve) {
+        tempV.set(0, 7.3, 4.0);
+        tempV.project(camera);
+        if (tempV.z < 1) {
+          const x = (tempV.x * 0.5 + 0.5) * width;
+          const y = (-(tempV.y * 0.5) + 0.5) * height;
+          cBadge.style.left = `${x}px`;
+          cBadge.style.top = `${y}px`;
+          cBadge.style.opacity = '1';
+        } else {
+          cBadge.style.opacity = '0';
         }
       }
     }
@@ -1536,12 +1805,37 @@
 
       controls.update();
 
+      // Articulated Playmobil Animation (Breathing, Head Turning & Fast Typing)
       for (const [id, item] of Object.entries(characterMeshes)) {
         const time = elapsedTime * 2.2 + item.seed;
-        item.mesh.position.y = item.initialY + Math.sin(time) * 0.04;
+        item.mesh.position.y = item.initialY + Math.sin(time) * 0.03;
+        
         if (item.head) {
-          item.head.rotation.y = Math.sin(time * 0.4) * 0.12;
+          item.head.rotation.y = Math.sin(time * 0.4) * 0.14;
         }
+
+        // Seated agents: Rapid realistic typing motion on keyboard!
+        if (item.isSeated && item.leftArm && item.rightArm) {
+          const typeSpeed = 16;
+          item.leftArm.rotation.x = -1.15 + Math.sin(elapsedTime * typeSpeed + item.seed) * 0.09;
+          item.rightArm.rotation.x = -1.15 + Math.cos(elapsedTime * typeSpeed + item.seed + 1.6) * 0.09;
+        } else if (id === 'walter' && item.rightArm) {
+          // Walter leadership gestures
+          item.rightArm.rotation.x = -0.4 + Math.sin(elapsedTime * 1.5) * 0.09;
+        } else if (id === 'luz' && item.rightArm) {
+          // Luz tapping holographic tablet
+          item.rightArm.rotation.x = -0.5 + Math.sin(elapsedTime * 3.2) * 0.11;
+        }
+      }
+
+      // Live Collaboration Conduit Energy Flow (Ari -> Tool Router)
+      if (conduitCurve && conduitParticles.length > 0) {
+        conduitParticles.forEach((orb, idx) => {
+          const t = (elapsedTime * 0.22 + (idx / conduitParticles.length)) % 1.0;
+          orb.position.copy(conduitCurve.getPoint(t));
+          const s = 0.85 + Math.sin(elapsedTime * 8 + idx) * 0.25;
+          orb.scale.set(s, s, s);
+        });
       }
 
       if (selectionRing && selectionRing.visible) {
