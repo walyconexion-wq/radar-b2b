@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0">
-  <title>Oficina Virtual de Agentes · Radar B2B Ops</title>
+  <title>Oficina Virtual 3D · Radar B2B HQ</title>
   
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏢</text></svg>">
 
@@ -37,6 +37,10 @@
     }
   </script>
 
+  <!-- THREE.JS & ORBIT CONTROLS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
   <style>
     body {
       background-color: #04060E;
@@ -46,72 +50,79 @@
       -webkit-user-select: none;
     }
 
-    /* Grid pattern for high-tech tactical floor */
-    .floor-grid {
-      background-size: 40px 40px;
-      background-image: 
-        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    /* 3D Canvas styles */
+    #canvas-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      outline: none;
     }
 
-    /* Isometric Room Platforms */
-    .iso-room {
-      background: rgba(11, 16, 33, 0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 25px -5px rgba(99, 102, 241, 0.15);
-      border-radius: 28px;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      position: relative;
-    }
-    .iso-room:hover {
-      border-color: rgba(0, 242, 254, 0.35);
-      box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.9), 0 0 35px -5px rgba(0, 242, 254, 0.25);
+    #three-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
     }
 
-    /* Desk Workstation */
-    .desk-card {
-      background: rgba(16, 22, 44, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      border-radius: 20px;
-      transition: all 0.25s ease;
+    /* Floating 3D Badges Overlay */
+    #badges-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 10;
+    }
+
+    .badge-3d {
+      position: absolute;
+      pointer-events: auto;
+      transform: translate(-50%, -100%);
+      transition: opacity 0.2s ease, transform 0.15s ease-out;
       cursor: pointer;
-      position: relative;
-    }
-    .desk-card:hover {
-      transform: translateY(-4px);
-      background: rgba(22, 30, 60, 0.85);
-      border-color: rgba(0, 242, 254, 0.5);
-      box-shadow: 0 12px 25px -5px rgba(0, 242, 254, 0.2);
-    }
-    .desk-card.active-desk {
-      border-color: #00F2FE;
-      box-shadow: 0 0 25px rgba(0, 242, 254, 0.4);
+      will-change: transform, left, top;
     }
 
-    /* Monitor Screens Glow */
-    .screen-glow {
-      box-shadow: 0 0 10px rgba(0, 242, 254, 0.6);
-    }
-    .screen-glow-indigo {
-      box-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
-    }
-    .screen-glow-emerald {
-      box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+    .badge-3d:hover {
+      transform: translate(-50%, -115%) scale(1.06);
+      z-index: 25;
     }
 
-    /* Custom Floating Pill */
-    .agent-pill {
-      box-shadow: 0 8px 16px -2px rgba(0,0,0,0.6);
-      backdrop-filter: blur(8px);
+    .badge-pill {
+      background: rgba(10, 14, 28, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 8px 24px -2px rgba(0, 0, 0, 0.75), 0 0 12px -2px rgba(0, 242, 254, 0.2);
+      border-radius: 9999px;
+      padding: 5px 12px 5px 8px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      white-space: nowrap;
       transition: all 0.2s ease;
     }
-    .agent-pill:hover {
-      transform: scale(1.05);
+
+    .badge-3d:hover .badge-pill {
+      border-color: #00F2FE;
+      box-shadow: 0 12px 28px -2px rgba(0, 0, 0, 0.85), 0 0 20px rgba(0, 242, 254, 0.4);
     }
 
-    /* Navigation button active */
+    .badge-leader .badge-pill {
+      border-color: rgba(245, 158, 11, 0.4);
+      box-shadow: 0 8px 24px -2px rgba(0, 0, 0, 0.75), 0 0 14px -2px rgba(245, 158, 11, 0.3);
+    }
+
+    .badge-luz .badge-pill {
+      border-color: rgba(0, 242, 254, 0.5);
+      box-shadow: 0 8px 24px -2px rgba(0, 0, 0, 0.75), 0 0 16px -2px rgba(0, 242, 254, 0.4);
+    }
+
+    /* Department Tab Active */
     .dept-tab.active {
       background: rgba(0, 242, 254, 0.15);
       color: #00F2FE;
@@ -119,7 +130,16 @@
       box-shadow: 0 0 20px -3px rgba(0, 242, 254, 0.25);
     }
 
-    /* Pulse wave for active task */
+    /* Secret Bunker Easter Egg */
+    .bunker-trigger {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .bunker-trigger:active {
+      transform: scale(0.92);
+    }
+
+    /* Task Pulse Animation */
     @keyframes taskPulse {
       0% { transform: scale(1); opacity: 1; }
       50% { transform: scale(1.08); opacity: 0.8; }
@@ -139,7 +159,7 @@
     
     <!-- BRAND / TITLE -->
     <div class="flex items-center gap-4">
-      <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-cyan-500 to-indigo-500 p-0.5 shadow-lg shadow-cyan-500/20 flex items-center justify-center text-xl">
+      <div id="secret-bunker-logo" class="bunker-trigger w-11 h-11 rounded-2xl bg-gradient-to-tr from-cyan-500 to-indigo-500 p-0.5 shadow-lg shadow-cyan-500/20 flex items-center justify-center text-xl" title="Cuartel General Radar B2B (4 clics para Búnker Secreto)">
         🏢
       </div>
       <div>
@@ -147,14 +167,14 @@
           <span class="font-extrabold text-base tracking-tight text-white font-mono">RADAR B2B</span>
           <span class="px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 font-mono text-[10px] border border-cyan-500/30 font-bold flex items-center gap-1.5">
             <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-            OFICINA VIRTUAL LIVE
+            OFICINA VIRTUAL 3D LIVE
           </span>
         </div>
-        <p class="text-[11px] text-slate-400 font-mono">Centro de Comando & Orquestación de Agentes de IA</p>
+        <p class="text-[11px] text-slate-400 font-mono">Cuartel General Isométrico · Orquestación en Tiempo Real</p>
       </div>
     </div>
 
-    <!-- DEPARTMENT TABS (ROOM SELECTOR) -->
+    <!-- DEPARTMENT TABS (FLY TO ROOM) -->
     <nav class="hidden lg:flex items-center gap-1.5 bg-[#090D1C] p-1.5 rounded-2xl border border-white/10 text-xs font-medium">
       <button data-dept="all" class="dept-tab active px-4 py-2 rounded-xl flex items-center gap-2 text-slate-300 transition-all">
         <span>🏢</span>
@@ -183,11 +203,16 @@
       </button>
     </nav>
 
-    <!-- RIGHT QUICK ACTIONS -->
+    <!-- RIGHT QUICK ACTIONS & MODE TOGGLE -->
     <div class="flex items-center gap-3">
+      <!-- Audio Toggle -->
+      <button id="audio-toggle-btn" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 flex items-center justify-center text-xs transition-colors" title="Sonido FX On/Off">
+        🔊
+      </button>
+
       <a href="bunker.html" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-slate-300 transition-colors flex items-center gap-1.5">
         <span>🛡️</span>
-        <span class="hidden sm:inline">Búnker</span>
+        <span class="hidden sm:inline">Búnker Secreto</span>
       </a>
       <a href="index.html" class="px-4 py-2 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-xs font-mono text-cyan-300 font-bold transition-colors flex items-center gap-1.5">
         <span>←</span>
@@ -196,11 +221,11 @@
     </div>
   </header>
 
-  <!-- MAIN CANVAS VIEWPORT (PAN & ZOOM CONTAINER) -->
-  <main id="viewport-container" class="flex-1 relative overflow-hidden cursor-grab active:cursor-grabbing floor-grid bg-[#04060E]">
+  <!-- MAIN 3D WORKSPACE VIEWPORT -->
+  <main id="viewport-container" class="flex-1 relative overflow-hidden bg-[#04060E]">
     
-    <!-- SUB-HEADER ON MOBILE FOR DEPARTMENTS -->
-    <div class="lg:hidden absolute top-3 left-3 right-3 z-20 flex gap-1.5 overflow-x-auto p-1.5 rounded-2xl bg-black/80 backdrop-blur-md border border-white/10 text-xs">
+    <!-- MOBILE SUB-HEADER TABS -->
+    <div class="lg:hidden absolute top-3 left-3 right-3 z-20 flex gap-1.5 overflow-x-auto p-1.5 rounded-2xl bg-black/85 backdrop-blur-md border border-white/10 text-xs">
       <button data-dept="all" class="dept-tab active px-3 py-1.5 rounded-xl whitespace-nowrap text-slate-300">Toda la Oficina (12)</button>
       <button data-dept="dept-director" class="dept-tab px-3 py-1.5 rounded-xl whitespace-nowrap text-slate-300">👑 Dirección (2)</button>
       <button data-dept="dept-scraping" class="dept-tab px-3 py-1.5 rounded-xl whitespace-nowrap text-slate-300">⚡ Scraping (4)</button>
@@ -208,343 +233,14 @@
       <button data-dept="dept-sales" class="dept-tab px-3 py-1.5 rounded-xl whitespace-nowrap text-slate-300">💼 Comercial (2)</button>
     </div>
 
-    <!-- TRANSFORMABLE WORKSPACE (SCALED & PANNED VIA JS) -->
-    <div id="office-stage" class="absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-out" style="transform: translate(0px, 0px) scale(1);">
-      
-      <!-- 2.5D ISOMETRIC OFFICE MAP CONTAINER (1400px x 920px) -->
-      <div id="office-map" class="relative w-[1380px] h-[900px] shrink-0 p-8 grid grid-cols-12 grid-rows-12 gap-6">
+    <!-- THREE.JS WEBGL CANVAS CONTAINER -->
+    <div id="canvas-container">
+      <canvas id="three-canvas"></canvas>
+    </div>
 
-        <!-- ============================================== -->
-        <!-- SALA 1: DESPACHO DE DIRECCIÓN (Top Left) -->
-        <!-- ============================================== -->
-        <div id="dept-director" class="iso-room col-span-5 row-span-6 p-6 flex flex-col justify-between border-t-2 border-t-cyan-400">
-          
-          <!-- Header de Sala -->
-          <div class="flex items-center justify-between border-b border-white/[0.08] pb-3 mb-4">
-            <div class="flex items-center gap-2.5">
-              <span class="text-xl">🏛️</span>
-              <div>
-                <h2 class="font-extrabold text-sm text-white tracking-wide font-mono">DESPACHO DE DIRECCIÓN GENERAL</h2>
-                <p class="text-[10px] text-cyan-400 font-mono">Toma de Decisiones, Ecuación X & Orquestación</p>
-              </div>
-            </div>
-            <span class="px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 text-[9px] font-mono font-bold">2 LÍDERES</span>
-          </div>
-
-          <!-- Pizarra Ejecutiva de Estrategia -->
-          <div class="bg-black/40 border border-white/5 rounded-2xl p-3 mb-4 flex items-center justify-between gap-3 text-xs font-mono">
-            <div class="flex items-center gap-2">
-              <span>📋</span>
-              <span class="text-slate-300 text-[11px]">Meta Q4: <b>Ecuación X</b> ($1,500 USD / mes con 4h/día)</span>
-            </div>
-            <span class="text-cyan-400 text-[10px] font-bold">RETAINERS: $450-$650</span>
-          </div>
-
-          <!-- Puestos Ejecutivos (Walter & Luz) -->
-          <div class="grid grid-cols-2 gap-4 flex-1">
-            
-            <!-- Puesto 1: Comandante Walter -->
-            <div class="desk-card p-4 flex flex-col justify-between group" data-agent-id="walter">
-              <div class="flex items-start justify-between">
-                <span class="text-3xl">👨‍💻</span>
-                <span class="agent-pill px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-[10px] font-mono text-emerald-300 font-bold flex items-center gap-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                  COMANDANTE
-                </span>
-              </div>
-              <div class="space-y-1 my-2">
-                <div class="font-bold text-xs text-white group-hover:text-cyan-300 transition-colors">Walter C.</div>
-                <div class="text-[10px] text-slate-400 font-mono">Dirección General & Estrategia</div>
-              </div>
-              <!-- Estación de Trabajo Visual -->
-              <div class="bg-black/50 p-2.5 rounded-xl border border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-300">
-                <span>🖥️ Dual Monitor 4K</span>
-                <span class="text-emerald-400 font-bold">SUPERVISANDO</span>
-              </div>
-            </div>
-
-            <!-- Puesto 2: Socia Luz (Orquestadora) -->
-            <div class="desk-card p-4 flex flex-col justify-between group" data-agent-id="luz">
-              <div class="flex items-start justify-between">
-                <span class="text-3xl">🤖</span>
-                <span class="agent-pill px-2 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-[10px] font-mono text-cyan-300 font-bold flex items-center gap-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
-                  SOCIA IA
-                </span>
-              </div>
-              <div class="space-y-1 my-2">
-                <div class="font-bold text-xs text-white group-hover:text-cyan-300 transition-colors">Luz (Antigravity Ops)</div>
-                <div class="text-[10px] text-cyan-400 font-mono">Orquestadora Central de Agentes</div>
-              </div>
-              <!-- Estación de Trabajo Visual -->
-              <div class="bg-black/50 p-2.5 rounded-xl border border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-300">
-                <span>🧠 Tool Router Core</span>
-                <span class="text-cyan-400 font-bold">24/7 EN LÍNEA</span>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Decoración Planta Oficina -->
-          <div class="mt-3 pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-500">
-            <span>🪴 Planta Ficus Robusta</span>
-            <span>☕ Café Táctico Listo</span>
-          </div>
-        </div>
-
-        <!-- ============================================== -->
-        <!-- SALA 2: LABORATORIO DE SCRAPING & INTELIGENCIA (Top Right) -->
-        <!-- ============================================== -->
-        <div id="dept-scraping" class="iso-room col-span-7 row-span-6 p-6 flex flex-col justify-between border-t-2 border-t-indigo-400">
-          
-          <!-- Header de Sala -->
-          <div class="flex items-center justify-between border-b border-white/[0.08] pb-3 mb-4">
-            <div class="flex items-center gap-2.5">
-              <span class="text-xl">⚡</span>
-              <div>
-                <h2 class="font-extrabold text-sm text-white tracking-wide font-mono">LABORATORIO DE SCRAPING & INTELIGENCIA</h2>
-                <p class="text-[10px] text-indigo-400 font-mono">Heavy Stack: Crawl4AI, Playwright, Scrapy, Python 3.12</p>
-              </div>
-            </div>
-            <span class="px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 text-[9px] font-mono font-bold">4 AGENTES LAB</span>
-          </div>
-
-          <!-- 4 Escritorios de Scraping -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 flex-1">
-            
-            <!-- Agente 1: Crawl4AI Sentinel -->
-            <div class="desk-card p-3 flex flex-col justify-between group" data-agent-id="crawl4ai">
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-2xl">🕷️</span>
-                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-              </div>
-              <div class="space-y-0.5 mb-2">
-                <div class="font-bold text-xs text-white group-hover:text-cyan-300 transition-colors">Crawl4AI Sentinel</div>
-                <div class="text-[9px] text-slate-400 font-mono">Bypass Anti-Bot & Markdown</div>
-              </div>
-              <div class="bg-black/50 p-2 rounded-lg border border-white/5 text-[9px] font-mono text-slate-400">
-                <div>SKUs: <b class="text-white">1,420</b></div>
-                <div>Status: <b class="text-emerald-400">Vigilando</b></div>
-              </div>
-            </div>
-
-            <!-- Agente 2: Playwright Stealth Engine -->
-            <div class="desk-card p-3 flex flex-col justify-between group" data-agent-id="playwright">
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-2xl">🎭</span>
-                <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
-              </div>
-              <div class="space-y-0.5 mb-2">
-                <div class="font-bold text-xs text-white group-hover:text-indigo-300 transition-colors">Playwright Stealth</div>
-                <div class="text-[9px] text-slate-400 font-mono">SPAs, Clics & Carritos</div>
-              </div>
-              <div class="bg-black/50 p-2 rounded-lg border border-white/5 text-[9px] font-mono text-slate-400">
-                <div>Headless: <b class="text-white">Activo</b></div>
-                <div>Sesiones: <b class="text-indigo-300">Limpias</b></div>
-              </div>
-            </div>
-
-            <!-- Agente 3: Tool Router Dispatcher -->
-            <div class="desk-card p-3 flex flex-col justify-between group" data-agent-id="tool-router">
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-2xl">🔀</span>
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              </div>
-              <div class="space-y-0.5 mb-2">
-                <div class="font-bold text-xs text-white group-hover:text-emerald-300 transition-colors">Tool Router Core</div>
-                <div class="text-[9px] text-slate-400 font-mono">Selector Óptimo Python</div>
-              </div>
-              <div class="bg-black/50 p-2 rounded-lg border border-white/5 text-[9px] font-mono text-slate-400">
-                <div>Decisión: <b class="text-white">0.02s</b></div>
-                <div>Modo: <b class="text-emerald-300">Automático</b></div>
-              </div>
-            </div>
-
-            <!-- Agente 4: Scrapy & BS4 Pipeline -->
-            <div class="desk-card p-3 flex flex-col justify-between group" data-agent-id="scrapy">
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-2xl">⚡</span>
-                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-              </div>
-              <div class="space-y-0.5 mb-2">
-                <div class="font-bold text-xs text-white group-hover:text-amber-300 transition-colors">Scrapy Pipeline</div>
-                <div class="text-[9px] text-slate-400 font-mono">Extracción Masiva Veloz</div>
-              </div>
-              <div class="bg-black/50 p-2 rounded-lg border border-white/5 text-[9px] font-mono text-slate-400">
-                <div>Rendimiento: <b class="text-white">50 req/s</b></div>
-                <div>Lote: <b class="text-amber-300">En cola</b></div>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Racks de Servidores de Fondo -->
-          <div class="mt-3 pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-500">
-            <span>🖥️ Racks de Servidores Python 3.12 (UV Virtualenv)</span>
-            <span class="text-cyan-400 font-bold">100% OPERATIVO</span>
-          </div>
-        </div>
-
-        <!-- ============================================== -->
-        <!-- SALA 3: OPERACIONES & ALERTAS EN VIVO (Bottom Left) -->
-        <!-- ============================================== -->
-        <div id="dept-ops" class="iso-room col-span-7 row-span-6 p-6 flex flex-col justify-between border-t-2 border-t-emerald-400">
-          
-          <!-- Header de Sala -->
-          <div class="flex items-center justify-between border-b border-white/[0.08] pb-3 mb-4">
-            <div class="flex items-center gap-2.5">
-              <span class="text-xl">📡</span>
-              <div>
-                <h2 class="font-extrabold text-sm text-white tracking-wide font-mono">OPERACIONES, ALERTAS & ENTREGA CONTINUA</h2>
-                <p class="text-[10px] text-emerald-400 font-mono">Telegram Bot Push, Sincronización Google Sheets, Ari Web</p>
-              </div>
-            </div>
-            <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 text-[9px] font-mono font-bold">4 AGENTES OPS</span>
-          </div>
-
-          <!-- 4 Escritorios de Operaciones -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 flex-1">
-            
-            <!-- Agente 1: Telegram Bot Dispatcher -->
-            <div class="desk-card p-3 flex flex-col justify-between group" data-agent-id="telegram-bot">
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-2xl">🤖</span>
-                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-              </div>
-              <div class="space-y-0.5 mb-2">
-                <div class="font-bold text-xs text-white group-hover:text-cyan-300 transition-colors">Telegram Dispatcher</div>
-                <div class="text-[9px] text-slate-400 font-mono">@Walys2b2_bot Alertas</div>
-              </div>
-              <div class="bg-black/50 p-2 rounded-lg border border-white/5 text-[9px] font-mono text-slate-400">
-                <div>Push: <b class="text-cyan-300">&lt;24s</b></div>
-                <div>Canal: <b class="text-white">Privado</b></div>
-              </div>
-            </div>
-
-            <!-- Agente 2: Google Sheets Sync -->
-            <div class="desk-card p-3 flex flex-col justify-between group" data-agent-id="sheets-sync">
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-2xl">📊</span>
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              </div>
-              <div class="space-y-0.5 mb-2">
-                <div class="font-bold text-xs text-white group-hover:text-emerald-300 transition-colors">Sheets Auto-Sync</div>
-                <div class="text-[9px] text-slate-400 font-mono">Reportes Vivos 8 AM</div>
-              </div>
-              <div class="bg-black/50 p-2 rounded-lg border border-white/5 text-[9px] font-mono text-slate-400">
-                <div>Filas: <b class="text-white">Auto-fill</b></div>
-                <div>Sync: <b class="text-emerald-300">Sin fallos</b></div>
-              </div>
-            </div>
-
-            <!-- Agente 3: Price War Sentinel -->
-            <div class="desk-card p-3 flex flex-col justify-between group" data-agent-id="price-sentinel">
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-2xl">📉</span>
-                <span class="w-2 h-2 rounded-full bg-rose-400 animate-pulse"></span>
-              </div>
-              <div class="space-y-0.5 mb-2">
-                <div class="font-bold text-xs text-white group-hover:text-rose-300 transition-colors">Price War Sentinel</div>
-                <div class="text-[9px] text-slate-400 font-mono">Detección Quiebres & Bajas</div>
-              </div>
-              <div class="bg-black/50 p-2 rounded-lg border border-white/5 text-[9px] font-mono text-slate-400">
-                <div>Alertas: <b class="text-rose-400">84 hoy</b></div>
-                <div>Margen: <b class="text-white">+$18.4k</b></div>
-              </div>
-            </div>
-
-            <!-- Agente 4: Ari Web Assistant -->
-            <div class="desk-card p-3 flex flex-col justify-between group" data-agent-id="ari-agent">
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-2xl">💬</span>
-                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-              </div>
-              <div class="space-y-0.5 mb-2">
-                <div class="font-bold text-xs text-white group-hover:text-cyan-300 transition-colors">Ari Assistant</div>
-                <div class="text-[9px] text-slate-400 font-mono">Atención Web & Leads</div>
-              </div>
-              <div class="bg-black/50 p-2 rounded-lg border border-white/5 text-[9px] font-mono text-slate-400">
-                <div>Web: <b class="text-white">radarb2b.site</b></div>
-                <div>Pruebas: <b class="text-cyan-300">48hs Free</b></div>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Telemetría de Operaciones -->
-          <div class="mt-3 pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-500">
-            <span>🌐 Red de Webhooks y APIs Seguras</span>
-            <span class="text-emerald-400 font-bold">LATENCIA MÍNIMA</span>
-          </div>
-        </div>
-
-        <!-- ============================================== -->
-        <!-- SALA 4: HUB COMERCIAL & CRECIMIENTO (Bottom Right) -->
-        <!-- ============================================== -->
-        <div id="dept-sales" class="iso-room col-span-5 row-span-6 p-6 flex flex-col justify-between border-t-2 border-t-amber-400">
-          
-          <!-- Header de Sala -->
-          <div class="flex items-center justify-between border-b border-white/[0.08] pb-3 mb-4">
-            <div class="flex items-center gap-2.5">
-              <span class="text-xl">💼</span>
-              <div>
-                <h2 class="font-extrabold text-sm text-white tracking-wide font-mono">HUB COMERCIAL & PROSPECCIÓN</h2>
-                <p class="text-[10px] text-amber-400 font-mono">Upwork, Contra & Captura B2B Internacional</p>
-              </div>
-            </div>
-            <span class="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 text-[9px] font-mono font-bold">2 AGENTES VENTAS</span>
-          </div>
-
-          <!-- 2 Escritorios Comerciales -->
-          <div class="grid grid-cols-2 gap-4 flex-1">
-            
-            <!-- Agente 1: Upwork Job Hunter -->
-            <div class="desk-card p-4 flex flex-col justify-between group" data-agent-id="upwork-hunter">
-              <div class="flex items-start justify-between">
-                <span class="text-3xl">🎯</span>
-                <span class="agent-pill px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-[10px] font-mono text-amber-300 font-bold">
-                  RADAR CLIENTES
-                </span>
-              </div>
-              <div class="space-y-1 my-2">
-                <div class="font-bold text-xs text-white group-hover:text-amber-300 transition-colors">Upwork Job Hunter</div>
-                <div class="text-[10px] text-slate-400 font-mono">Filtro de Trabajos $45-$65/hr</div>
-              </div>
-              <div class="bg-black/50 p-2.5 rounded-xl border border-white/5 text-[10px] font-mono text-slate-300">
-                <div>Contratos: <b class="text-amber-300">Python Scraping</b></div>
-                <div>Propuestas: <b class="text-emerald-400">&lt;5 postulantes</b></div>
-              </div>
-            </div>
-
-            <!-- Agente 2: Proposal Architect -->
-            <div class="desk-card p-4 flex flex-col justify-between group" data-agent-id="proposal-architect">
-              <div class="flex items-start justify-between">
-                <span class="text-3xl">✍️</span>
-                <span class="agent-pill px-2 py-0.5 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-[10px] font-mono text-indigo-300 font-bold">
-                  COPY TÁCTICO
-                </span>
-              </div>
-              <div class="space-y-1 my-2">
-                <div class="font-bold text-xs text-white group-hover:text-indigo-300 transition-colors">Proposal Architect</div>
-                <div class="text-[10px] text-slate-400 font-mono">Pitch de 48hs & ROI Link</div>
-              </div>
-              <div class="bg-black/50 p-2.5 rounded-xl border border-white/5 text-[10px] font-mono text-slate-300">
-                <div>Hook: <b class="text-indigo-300">Prueba 3 URLs Gratis</b></div>
-                <div>Cierre: <b class="text-cyan-400">radarb2b.site</b></div>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Tablero de Metas Comerciales -->
-          <div class="mt-3 pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-500">
-            <span>📈 Ticket Promedio: $150 - $650 USD</span>
-            <span class="text-amber-400 font-bold">ALTA CONVERSIÓN</span>
-          </div>
-        </div>
-
-      </div>
-
+    <!-- FLOATING 3D BADGES OVERLAY (PROJECTED OVER CHARACTERS) -->
+    <div id="badges-overlay">
+      <!-- Injected dynamically via JS to match 3D avatar coordinates -->
     </div>
 
     <!-- FLOATING ZOOM & CAMERA CONTROLS (BOTTOM RIGHT) -->
@@ -563,16 +259,22 @@
         <span>🎯</span>
         <span class="hidden sm:inline">Centrar</span>
       </button>
+      <button id="toggle-labels-btn" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 flex items-center justify-center text-xs transition-colors" title="Mostrar/Ocultar Etiquetas">
+        🏷️
+      </button>
       <button id="fullscreen-btn" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 flex items-center justify-center text-sm transition-colors" title="Pantalla Completa">
         ⛶
       </button>
     </div>
 
     <!-- FLOATING HINT PILL (BOTTOM LEFT) -->
-    <div class="hidden sm:flex absolute bottom-6 left-6 z-20 items-center gap-2 bg-[#090E21]/90 backdrop-blur-xl px-4 py-2.5 rounded-2xl border border-white/10 shadow-2xl text-xs font-mono text-slate-400">
-      <span class="text-cyan-400">💡 Arrastrá el mouse para explorar el plano</span>
+    <div class="hidden sm:flex absolute bottom-6 left-6 z-20 items-center gap-2.5 bg-[#090E21]/90 backdrop-blur-xl px-4 py-2.5 rounded-2xl border border-white/10 shadow-2xl text-xs font-mono text-slate-400">
+      <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+      <span class="text-white font-bold">12 agentes · Vos en Dirección</span>
       <span>•</span>
-      <span>Hacé clic en cualquier escritorio para inspeccionar el agente</span>
+      <span class="text-cyan-300">Arrastrá para explorar en 3D</span>
+      <span>•</span>
+      <span>Clic en cualquier personaje o escritorio</span>
     </div>
 
   </main>
@@ -580,7 +282,7 @@
   <!-- ============================================== -->
   <!-- SLIDE-IN AGENT CONTROL DRAWER (RIGHT PANEL) -->
   <!-- ============================================== -->
-  <aside id="agent-drawer" class="fixed top-0 right-0 bottom-0 w-full sm:w-[460px] bg-[#080C1E]/95 backdrop-blur-2xl border-l border-white/10 p-6 sm:p-8 z-50 flex flex-col justify-between transform translate-x-full transition-transform duration-300 ease-in-out shadow-2xl">
+  <aside id="agent-drawer" class="fixed top-0 right-0 bottom-0 w-full sm:w-[470px] bg-[#080C1E]/95 backdrop-blur-2xl border-l border-white/10 p-6 sm:p-8 z-50 flex flex-col justify-between transform translate-x-full transition-transform duration-300 ease-in-out shadow-2xl overflow-y-auto">
     
     <!-- Top Bar of Drawer -->
     <div>
@@ -650,8 +352,8 @@
           <span>TERMINAL DE TAREAS</span>
           <span class="text-emerald-400">READY</span>
         </div>
-        <div id="drawer-terminal-log" class="text-slate-300 pt-1 text-[10px] leading-tight">
-          > Sistema en reposo esperando instrucciones del Comandante Walter.
+        <div id="drawer-terminal-log" class="text-slate-300 pt-1 text-[10px] leading-tight font-mono">
+          > Sistema 3D en reposo esperando instrucciones del Comandante Walter.
         </div>
       </div>
     </div>
@@ -663,7 +365,7 @@
         <span>Simular Disparo de Tarea</span>
       </button>
       <div class="text-[10px] text-slate-500 font-mono text-center">
-        Conectado a la API de Radar B2B & Motor de Agentes
+        Conectado a la API de Radar B2B & Motor Three.js WebGL
       </div>
     </div>
 
@@ -673,17 +375,17 @@
   <div id="drawer-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden transition-opacity"></div>
 
   <!-- ============================================== -->
-  <!-- INTERACTIVE LOGIC ENGINE -->
+  <!-- AGENTS DATA SPECIFICATION -->
   <!-- ============================================== -->
   <script>
-    // AGENT DATABASE SPECIFICATION
     const AGENTS = {
       'walter': {
         name: 'Walter C.',
         role: 'Comandante & Dirección General',
-        dept: 'DIRECCIÓN & ESTRATEGIA',
+        dept: 'DIRECCIÓN GENERAL',
         badge: 'HUMAN LEAD',
         icon: '👨‍💻',
+        pos3d: { x: -16, y: 1.2, z: -10 },
         mission: 'Liderazgo supremo del laboratorio Radar B2B. Aprobación de presupuestos, cierre de clientes clave, validación de calidad de datasets y guardian de la Ecuación X ($1,500 USD/mes con 4h/día).',
         stack: ['Dirección General', 'Validación Humana', 'Ecuación X', 'Upwork Enterprise', 'Negociación B2B'],
         metric1Label: 'Objetivo Q4',
@@ -698,8 +400,9 @@
         dept: 'DIRECCIÓN & ORQUESTACIÓN',
         badge: 'AI ORCHESTRATOR',
         icon: '🤖',
+        pos3d: { x: -11, y: 1.2, z: -10 },
         mission: 'Co-piloto estratégica y orquestadora central. Traduce las visiones de Walter en código ejecutable, selecciona las mejores herramientas open-source (Tool Router) y supervisa a los subagentes 24/7.',
-        stack: ['DeepMind Antigravity', 'Python 3.12', 'Tool Router', 'Memanto Memory', 'Codebase Memory', 'Prompt Engineering'],
+        stack: ['DeepMind Antigravity', 'Python 3.12', 'Tool Router', 'Memanto Memory', 'Codebase Memory', 'Three.js 3D'],
         metric1Label: 'Agentes a Cargo',
         metric1Val: '10 Subagentes',
         metric2Label: 'Disponibilidad',
@@ -712,6 +415,7 @@
         dept: 'LABORATORIO DE SCRAPING',
         badge: 'ANTI-BOT BYPASS',
         icon: '🕷️',
+        pos3d: { x: 9, y: 1.2, z: -15 },
         mission: 'Extracción profunda y sigilosa de catálogos web complejos. Convierte sitios caóticos en Markdown estructurado limpio para que los modelos LLM extraigan precios y stock sin alucinaciones.',
         stack: ['crawl4ai 0.9.4', 'Chromium Headless', 'Proxy Rotation', 'Markdown Cleaner', 'Python 3.12'],
         metric1Label: 'SKUs Raspados',
@@ -726,6 +430,7 @@
         dept: 'LABORATORIO DE SCRAPING',
         badge: 'BROWSER ENGINE',
         icon: '🎭',
+        pos3d: { x: 17, y: 1.2, z: -15 },
         mission: 'Manejo de sitios con JavaScript pesado, simulación de clics en carritos de compra, selección de variantes (talles/colores) y descarga de datos dinámicos simulando navegación humana.',
         stack: ['Playwright 1.63', 'Patchright Stealth', 'Async Python', 'Cookie Session Injector'],
         metric1Label: 'Interacciones SPA',
@@ -740,6 +445,7 @@
         dept: 'LABORATORIO DE SCRAPING',
         badge: 'OPTIMIZER',
         icon: '🔀',
+        pos3d: { x: 9, y: 1.2, z: -7 },
         mission: 'Evalúa la dificultad del sitio objetivo y selecciona automáticamente el arma más eficiente: Requests para sitios estáticos, Crawl4AI para LLMs o Playwright para aplicaciones interactivas complejas.',
         stack: ['Python Tool Router', 'Benchmarking Heurístico', 'UncleCode LiteLLM', 'Cost Optimizer'],
         metric1Label: 'Latencia Decisión',
@@ -754,6 +460,7 @@
         dept: 'LABORATORIO DE SCRAPING',
         badge: 'BULK EXTRACTOR',
         icon: '⚡',
+        pos3d: { x: 17, y: 1.2, z: -7 },
         mission: 'Descarga y procesamiento paralelo de miles de páginas por minuto. Limpia texto sucio, elimina duplicados y normaliza monedas (ARS, USD, EUR) directo a CSV o JSON.',
         stack: ['Scrapy Twisted', 'BeautifulSoup4', 'Regex Engine', 'JSONL Streamer'],
         metric1Label: 'Velocidad',
@@ -768,6 +475,7 @@
         dept: 'OPERACIONES & ALERTAS',
         badge: 'PUSH DISPATCHER',
         icon: '🤖',
+        pos3d: { x: -17, y: -0.3, z: 9 },
         mission: 'Conectado a @Walys2b2_bot para avisarle a Walter y a sus clientes al instante en su celular cuando un rival baja el precio o se queda sin stock, en menos de 24 segundos.',
         stack: ['Telegram Bot API', 'Python Asyncio', 'Webhook Dispatcher', 'Rich Markdown Formatter'],
         metric1Label: 'Tiempo Alerta',
@@ -782,6 +490,7 @@
         dept: 'OPERACIONES & ALERTAS',
         badge: 'ZERO DATA ENTRY',
         icon: '📊',
+        pos3d: { x: -9, y: -0.3, z: 9 },
         mission: 'Elimina para siempre el copiar y pegar a mano. Cada mañana a las 8 AM la planilla de Google Sheets del cliente amanece con los precios, stock y competidores auditados.',
         stack: ['Google Sheets API v4', 'OAuth Service Account', 'Pandas DataFrame', 'Auto-Formatting'],
         metric1Label: 'Sincronización',
@@ -796,6 +505,7 @@
         dept: 'OPERACIONES & ALERTAS',
         badge: 'PROFIT DEFENDER',
         icon: '📉',
+        pos3d: { x: -17, y: -0.3, z: 17 },
         mission: 'Monitorea las variaciones matemáticas entre tiendas rivales. Calcula el margen de ganancia protegido y proyecta pérdidas potenciales antes de que el cliente pierda ventas.',
         stack: ['Algoritmo Delta %', 'Protección de Margen', 'Alerta Sniper Quiebre', 'Calculadora ROI'],
         metric1Label: 'Margen Protegido',
@@ -810,6 +520,7 @@
         dept: 'OPERACIONES & CLIENTES',
         badge: 'LEAD MAGNET',
         icon: '💬',
+        pos3d: { x: -9, y: -0.3, z: 17 },
         mission: 'Reside en radarb2b.site. Atiende visitantes, responde dudas técnicas en lenguaje claro, cotiza según la escalera de 4 precios y capta solicitudes para la prueba gratis de 48 horas.',
         stack: ['JavaScript Vanilla', 'Telegram Lead Forwarder', 'Landy Knowledge Base', 'Session Storage'],
         metric1Label: 'Conversaciones',
@@ -824,6 +535,7 @@
         dept: 'HUB COMERCIAL & UPWORK',
         badge: 'OPPORTUNITY RADAR',
         icon: '🎯',
+        pos3d: { x: 10, y: -0.3, z: 13 },
         mission: 'Escanea cada 30 minutos las publicaciones de Upwork y Contra filtrando clientes con pago verificado, presupuestos superiores a $45/hr o proyectos de $150-$650 con menos de 5 propuestas.',
         stack: ['Upwork RSS / Scraping', 'Filtro Semántico', 'Scoring de Clientes', 'Notificador Táctico'],
         metric1Label: 'Trabajos Filtrados',
@@ -838,6 +550,7 @@
         dept: 'HUB COMERCIAL & UPWORK',
         badge: 'COPY EXPERT',
         icon: '✍️',
+        pos3d: { x: 18, y: -0.3, z: 13 },
         mission: 'Redacta propuestas personalizadas usando el "Anzuelo Irresistible": ofrece la prueba gratis de 48hs en 3 URLs y linkea a radarb2b.site como respaldo de autoridad técnica.',
         stack: ['Copywriting B2B', 'Plantillas de Conversión', 'Personalización Dinámica', 'Anzuelo 48hs'],
         metric1Label: 'Tasa Respuesta',
@@ -848,95 +561,1010 @@
       }
     };
 
-    // PAN & ZOOM MOTOR
-    let scale = 1;
-    let panX = 0;
-    let panY = 0;
-    let isDragging = false;
-    let startX = 0;
-    let startY = 0;
-    let activeAgentId = null;
+    // DEPARTMENT CAMERA TARGETS (3D COORDINATES & ZOOM LEVEL)
+    const DEPT_CAMERAS = {
+      'all': { x: 0, y: 0, z: 0, zoom: 1.0 },
+      'dept-director': { x: -14, y: 1.2, z: -10, zoom: 1.7 },
+      'dept-scraping': { x: 13, y: 1.2, z: -11, zoom: 1.6 },
+      'dept-ops': { x: -13, y: -0.3, z: 13, zoom: 1.6 },
+      'dept-sales': { x: 14, y: -0.3, z: 13, zoom: 1.7 }
+    };
+  </script>
 
-    const viewportContainer = document.getElementById('viewport-container');
-    const officeStage = document.getElementById('office-stage');
-    const zoomLevelText = document.getElementById('zoom-level-text');
+  <!-- ============================================== -->
+  <!-- THREE.JS 3D ISOMETRIC ENGINE -->
+  <!-- ============================================== -->
+  <script>
+    let scene, camera, renderer, controls;
+    let interactiveObjects = [];
+    let characterMeshes = {};
+    let selectionRing = null;
+    let labelsVisible = true;
+    let audioEnabled = true;
 
-    function updateTransform() {
-      officeStage.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
-      if (zoomLevelText) zoomLevelText.textContent = `${Math.round(scale * 100)}%`;
+    // Web Audio Synthesizer for High-Tech FX (Lazily initialized)
+    let audioCtx = null;
+    function getAudioCtx() {
+      if (!audioCtx && (window.AudioContext || window.webkitAudioContext)) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
     }
 
-    // Mouse drag
-    viewportContainer.addEventListener('mousedown', (e) => {
-      // Don't drag if clicking a desk or button
-      if (e.target.closest('.desk-card') || e.target.closest('button')) return;
-      isDragging = true;
-      startX = e.clientX - panX;
-      startY = e.clientY - panY;
-    });
+    function playBeep(freq = 600, duration = 0.08, type = 'sine') {
+      if (!audioEnabled) return;
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      try {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(0.05, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (e) {}
+    }
 
-    window.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
-      panX = e.clientX - startX;
-      panY = e.clientY - startY;
-      updateTransform();
-    });
+    // Camera Lerp Animation System
+    let targetCamera = {
+      x: 0, y: 0, z: 0,
+      zoom: 1.0
+    };
 
-    window.addEventListener('mouseup', () => {
-      isDragging = false;
-    });
+    function init3D() {
+      const container = document.getElementById('canvas-container');
+      const width = container.clientWidth;
+      const height = container.clientHeight;
 
-    // Touch drag for mobile
-    let touchStartX = 0;
-    let touchStartY = 0;
-    viewportContainer.addEventListener('touchstart', (e) => {
-      if (e.touches.length === 1) {
-        if (e.target.closest('.desk-card') || e.target.closest('button')) return;
-        isDragging = true;
-        touchStartX = e.touches[0].clientX - panX;
-        touchStartY = e.touches[0].clientY - panY;
+      // 1. Scene
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x04060E);
+      scene.fog = new THREE.FogExp2(0x04060E, 0.012);
+
+      // 2. Camera (True Isometric Setup)
+      const aspect = width / height;
+      const d = 26; // Frustum size
+      camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, 1, 1000);
+      
+      // Classic 35.264° isometric angle
+      camera.position.set(45, 40, 45);
+      camera.lookAt(0, 0, 0);
+
+      // 3. Renderer
+      renderer = new THREE.WebGLRenderer({
+        canvas: document.getElementById('three-canvas'),
+        antialias: true,
+        alpha: false,
+        powerPreference: 'high-performance'
+      });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.15;
+
+      // 4. Controls (Smooth OrbitControls)
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.08;
+      controls.maxPolarAngle = Math.PI / 2.25; // Don't go below floor
+      controls.minPolarAngle = Math.PI / 8;
+      controls.enableRotate = true;
+      controls.enablePan = true;
+      controls.enableZoom = true;
+      controls.zoomSpeed = 1.2;
+      controls.target.set(0, 0, 0);
+
+      // 5. Lighting Setup (Luxury Warm Tech Atmosphere)
+      setupLighting();
+
+      // 6. Build the 3D World
+      buildEnvironment();
+
+      // 7. Spawn Avatars
+      spawnCharacters();
+
+      // 8. Create Selection Indicator Ring
+      createSelectionRing();
+
+      // 9. Create HTML Floating Badges
+      createFloatingBadges();
+
+      // 10. Raycasting Clicks & Hovers
+      setupRaycasting();
+
+      // 11. Responsive Resize
+      window.addEventListener('resize', onWindowResize);
+
+      // 12. Start Animation Loop
+      animate();
+    }
+
+    function setupLighting() {
+      // Soft Slate Ambient Fill
+      const ambientLight = new THREE.AmbientLight(0x232d4b, 1.2);
+      scene.add(ambientLight);
+
+      // Main Sun / Key Light with Soft Shadows
+      const dirLight = new THREE.DirectionalLight(0xfff7ec, 1.4);
+      dirLight.position.set(35, 60, 30);
+      dirLight.castShadow = true;
+      dirLight.shadow.mapSize.width = 2048;
+      dirLight.shadow.mapSize.height = 2048;
+      dirLight.shadow.camera.near = 0.5;
+      dirLight.shadow.camera.far = 150;
+      const d = 35;
+      dirLight.shadow.camera.left = -d;
+      dirLight.shadow.camera.right = d;
+      dirLight.shadow.camera.top = d;
+      dirLight.shadow.camera.bottom = -d;
+      dirLight.shadow.bias = -0.0005;
+      scene.add(dirLight);
+
+      // Warm Interior Lights for Rooms
+      // Dirección: Warm Amber/Gold
+      const dirPoint = new THREE.PointLight(0xffaa44, 1.8, 30);
+      dirPoint.position.set(-14, 8, -10);
+      scene.add(dirPoint);
+
+      // Scraping Lab: Cyan/Neon Glow
+      const scrapPoint = new THREE.PointLight(0x00f2fe, 1.6, 32);
+      scrapPoint.position.set(13, 8, -11);
+      scene.add(scrapPoint);
+
+      // Operaciones: Emerald Mission Control Glow
+      const opsPoint = new THREE.PointLight(0x10b981, 1.5, 30);
+      opsPoint.position.set(-13, 7, 13);
+      scene.add(opsPoint);
+
+      // Hub Comercial: Warm Amber Luxury Glow
+      const salesPoint = new THREE.PointLight(0xf59e0b, 1.4, 28);
+      salesPoint.position.set(14, 7, 13);
+      scene.add(salesPoint);
+    }
+
+    // Procedural Grid Texture for Tech Floors
+    function createGridTexture(lineColor = '#1e293b', bgColor = '#090d1c') {
+      const canvas = document.createElement('canvas');
+      canvas.width = 128;
+      canvas.height = 128;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = bgColor;
+      ctx.fillRect(0, 0, 128, 128);
+      ctx.strokeStyle = lineColor;
+      ctx.lineWidth = 2;
+      ctx.strokeRect(0, 0, 128, 128);
+      ctx.fillStyle = 'rgba(255,255,255,0.02)';
+      ctx.fillRect(4, 4, 120, 120);
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      return texture;
+    }
+
+    // Procedural Wood Parquet Texture for Executive Suite
+    function createWoodTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 256;
+      canvas.height = 256;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#2c1810';
+      ctx.fillRect(0, 0, 256, 256);
+      
+      // Planks
+      for (let i = 0; i < 8; i++) {
+        const y = i * 32;
+        ctx.fillStyle = i % 2 === 0 ? '#381f14' : '#27140c';
+        ctx.fillRect(0, y, 256, 30);
+        ctx.fillStyle = 'rgba(0,0,0,0.3)';
+        ctx.fillRect(0, y + 30, 256, 2);
+      }
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      texture.repeat.set(3, 3);
+      return texture;
+    }
+
+    function buildEnvironment() {
+      // 1. BASE VOID GROUND
+      const groundGeo = new THREE.PlaneGeometry(160, 160);
+      const groundMat = new THREE.MeshStandardMaterial({
+        color: 0x03050c,
+        roughness: 0.95,
+        metalness: 0.1
+      });
+      const ground = new THREE.Mesh(groundGeo, groundMat);
+      ground.rotation.x = -Math.PI / 2;
+      ground.position.y = -3;
+      ground.receiveShadow = true;
+      scene.add(ground);
+
+      // Subtle Tech Floor Grid
+      const grid = new THREE.GridHelper(120, 60, 0x00f2fe, 0x111827);
+      grid.position.y = -2.98;
+      grid.material.opacity = 0.2;
+      grid.material.transparent = true;
+      scene.add(grid);
+
+      // 2. ROOM PLATFORMS
+      // Sala 1: Dirección General (Top-Left, Y=0)
+      createPlatform(-14, 0, -10, 20, 18, 1.2, 0xffaa44, 'wood');
+      buildExecutiveFurniture(-14, 0.6, -10);
+
+      // Sala 2: Laboratorio de Scraping (Top-Right, Y=0)
+      createPlatform(13, 0, -11, 22, 19, 1.2, 0x00f2fe, 'tech');
+      buildScrapingLabFurniture(13, 0.6, -11);
+
+      // Sala 3: Operaciones & Alertas (Bottom-Left, Y=-1.2 - Lower Level)
+      createPlatform(-13, -1.2, 13, 22, 18, 1.2, 0x10b981, 'ops');
+      buildOperationsFurniture(-13, -0.6, 13);
+
+      // Sala 4: Hub Comercial & Crecimiento (Bottom-Right, Y=-1.2)
+      createPlatform(14, -1.2, 13, 20, 18, 1.2, 0xf59e0b, 'sales');
+      buildCommercialFurniture(14, -0.6, 13);
+
+      // 3. Central Mezzanine Stairs & Walkways
+      buildStairsAndWalkways();
+
+      // 4. Perimeter Modern Plants & Pots
+      createPlant(-23, 0.6, -18);
+      createPlant(-5, 0.6, -18);
+      createPlant(23, 0.6, -19);
+      createPlant(3, 0.6, -19);
+      createPlant(-23, -0.6, 21);
+      createPlant(23, -0.6, 21);
+    }
+
+    function createPlatform(x, y, z, width, depth, height, glowColor, style) {
+      const group = new THREE.Group();
+      group.position.set(x, y, z);
+
+      // Main Beveled Platform
+      const geo = new THREE.BoxGeometry(width, height, depth);
+      let mat;
+
+      if (style === 'wood') {
+        const tex = createWoodTexture();
+        mat = new THREE.MeshStandardMaterial({
+          map: tex,
+          roughness: 0.6,
+          metalness: 0.1
+        });
+      } else {
+        const tex = createGridTexture(style === 'tech' ? '#00f2fe' : (style === 'ops' ? '#10b981' : '#f59e0b'));
+        tex.repeat.set(width / 4, depth / 4);
+        mat = new THREE.MeshStandardMaterial({
+          map: tex,
+          color: style === 'tech' ? 0x0e1326 : 0x0a0f20,
+          roughness: 0.7,
+          metalness: 0.2
+        });
+      }
+
+      const platform = new THREE.Mesh(geo, mat);
+      platform.castShadow = true;
+      platform.receiveShadow = true;
+      group.add(platform);
+
+      // Glowing Neon Perimeter Border
+      const borderGeo = new THREE.BoxGeometry(width + 0.3, 0.1, depth + 0.3);
+      const borderMat = new THREE.MeshBasicMaterial({
+        color: glowColor,
+        transparent: true,
+        opacity: 0.85
+      });
+      const border = new THREE.Mesh(borderGeo, borderMat);
+      border.position.y = height / 2 + 0.05;
+      group.add(border);
+
+      // Back Wall with Glass & Wood Paneling
+      const wallGeo = new THREE.BoxGeometry(width, 4, 0.4);
+      const wallMat = new THREE.MeshStandardMaterial({
+        color: 0x070a16,
+        roughness: 0.8,
+        metalness: 0.3
+      });
+      const wall = new THREE.Mesh(wallGeo, wallMat);
+      wall.position.set(0, 2 + height / 2, -depth / 2 + 0.2);
+      wall.castShadow = true;
+      wall.receiveShadow = true;
+      group.add(wall);
+
+      // Glass Railing along front
+      buildGlassRailing(group, width, height / 2, depth / 2 - 0.2);
+
+      scene.add(group);
+      return group;
+    }
+
+    function buildGlassRailing(parent, width, y, z) {
+      const glassGeo = new THREE.BoxGeometry(width * 0.95, 1.2, 0.08);
+      const glassMat = new THREE.MeshPhysicalMaterial({
+        color: 0x94a3b8,
+        metalness: 0.1,
+        roughness: 0.1,
+        transmission: 0.85,
+        transparent: true,
+        opacity: 0.5
+      });
+      const glass = new THREE.Mesh(glassGeo, glassMat);
+      glass.position.set(0, y + 0.6, z);
+      parent.add(glass);
+
+      // Top Railing Metal Tube
+      const railGeo = new THREE.CylinderGeometry(0.05, 0.05, width * 0.95, 8);
+      const railMat = new THREE.MeshStandardMaterial({ color: 0x111827, metalness: 0.8, roughness: 0.3 });
+      const rail = new THREE.Mesh(railGeo, railMat);
+      rail.rotation.z = Math.PI / 2;
+      rail.position.set(0, y + 1.22, z);
+      parent.add(rail);
+    }
+
+    function buildStairsAndWalkways() {
+      const stairsGroup = new THREE.Group();
+      const numSteps = 5;
+      const stepWidth = 6;
+      const stepDepth = 1.0;
+      const stepHeight = 1.2 / numSteps;
+
+      for (let i = 0; i < numSteps; i++) {
+        const stepGeo = new THREE.BoxGeometry(stepWidth, stepHeight, stepDepth);
+        const stepMat = new THREE.MeshStandardMaterial({
+          color: 0x0f172a,
+          roughness: 0.5,
+          metalness: 0.4
+        });
+        const step = new THREE.Mesh(stepGeo, stepMat);
+        step.position.set(0, -1.2 + (i + 0.5) * stepHeight, (i - 2) * stepDepth);
+        step.castShadow = true;
+        step.receiveShadow = true;
+        stairsGroup.add(step);
+
+        // LED Strip Under Step
+        const ledGeo = new THREE.BoxGeometry(stepWidth - 0.2, 0.04, 0.04);
+        const ledMat = new THREE.MeshBasicMaterial({ color: 0x00f2fe });
+        const led = new THREE.Mesh(ledGeo, ledMat);
+        led.position.set(0, -1.2 + (i + 1) * stepHeight, (i - 2) * stepDepth + stepDepth / 2);
+        stairsGroup.add(led);
+      }
+      scene.add(stairsGroup);
+    }
+
+    // 3D FURNITURE BUILDERS
+    function createDesk(x, y, z, rotY = 0, agentId = null, monitorColor = 0x00f2fe) {
+      const deskGroup = new THREE.Group();
+      deskGroup.position.set(x, y, z);
+      deskGroup.rotation.y = rotY;
+
+      // Tabletop
+      const topGeo = new THREE.BoxGeometry(3.6, 0.15, 1.8);
+      const topMat = new THREE.MeshStandardMaterial({
+        color: 0x181008,
+        roughness: 0.4,
+        metalness: 0.2
+      });
+      const top = new THREE.Mesh(topGeo, topMat);
+      top.position.y = 1.1;
+      top.castShadow = true;
+      top.receiveShadow = true;
+      deskGroup.add(top);
+
+      // Legs / Metal Frame
+      const legGeo = new THREE.BoxGeometry(0.12, 1.1, 1.6);
+      const legMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.8, roughness: 0.3 });
+      
+      const leftLeg = new THREE.Mesh(legGeo, legMat);
+      leftLeg.position.set(-1.6, 0.55, 0);
+      deskGroup.add(leftLeg);
+
+      const rightLeg = new THREE.Mesh(legGeo, legMat);
+      rightLeg.position.set(1.6, 0.55, 0);
+      deskGroup.add(rightLeg);
+
+      // Front Modesty Panel with Soft Amber Glow
+      const panelGeo = new THREE.BoxGeometry(3.2, 0.7, 0.05);
+      const panelMat = new THREE.MeshStandardMaterial({ color: 0x1f140d, roughness: 0.6 });
+      const panel = new THREE.Mesh(panelGeo, panelMat);
+      panel.position.set(0, 0.75, -0.75);
+      deskGroup.add(panel);
+
+      // Dual Monitors
+      for (let m = -0.7; m <= 0.7; m += 1.4) {
+        // Monitor Stand
+        const standGeo = new THREE.CylinderGeometry(0.05, 0.05, 0.3, 8);
+        const standMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.8 });
+        const stand = new THREE.Mesh(standGeo, standMat);
+        stand.position.set(m, 1.25, -0.4);
+        deskGroup.add(stand);
+
+        // Screen Bezel
+        const screenGeo = new THREE.BoxGeometry(1.2, 0.75, 0.06);
+        const screenMat = new THREE.MeshStandardMaterial({ color: 0x050711, roughness: 0.4 });
+        const screen = new THREE.Mesh(screenGeo, screenMat);
+        screen.position.set(m, 1.65, -0.4);
+        screen.rotation.y = m < 0 ? 0.12 : -0.12;
+        screen.castShadow = true;
+        deskGroup.add(screen);
+
+        // Screen Display Surface with Glowing Emissive Color
+        const displayGeo = new THREE.PlaneGeometry(1.1, 0.65);
+        const displayMat = new THREE.MeshBasicMaterial({ color: monitorColor });
+        const display = new THREE.Mesh(displayGeo, displayMat);
+        display.position.set(m, 1.65, -0.36);
+        display.rotation.y = m < 0 ? 0.12 : -0.12;
+        deskGroup.add(display);
+      }
+
+      // Keyboard & Mouse
+      const kbGeo = new THREE.BoxGeometry(1.0, 0.03, 0.35);
+      const kbMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.8 });
+      const kb = new THREE.Mesh(kbGeo, kbMat);
+      kb.position.set(0, 1.19, 0.2);
+      deskGroup.add(kb);
+
+      const mouseGeo = new THREE.BoxGeometry(0.12, 0.03, 0.2);
+      const mouse = new THREE.Mesh(mouseGeo, kbMat);
+      mouse.position.set(0.7, 1.19, 0.2);
+      deskGroup.add(mouse);
+
+      // Ergonomic Chair
+      createChair(deskGroup, 0, 0, 1.1, Math.PI);
+
+      if (agentId) {
+        top.userData = { agentId: agentId };
+        interactiveObjects.push(top);
+      }
+
+      scene.add(deskGroup);
+      return deskGroup;
+    }
+
+    function createChair(parent, x, y, z, rotY = 0) {
+      const chair = new THREE.Group();
+      chair.position.set(x, y, z);
+      chair.rotation.y = rotY;
+
+      // Base with wheels
+      const baseGeo = new THREE.CylinderGeometry(0.35, 0.35, 0.08, 6);
+      const baseMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.7 });
+      const base = new THREE.Mesh(baseGeo, baseMat);
+      base.position.y = 0.15;
+      chair.add(base);
+
+      // Stem
+      const stemGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.5, 8);
+      const stem = new THREE.Mesh(stemGeo, baseMat);
+      stem.position.y = 0.45;
+      chair.add(stem);
+
+      // Seat Cushion
+      const seatGeo = new THREE.BoxGeometry(0.9, 0.12, 0.9);
+      const seatMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.8 });
+      const seat = new THREE.Mesh(seatGeo, seatMat);
+      seat.position.y = 0.72;
+      chair.add(seat);
+
+      // Backrest
+      const backGeo = new THREE.BoxGeometry(0.85, 1.1, 0.1);
+      const back = new THREE.Mesh(backGeo, seatMat);
+      back.position.set(0, 1.35, -0.4);
+      chair.add(back);
+
+      parent.add(chair);
+      return chair;
+    }
+
+    function createPlant(x, y, z) {
+      const plant = new THREE.Group();
+      plant.position.set(x, y, z);
+
+      // Ceramic Pot
+      const potGeo = new THREE.CylinderGeometry(0.6, 0.45, 1.1, 12);
+      const potMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.3 });
+      const pot = new THREE.Mesh(potGeo, potMat);
+      pot.position.y = 0.55;
+      pot.castShadow = true;
+      plant.add(pot);
+
+      // Leaves
+      const leafMat = new THREE.MeshStandardMaterial({ color: 0x15803d, roughness: 0.6 });
+      for (let i = 0; i < 7; i++) {
+        const leafGeo = new THREE.SphereGeometry(0.45, 6, 6);
+        leafGeo.scale(1.2, 0.3, 0.9);
+        const leaf = new THREE.Mesh(leafGeo, leafMat);
+        const angle = (i / 7) * Math.PI * 2;
+        leaf.position.set(Math.cos(angle) * 0.45, 1.1 + Math.sin(i) * 0.25, Math.sin(angle) * 0.45);
+        leaf.rotation.y = angle;
+        leaf.rotation.z = 0.3;
+        leaf.castShadow = true;
+        plant.add(leaf);
+      }
+      scene.add(plant);
+    }
+
+    function buildExecutiveFurniture(cx, cy, cz) {
+      // Big Executive Double Desk for Walter & Luz
+      createDesk(cx - 3, cy, cz, 0, 'walter', 0x00f2fe);
+      createDesk(cx + 3, cy, cz, 0, 'luz', 0x8b5cf6);
+
+      // Executive Leather Sofa
+      const sofa = new THREE.Group();
+      sofa.position.set(cx - 4, cy, cz + 6);
+      sofa.rotation.y = Math.PI / 2;
+
+      const seatGeo = new THREE.BoxGeometry(4.5, 0.5, 1.6);
+      const sofaMat = new THREE.MeshStandardMaterial({ color: 0xb45309, roughness: 0.7 });
+      const sofaSeat = new THREE.Mesh(seatGeo, sofaMat);
+      sofaSeat.position.y = 0.4;
+      sofaSeat.castShadow = true;
+      sofa.add(sofaSeat);
+
+      const backGeo = new THREE.BoxGeometry(4.5, 1.2, 0.4);
+      const sofaBack = new THREE.Mesh(backGeo, sofaMat);
+      sofaBack.position.set(0, 1.0, -0.6);
+      sofaBack.castShadow = true;
+      sofa.add(sofaBack);
+
+      scene.add(sofa);
+
+      // Big Dashboard on Wall ("Visión del Equipo")
+      const boardGeo = new THREE.BoxGeometry(9.0, 3.2, 0.1);
+      const boardMat = new THREE.MeshBasicMaterial({ color: 0x0f172a });
+      const board = new THREE.Mesh(boardGeo, boardMat);
+      board.position.set(cx, cy + 3.4, cz - 8.6);
+      scene.add(board);
+
+      const glowBorderGeo = new THREE.BoxGeometry(9.2, 3.4, 0.05);
+      const glowBorderMat = new THREE.MeshBasicMaterial({ color: 0x00f2fe });
+      const glowBorder = new THREE.Mesh(glowBorderGeo, glowBorderMat);
+      glowBorder.position.set(cx, cy + 3.4, cz - 8.65);
+      scene.add(glowBorder);
+    }
+
+    function buildScrapingLabFurniture(cx, cy, cz) {
+      // 4 Workstations
+      createDesk(cx - 4, cy, cz - 4, 0, 'crawl4ai', 0x00f2fe);
+      createDesk(cx + 4, cy, cz - 4, 0, 'playwright', 0x6366f1);
+      createDesk(cx - 4, cy, cz + 4, Math.PI, 'tool-router', 0x10b981);
+      createDesk(cx + 4, cy, cz + 4, Math.PI, 'scrapy', 0xf59e0b);
+
+      // 3 Tall Server Racks against wall
+      for (let i = -2; i <= 2; i += 2) {
+        const rackGeo = new THREE.BoxGeometry(1.6, 4.5, 1.2);
+        const rackMat = new THREE.MeshStandardMaterial({ color: 0x090d1c, metalness: 0.9, roughness: 0.2 });
+        const rack = new THREE.Mesh(rackGeo, rackMat);
+        rack.position.set(cx + i * 2.2, cy + 2.25, cz - 8.2);
+        rack.castShadow = true;
+        scene.add(rack);
+
+        // Blinking LEDs
+        for (let l = 0; l < 8; l++) {
+          const ledGeo = new THREE.BoxGeometry(1.3, 0.06, 0.05);
+          const ledMat = new THREE.MeshBasicMaterial({ color: l % 2 === 0 ? 0x00f2fe : 0x10b981 });
+          const led = new THREE.Mesh(ledGeo, ledMat);
+          led.position.set(cx + i * 2.2, cy + 0.8 + l * 0.45, cz - 7.55);
+          scene.add(led);
+        }
+      }
+    }
+
+    function buildOperationsFurniture(cx, cy, cz) {
+      createDesk(cx - 4, cy, cz - 4, 0, 'telegram-bot', 0x00f2fe);
+      createDesk(cx + 4, cy, cz - 4, 0, 'sheets-sync', 0x10b981);
+      createDesk(cx - 4, cy, cz + 4, Math.PI, 'price-sentinel', 0xf43f5e);
+      createDesk(cx + 4, cy, cz + 4, Math.PI, 'ari-agent', 0x8b5cf6);
+    }
+
+    function buildCommercialFurniture(cx, cy, cz) {
+      createDesk(cx - 4, cy, cz, 0, 'upwork-hunter', 0xf59e0b);
+      createDesk(cx + 4, cy, cz, 0, 'proposal-architect', 0x6366f1);
+    }
+
+    // ==============================================
+    // 3D CHARACTER AVATAR GENERATOR
+    // ==============================================
+    function createCharacter(agentId, config) {
+      const char = new THREE.Group();
+      const pos = config.pos3d;
+      char.position.set(pos.x, pos.y, pos.z);
+
+      // Root hit target for raycasting
+      const hitBox = new THREE.Mesh(
+        new THREE.BoxGeometry(1.8, 3.2, 1.8),
+        new THREE.MeshBasicMaterial({ visible: false })
+      );
+      hitBox.position.y = 1.4;
+      hitBox.userData = { agentId: agentId };
+      char.add(hitBox);
+      interactiveObjects.push(hitBox);
+
+      // Head
+      const headGeo = new THREE.SphereGeometry(0.38, 12, 12);
+      const skinMat = new THREE.MeshStandardMaterial({
+        color: config.skinColor || 0xffd5b8,
+        roughness: 0.6
+      });
+      const head = new THREE.Mesh(headGeo, skinMat);
+      head.position.y = 2.45;
+      head.castShadow = true;
+      char.add(head);
+
+      // Hair / Tech Visor
+      const hairGeo = new THREE.SphereGeometry(0.41, 10, 10);
+      const hairMat = new THREE.MeshStandardMaterial({
+        color: config.hairColor || 0x1e293b,
+        roughness: 0.4
+      });
+      const hair = new THREE.Mesh(hairGeo, hairMat);
+      hair.position.set(0, 2.52, -0.05);
+      hair.scale.set(1.02, 0.95, 1.05);
+      char.add(hair);
+
+      // Torso / Jacket
+      const torsoGeo = new THREE.BoxGeometry(0.85, 1.05, 0.55);
+      const jacketMat = new THREE.MeshStandardMaterial({
+        color: config.jacketColor || 0x0f172a,
+        roughness: 0.5
+      });
+      const torso = new THREE.Mesh(torsoGeo, jacketMat);
+      torso.position.y = 1.65;
+      torso.castShadow = true;
+      char.add(torso);
+
+      // Legs
+      const legGeo = new THREE.BoxGeometry(0.28, 1.1, 0.32);
+      const pantsMat = new THREE.MeshStandardMaterial({
+        color: config.pantsColor || 0x1e293b,
+        roughness: 0.7
+      });
+      
+      const leftLeg = new THREE.Mesh(legGeo, pantsMat);
+      leftLeg.position.set(-0.22, 0.6, 0);
+      leftLeg.castShadow = true;
+      char.add(leftLeg);
+
+      const rightLeg = new THREE.Mesh(legGeo, pantsMat);
+      rightLeg.position.set(0.22, 0.6, 0);
+      rightLeg.castShadow = true;
+      char.add(rightLeg);
+
+      // Shoes
+      const shoeGeo = new THREE.BoxGeometry(0.3, 0.18, 0.48);
+      const shoeMat = new THREE.MeshStandardMaterial({ color: 0x050711 });
+      
+      const leftShoe = new THREE.Mesh(shoeGeo, shoeMat);
+      leftShoe.position.set(-0.22, 0.09, 0.08);
+      char.add(leftShoe);
+
+      const rightShoe = new THREE.Mesh(shoeGeo, shoeMat);
+      rightShoe.position.set(0.22, 0.09, 0.08);
+      char.add(rightShoe);
+
+      // Special Accessories
+      if (agentId === 'luz') {
+        // Glowing Cyan Halo / Tech Visor
+        const ringGeo = new THREE.TorusGeometry(0.48, 0.04, 8, 24);
+        const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f2fe });
+        const ring = new THREE.Mesh(ringGeo, ringMat);
+        ring.rotation.x = Math.PI / 2;
+        ring.position.y = 2.95;
+        char.add(ring);
+
+        // Glowing Hologram Tablet in Hand
+        const tabGeo = new THREE.BoxGeometry(0.5, 0.35, 0.04);
+        const tabMat = new THREE.MeshBasicMaterial({ color: 0x00f2fe });
+        const tab = new THREE.Mesh(tabGeo, tabMat);
+        tab.position.set(0.5, 1.5, 0.4);
+        tab.rotation.x = 0.4;
+        char.add(tab);
+      }
+
+      scene.add(char);
+      characterMeshes[agentId] = {
+        mesh: char,
+        head: head,
+        initialY: pos.y,
+        seed: Math.random() * 10
+      };
+      return char;
+    }
+
+    function spawnCharacters() {
+      // 1. Walter (Comandante en Dirección)
+      createCharacter('walter', {
+        pos3d: AGENTS['walter'].pos3d,
+        jacketColor: 0x111827,
+        pantsColor: 0x1e3a5f, // Denim
+        hairColor: 0x1a1a1a,
+        skinColor: 0xe2b998
+      });
+
+      // 2. Luz (Socia Orquestadora con acentos cian)
+      createCharacter('luz', {
+        pos3d: AGENTS['luz'].pos3d,
+        jacketColor: 0x0f172a,
+        pantsColor: 0x0284c7,
+        hairColor: 0x00f2fe, // Cyan cyber hair
+        skinColor: 0xf8d7c4
+      });
+
+      // 3. Scraping Lab Agents
+      createCharacter('crawl4ai', { pos3d: AGENTS['crawl4ai'].pos3d, jacketColor: 0x047857 });
+      createCharacter('playwright', { pos3d: AGENTS['playwright'].pos3d, jacketColor: 0x4338ca });
+      createCharacter('tool-router', { pos3d: AGENTS['tool-router'].pos3d, jacketColor: 0x0d9488 });
+      createCharacter('scrapy', { pos3d: AGENTS['scrapy'].pos3d, jacketColor: 0xd97706 });
+
+      // 4. Operations Agents
+      createCharacter('telegram-bot', { pos3d: AGENTS['telegram-bot'].pos3d, jacketColor: 0x0284c7 });
+      createCharacter('sheets-sync', { pos3d: AGENTS['sheets-sync'].pos3d, jacketColor: 0x16a34a });
+      createCharacter('price-sentinel', { pos3d: AGENTS['price-sentinel'].pos3d, jacketColor: 0xe11d48 });
+      createCharacter('ari-agent', { pos3d: AGENTS['ari-agent'].pos3d, jacketColor: 0x7c3aed });
+
+      // 5. Commercial Agents
+      createCharacter('upwork-hunter', { pos3d: AGENTS['upwork-hunter'].pos3d, jacketColor: 0xb45309 });
+      createCharacter('proposal-architect', { pos3d: AGENTS['proposal-architect'].pos3d, jacketColor: 0x4f46e5 });
+    }
+
+    function createSelectionRing() {
+      const ringGeo = new THREE.RingGeometry(1.2, 1.4, 32);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: 0x00f2fe,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.8
+      });
+      selectionRing = new THREE.Mesh(ringGeo, ringMat);
+      selectionRing.rotation.x = -Math.PI / 2;
+      selectionRing.visible = false;
+      scene.add(selectionRing);
+    }
+
+    // ==============================================
+    // 3D TO 2D SCREEN PROJECTION (HTML FLOATING BADGES)
+    // ==============================================
+    function createFloatingBadges() {
+      const overlay = document.getElementById('badges-overlay');
+      overlay.innerHTML = '';
+
+      for (const [id, agent] of Object.entries(AGENTS)) {
+        const badge = document.createElement('div');
+        badge.className = `badge-3d ${id === 'walter' ? 'badge-leader' : (id === 'luz' ? 'badge-luz' : '')}`;
+        badge.id = `badge-${id}`;
+        badge.setAttribute('data-agent-id', id);
+
+        badge.innerHTML = `
+          <div class="badge-pill">
+            <span class="w-2 h-2 rounded-full ${id === 'walter' ? 'bg-amber-400' : (id === 'luz' ? 'bg-cyan-400' : 'bg-emerald-400')} animate-pulse"></span>
+            <div class="flex flex-col text-left">
+              <span class="text-[11px] font-bold text-white font-mono leading-none">${agent.name}</span>
+              <span class="text-[9px] text-slate-400 font-mono mt-0.5 leading-none">${agent.badge}</span>
+            </div>
+          </div>
+        `;
+
+        badge.addEventListener('click', (e) => {
+          e.stopPropagation();
+          playBeep(900, 0.09);
+          selectAgent(id);
+        });
+
+        overlay.appendChild(badge);
+      }
+    }
+
+    const tempV = new THREE.Vector3();
+    function updateBadgePositions() {
+      if (!labelsVisible) return;
+      const width = renderer.domElement.clientWidth;
+      const height = renderer.domElement.clientHeight;
+
+      for (const [id, agent] of Object.entries(AGENTS)) {
+        const badge = document.getElementById(`badge-${id}`);
+        if (!badge) continue;
+
+        const pos = agent.pos3d;
+        tempV.set(pos.x, pos.y + 3.1, pos.z);
+        tempV.project(camera);
+
+        // Check if point is inside view frustum
+        if (tempV.z < 1) {
+          const x = (tempV.x * 0.5 + 0.5) * width;
+          const y = (-(tempV.y * 0.5) + 0.5) * height;
+
+          badge.style.left = `${x}px`;
+          badge.style.top = `${y}px`;
+          badge.style.opacity = '1';
+        } else {
+          badge.style.opacity = '0';
+        }
+      }
+    }
+
+    // ==============================================
+    // RAYCASTING & INTERACTION
+    // ==============================================
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    function setupRaycasting() {
+      const canvas = renderer.domElement;
+
+      canvas.addEventListener('click', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(interactiveObjects, true);
+
+        if (intersects.length > 0) {
+          let target = intersects[0].object;
+          while (target && !target.userData.agentId && target.parent) {
+            target = target.parent;
+          }
+          if (target && target.userData.agentId) {
+            playBeep(850, 0.08);
+            selectAgent(target.userData.agentId);
+          }
+        }
+      });
+    }
+
+    function selectAgent(agentId) {
+      const data = AGENTS[agentId];
+      if (!data) return;
+
+      // Position Ring on Floor Under Agent
+      if (selectionRing) {
+        selectionRing.position.set(data.pos3d.x, data.pos3d.y + 0.05, data.pos3d.z);
+        selectionRing.visible = true;
+      }
+
+      // Smoothly target camera to agent
+      flyToCoordinates(data.pos3d.x, data.pos3d.y, data.pos3d.z, 1.8);
+
+      // Open Drawer
+      openAgentDrawer(agentId);
+    }
+
+    function flyToCoordinates(x, y, z, zoom = 1.5) {
+      targetCamera.x = x;
+      targetCamera.y = y;
+      targetCamera.z = z;
+      targetCamera.zoom = zoom;
+    }
+
+    function onWindowResize() {
+      const container = document.getElementById('canvas-container');
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      const aspect = width / height;
+      const d = 26;
+
+      camera.left = -d * aspect;
+      camera.right = d * aspect;
+      camera.top = d;
+      camera.bottom = -d;
+      camera.updateProjectionMatrix();
+
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    }
+
+    // RENDER LOOP
+    const clock = new THREE.Clock();
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const elapsedTime = clock.getElapsedTime();
+
+      // Smooth Camera & Target Lerping
+      controls.target.x += (targetCamera.x - controls.target.x) * 0.07;
+      controls.target.y += (targetCamera.y - controls.target.y) * 0.07;
+      controls.target.z += (targetCamera.z - controls.target.z) * 0.07;
+
+      if (Math.abs(camera.zoom - targetCamera.zoom) > 0.005) {
+        camera.zoom += (targetCamera.zoom - camera.zoom) * 0.07;
+        camera.updateProjectionMatrix();
+        document.getElementById('zoom-level-text').textContent = `${Math.round(camera.zoom * 100)}%`;
+      }
+
+      controls.update();
+
+      // Subtle Idle Character Breathing / Swaying
+      for (const [id, item] of Object.entries(characterMeshes)) {
+        const time = elapsedTime * 2.2 + item.seed;
+        item.mesh.position.y = item.initialY + Math.sin(time) * 0.04;
+        if (item.head) {
+          item.head.rotation.y = Math.sin(time * 0.4) * 0.12;
+        }
+      }
+
+      // Selection Ring Pulsing
+      if (selectionRing && selectionRing.visible) {
+        selectionRing.rotation.z += 0.02;
+        const scale = 1.0 + Math.sin(elapsedTime * 4) * 0.08;
+        selectionRing.scale.set(scale, scale, scale);
+      }
+
+      // Render Scene
+      renderer.render(scene, camera);
+
+      // Update 2D Floating Badges
+      updateBadgePositions();
+    }
+
+    // Initialize 3D Engine on DOM Loaded
+    window.addEventListener('DOMContentLoaded', () => {
+      init3D();
+    });
+  </script>
+
+  <!-- ============================================== -->
+  <!-- UI CONTROLLER & EVENT LISTENERS -->
+  <!-- ============================================== -->
+  <script>
+    let activeAgentId = null;
+
+    // Secret Bunker Easter Egg: 4 clicks on logo
+    let bunkerClicks = 0;
+    const logoTrigger = document.getElementById('secret-bunker-logo');
+    logoTrigger.addEventListener('click', () => {
+      bunkerClicks++;
+      playBeep(400 + bunkerClicks * 150, 0.1, 'triangle');
+      if (bunkerClicks >= 4) {
+        window.location.href = 'bunker.html';
       }
     });
 
-    window.addEventListener('touchmove', (e) => {
-      if (!isDragging || e.touches.length !== 1) return;
-      panX = e.touches[0].clientX - touchStartX;
-      panY = e.touches[0].clientY - touchStartY;
-      updateTransform();
+    // Audio Mute Toggle
+    const audioBtn = document.getElementById('audio-toggle-btn');
+    audioBtn.addEventListener('click', () => {
+      audioEnabled = !audioEnabled;
+      audioBtn.textContent = audioEnabled ? '🔊' : '🔇';
     });
 
-    window.addEventListener('touchend', () => {
-      isDragging = false;
+    // Toggle Badges
+    const labelsBtn = document.getElementById('toggle-labels-btn');
+    labelsBtn.addEventListener('click', () => {
+      labelsVisible = !labelsVisible;
+      const overlay = document.getElementById('badges-overlay');
+      overlay.style.display = labelsVisible ? 'block' : 'none';
+      labelsBtn.style.color = labelsVisible ? '#00f2fe' : '#64748b';
     });
 
-    // Scroll wheel zoom
-    viewportContainer.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      const zoomFactor = e.deltaY < 0 ? 1.08 : 0.92;
-      const newScale = Math.min(Math.max(scale * zoomFactor, 0.45), 2.2);
-      scale = newScale;
-      updateTransform();
-    }, { passive: false });
-
-    // Zoom Buttons
+    // Zoom Controls
     document.getElementById('zoom-in-btn').addEventListener('click', () => {
-      scale = Math.min(scale * 1.15, 2.2);
-      updateTransform();
+      targetCamera.zoom = Math.min(targetCamera.zoom * 1.25, 3.0);
+      playBeep(700, 0.05);
     });
 
     document.getElementById('zoom-out-btn').addEventListener('click', () => {
-      scale = Math.max(scale * 0.85, 0.45);
-      updateTransform();
+      targetCamera.zoom = Math.max(targetCamera.zoom * 0.8, 0.5);
+      playBeep(500, 0.05);
     });
 
     document.getElementById('center-view-btn').addEventListener('click', () => {
-      scale = window.innerWidth < 768 ? 0.65 : 1;
-      panX = 0;
-      panY = 0;
-      updateTransform();
+      targetCamera.x = 0;
+      targetCamera.y = 0;
+      targetCamera.z = 0;
+      targetCamera.zoom = 1.0;
+      playBeep(600, 0.08);
+      document.querySelectorAll('.dept-tab').forEach(t => t.classList.remove('active'));
+      document.querySelector('[data-dept="all"]').classList.add('active');
+      if (selectionRing) selectionRing.visible = false;
     });
 
-    // Fullscreen toggle
+    // Fullscreen Toggle
     document.getElementById('fullscreen-btn').addEventListener('click', () => {
       if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch(() => {});
@@ -945,7 +1573,7 @@
       }
     });
 
-    // DEPARTMENT FILTER TABS (FLY TO ROOM)
+    // Department Tab Navigation (Camera Fly-To)
     const deptTabs = document.querySelectorAll('.dept-tab');
     deptTabs.forEach(tab => {
       tab.addEventListener('click', () => {
@@ -953,36 +1581,17 @@
         tab.classList.add('active');
 
         const dept = tab.getAttribute('data-dept');
-        if (dept === 'all') {
-          scale = window.innerWidth < 768 ? 0.65 : 1;
-          panX = 0;
-          panY = 0;
-        } else if (dept === 'dept-director') {
-          scale = 1.35;
-          panX = 260;
-          panY = 160;
-        } else if (dept === 'dept-scraping') {
-          scale = 1.25;
-          panX = -260;
-          panY = 160;
-        } else if (dept === 'dept-ops') {
-          scale = 1.25;
-          panX = 180;
-          panY = -180;
-        } else if (dept === 'dept-sales') {
-          scale = 1.35;
-          panX = -260;
-          panY = -180;
-        }
-        updateTransform();
+        const target = DEPT_CAMERAS[dept] || DEPT_CAMERAS['all'];
+
+        playBeep(750, 0.1, 'sawtooth');
+        flyToCoordinates(target.x, target.y, target.z, target.zoom);
       });
     });
 
-    // AGENT DRAWER CONTROLLER
+    // AGENT DRAWER
     const drawer = document.getElementById('agent-drawer');
     const backdrop = document.getElementById('drawer-backdrop');
     const closeBtn = document.getElementById('close-drawer-btn');
-    const deskCards = document.querySelectorAll('.desk-card');
 
     function openAgentDrawer(agentId) {
       const data = AGENTS[agentId];
@@ -990,12 +1599,6 @@
 
       activeAgentId = agentId;
 
-      // Update Desk visual state
-      deskCards.forEach(d => d.classList.remove('active-desk'));
-      const activeDesk = document.querySelector(`[data-agent-id="${agentId}"]`);
-      if (activeDesk) activeDesk.classList.add('active-desk');
-
-      // Populate Drawer
       document.getElementById('drawer-agent-icon').textContent = data.icon;
       document.getElementById('drawer-agent-name').textContent = data.name;
       document.getElementById('drawer-agent-role').textContent = data.role;
@@ -1010,7 +1613,6 @@
 
       document.getElementById('drawer-terminal-log').textContent = `> ${data.taskLog}`;
 
-      // Stack Badges
       const stackContainer = document.getElementById('drawer-agent-stack');
       stackContainer.innerHTML = data.stack.map(s => `
         <span class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-mono text-cyan-300">
@@ -1018,7 +1620,6 @@
         </span>
       `).join('');
 
-      // Open Drawer
       drawer.classList.remove('translate-x-full');
       backdrop.classList.remove('hidden');
     }
@@ -1026,64 +1627,39 @@
     function closeAgentDrawer() {
       drawer.classList.add('translate-x-full');
       backdrop.classList.add('hidden');
-      deskCards.forEach(d => d.classList.remove('active-desk'));
       activeAgentId = null;
     }
-
-    deskCards.forEach(desk => {
-      desk.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const id = desk.getAttribute('data-agent-id');
-        openAgentDrawer(id);
-      });
-    });
 
     closeBtn.addEventListener('click', closeAgentDrawer);
     backdrop.addEventListener('click', closeAgentDrawer);
 
-    // ESC key closes drawer
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeAgentDrawer();
     });
 
-    // TRIGGER AGENT TASK SIMULATION
+    // SIMULATED TASK EXECUTION
     const triggerBtn = document.getElementById('trigger-agent-task-btn');
     triggerBtn.addEventListener('click', () => {
       if (!activeAgentId) return;
 
-      const activeDesk = document.querySelector(`[data-agent-id="${activeAgentId}"]`);
       const terminalLog = document.getElementById('drawer-terminal-log');
-
       triggerBtn.disabled = true;
-      triggerBtn.innerHTML = `<span>⏳</span><span>Ejecutando Tarea...</span>`;
-      
-      if (activeDesk) {
-        activeDesk.classList.add('executing-task');
-      }
+      triggerBtn.innerHTML = `<span>⏳</span><span>Ejecutando Tarea en 3D...</span>`;
+      playBeep(1100, 0.15, 'triangle');
 
       terminalLog.innerHTML = `<span class="text-amber-400">> [${new Date().toLocaleTimeString()}] Tarea iniciada por Comandante Walter...</span>`;
 
       setTimeout(() => {
-        terminalLog.innerHTML += `<br><span class="text-cyan-300">> [${new Date().toLocaleTimeString()}] Procesando flujo con stack pesado...</span>`;
+        playBeep(950, 0.1);
+        terminalLog.innerHTML += `<br><span class="text-cyan-300">> [${new Date().toLocaleTimeString()}] Disparando subagentes y motor de inferencia...</span>`;
       }, 700);
 
       setTimeout(() => {
-        if (activeDesk) {
-          activeDesk.classList.remove('executing-task');
-        }
+        playBeep(1200, 0.25);
         triggerBtn.disabled = false;
         triggerBtn.innerHTML = `<span>⚡</span><span>Simular Otra Tarea</span>`;
         terminalLog.innerHTML += `<br><span class="text-emerald-400 font-bold">> [${new Date().toLocaleTimeString()}] ¡Misión cumplida! Datos procesados y sincronizados sin errores.</span>`;
       }, 1600);
-    });
-
-    // Initial responsive setup
-    window.addEventListener('load', () => {
-      if (window.innerWidth < 768) {
-        scale = 0.62;
-        panY = -30;
-        updateTransform();
-      }
     });
   </script>
 </body>
