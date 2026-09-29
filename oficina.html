@@ -288,9 +288,12 @@
       <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
       <span class="text-white font-bold">12 agentes · Vos en Dirección</span>
       <span>•</span>
-      <span class="text-cyan-300">Arrastrá para explorar en 3D</span>
+      <span class="text-cyan-300">Arrastrá en 3D</span>
       <span>•</span>
-      <span>Tocá la píldora para abrir el Gestor de Tareas</span>
+      <button onclick="if(window.openAriChat) window.openAriChat();" class="text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1.5 transition-colors">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>💬 Hablá con Ari Asistente</span>
+      </button>
     </div>
 
   </main>
@@ -1675,6 +1678,15 @@
           </div>
         </div>
       `;
+
+      conduitBadge.addEventListener('click', (e) => {
+        e.stopPropagation();
+        playBeep(950, 0.09);
+        if (typeof window.openAriChat === 'function') {
+          window.openAriChat('¿Cómo funciona la colaboración entre Ari y Tool Router Core?');
+        }
+      });
+
       overlay.appendChild(conduitBadge);
     }
 
@@ -1759,7 +1771,12 @@
       }
 
       flyToCoordinates(data.pos3d.x, data.pos3d.y, data.pos3d.z, 1.8);
-      openTacticalModal(agentId);
+
+      if (agentId === 'ari-agent' && typeof window.openAriChat === 'function') {
+        window.openAriChat();
+      } else {
+        openTacticalModal(agentId);
+      }
     }
 
     function flyToCoordinates(x, y, z, zoom = 1.5) {
@@ -1914,6 +1931,9 @@
         currentModalAgentId = null;
       }, 150);
     }
+
+    window.closeTacticalModal = closeTacticalModal;
+    window.openTacticalModal = openTacticalModal;
 
     closeModalBtn.addEventListener('click', closeTacticalModal);
     modal.addEventListener('click', (e) => {
@@ -2454,5 +2474,11 @@
       });
     });
   </script>
+
+  <!-- SUPABASE JS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- ARI AGENT VIRTUAL ASSISTANT & ECOSYSTEM COPILOT -->
+  <script src="ari-agent.js"></script>
 </body>
 </html>
