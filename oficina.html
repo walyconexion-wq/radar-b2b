@@ -113,12 +113,12 @@
     }
 
     .badge-leader .badge-pill {
-      border-color: rgba(245, 158, 11, 0.4);
+      border-color: rgba(245, 158, 11, 0.5);
       box-shadow: 0 8px 24px -2px rgba(0, 0, 0, 0.75), 0 0 14px -2px rgba(245, 158, 11, 0.3);
     }
 
     .badge-luz .badge-pill {
-      border-color: rgba(0, 242, 254, 0.5);
+      border-color: rgba(0, 242, 254, 0.6);
       box-shadow: 0 8px 24px -2px rgba(0, 0, 0, 0.75), 0 0 16px -2px rgba(0, 242, 254, 0.4);
     }
 
@@ -137,6 +137,22 @@
     }
     .bunker-trigger:active {
       transform: scale(0.92);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 242, 254, 0.4);
     }
 
     /* Task Pulse Animation */
@@ -170,7 +186,7 @@
             OFICINA VIRTUAL 3D LIVE
           </span>
         </div>
-        <p class="text-[11px] text-slate-400 font-mono">Cuartel General Isométrico · Orquestación en Tiempo Real</p>
+        <p class="text-[11px] text-slate-400 font-mono">Cuartel General Isométrico · Orquestación Multiagente en Tiempo Real</p>
       </div>
     </div>
 
@@ -274,110 +290,102 @@
       <span>•</span>
       <span class="text-cyan-300">Arrastrá para explorar en 3D</span>
       <span>•</span>
-      <span>Clic en cualquier personaje o escritorio</span>
+      <span>Tocá la píldora para abrir el Gestor de Tareas</span>
     </div>
 
   </main>
 
-  <!-- ============================================== -->
-  <!-- SLIDE-IN AGENT CONTROL DRAWER (RIGHT PANEL) -->
-  <!-- ============================================== -->
-  <aside id="agent-drawer" class="fixed top-0 right-0 bottom-0 w-full sm:w-[470px] bg-[#080C1E]/95 backdrop-blur-2xl border-l border-white/10 p-6 sm:p-8 z-50 flex flex-col justify-between transform translate-x-full transition-transform duration-300 ease-in-out shadow-2xl overflow-y-auto">
-    
-    <!-- Top Bar of Drawer -->
-    <div>
-      <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
-        <div class="flex items-center gap-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
-          <span class="text-xs font-mono font-bold text-cyan-400 tracking-wider">PANEL DE CONTROL DEL AGENTE</span>
+  <!-- ============================================================== -->
+  <!-- MODAL FLOTANTE EJECUTIVO: GESTOR DE TAREAS & AVANCES EN TIEMPO REAL -->
+  <!-- ============================================================== -->
+  <div id="tactical-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md hidden transition-all duration-300">
+    <div id="modal-card" class="relative w-full max-w-3xl bg-[#080C1E]/95 backdrop-blur-2xl border border-white/15 rounded-3xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden transform scale-95 transition-all duration-300 ease-out">
+      
+      <!-- Top Bar of Modal -->
+      <div class="p-5 sm:p-6 border-b border-white/10 flex items-center justify-between bg-white/[0.02]">
+        <div class="flex items-center gap-3.5">
+          <div id="modal-agent-icon" class="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-2xl shadow-lg shadow-cyan-500/10">
+            🤖
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 id="modal-agent-name" class="font-extrabold text-base sm:text-lg text-white font-mono">Agente</h2>
+              <span id="modal-agent-badge" class="px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 text-[10px] font-mono font-bold">
+                EN LÍNEA
+              </span>
+            </div>
+            <p id="modal-agent-role" class="text-xs text-slate-400 font-mono mt-0.5">Rol en el Ecosistema</p>
+          </div>
         </div>
-        <button id="close-drawer-btn" class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center text-sm transition-colors">
+        <button id="close-modal-btn" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center text-base transition-colors" title="Cerrar Ventana">
           ✕
         </button>
       </div>
 
-      <!-- Agent Profile Card -->
-      <div class="flex items-center gap-4 mb-6">
-        <div id="drawer-agent-icon" class="w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-3xl shadow-lg shadow-cyan-500/10">
-          🤖
+      <!-- Navigation Tabs Inside Modal -->
+      <div id="modal-tabs-nav" class="px-5 sm:px-6 pt-3 pb-2 border-b border-white/10 flex gap-2 overflow-x-auto text-xs font-mono">
+        <!-- Injected dynamically based on whether it is Walter/Luz or Subagents -->
+      </div>
+
+      <!-- Tab Content Body -->
+      <div id="modal-tab-body" class="p-5 sm:p-6 overflow-y-auto flex-1 space-y-4 font-mono text-xs">
+        <!-- Dynamically injected -->
+      </div>
+
+      <!-- Footer Info / Action -->
+      <div class="p-4 sm:p-5 border-t border-white/10 flex items-center justify-between bg-black/40 text-[11px] font-mono text-slate-400">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Comunidad Multiagéntica Radar B2B · En Vivo</span>
         </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <h3 id="drawer-agent-name" class="font-extrabold text-lg text-white font-mono">Agente</h3>
-            <span id="drawer-agent-badge" class="px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 text-[9px] font-mono font-bold">
-              ACTIVO
-            </span>
-          </div>
-          <p id="drawer-agent-role" class="text-xs text-slate-400 font-mono mt-0.5">Rol en el Ecosistema</p>
-          <div id="drawer-agent-dept" class="text-[10px] text-cyan-400 font-mono mt-1 font-bold">DEPARTAMENTO</div>
+        <div id="modal-footer-action">
+          <!-- Button or tag injected dynamically -->
         </div>
       </div>
 
-      <!-- Misión Operativa -->
-      <div class="space-y-4 mb-6">
-        <div class="bg-black/40 rounded-2xl p-4 border border-white/5">
-          <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider block mb-1">Misión Principal:</span>
-          <p id="drawer-agent-mission" class="text-xs text-slate-200 leading-relaxed font-light">
-            Descripción de lo que hace este agente dentro del laboratorio.
-          </p>
-        </div>
-
-        <!-- Stack Tecnológico -->
-        <div>
-          <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider block mb-2">Stack Tecnológico & Herramientas:</span>
-          <div id="drawer-agent-stack" class="flex flex-wrap gap-1.5">
-            <!-- Badges dynamically injected -->
-          </div>
-        </div>
-
-        <!-- Métricas en Tiempo Real -->
-        <div>
-          <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider block mb-2">Telemetría & Rendimiento:</span>
-          <div class="grid grid-cols-2 gap-2.5">
-            <div class="bg-white/[0.03] p-3 rounded-xl border border-white/5">
-              <div class="text-[10px] text-slate-400 font-mono" id="drawer-metric-label-1">Métrica 1</div>
-              <div class="text-base font-bold text-white font-mono mt-0.5" id="drawer-metric-val-1">--</div>
-            </div>
-            <div class="bg-white/[0.03] p-3 rounded-xl border border-white/5">
-              <div class="text-[10px] text-slate-400 font-mono" id="drawer-metric-label-2">Métrica 2</div>
-              <div class="text-base font-bold text-cyan-400 font-mono mt-0.5" id="drawer-metric-val-2">--</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Log Terminal Simulator -->
-      <div class="bg-black/60 rounded-xl p-3 border border-white/10 font-mono text-[11px] space-y-1">
-        <div class="text-slate-500 text-[9px] border-b border-white/5 pb-1 flex items-center justify-between">
-          <span>TERMINAL DE TAREAS</span>
-          <span class="text-emerald-400">READY</span>
-        </div>
-        <div id="drawer-terminal-log" class="text-slate-300 pt-1 text-[10px] leading-tight font-mono">
-          > Sistema 3D en reposo esperando instrucciones del Comandante Walter.
-        </div>
-      </div>
     </div>
-
-    <!-- Bottom Action Button -->
-    <div class="pt-6 border-t border-white/10 space-y-3">
-      <button id="trigger-agent-task-btn" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-950 font-bold text-xs font-mono shadow-lg shadow-cyan-500/20 transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2">
-        <span>⚡</span>
-        <span>Simular Disparo de Tarea</span>
-      </button>
-      <div class="text-[10px] text-slate-500 font-mono text-center">
-        Conectado a la API de Radar B2B & Motor Three.js WebGL
-      </div>
-    </div>
-
-  </aside>
-
-  <!-- OVERLAY BACKGROUND WHEN DRAWER IS OPEN ON MOBILE -->
-  <div id="drawer-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden transition-opacity"></div>
+  </div>
 
   <!-- ============================================== -->
-  <!-- AGENTS DATA SPECIFICATION -->
+  <!-- AGENTS & COMMUNITY DATA SPECIFICATION -->
   <!-- ============================================== -->
   <script>
+    // Projects from Walter's multi-agent directory
+    const COMMUNITY_PROJECTS = [
+      { id: 'orquestadora', name: 'ORQUESTADORA CENTRAL LUZ', tag: 'Core', lastActive: 'hace 40m', progress: 95 },
+      { id: 'radarb2b', name: 'PROYECTO RADAR B2B', tag: 'Producción', lastActive: 'hace 10m', progress: 92 },
+      { id: 'shopdigital', name: 'LAB- SHOPDIGITAL', tag: 'Staging', lastActive: 'hace 2d', progress: 85 },
+      { id: 'auditoria', name: 'AUDITORIA-GENERAL', tag: 'QA', lastActive: 'hace 5d', progress: 100 },
+      { id: 'internos', name: 'AGENTES-INTERNOS', tag: 'Ecosistema', lastActive: 'hace 1d', progress: 90 },
+      { id: 'fundacion', name: 'FUNDACION- VALLE DE LUZ', tag: 'Comunidad', lastActive: 'hace 14d', progress: 60 },
+      { id: 'ministerio', name: 'MINISTERIO CAMINOS DE FE', tag: 'Comunidad', lastActive: 'hace 24d', progress: 50 },
+    ];
+
+    // Executive Dialogues between Walter & Luz
+    const EXECUTIVE_DIALOGUES = [
+      {
+        date: "Hoy, 18:40",
+        topic: "Ingeniería Inversa Oficina 3D & Three.js",
+        summary: "Walter detectó la oficina 'Fábrica Viva' de Lautaro Puebla en TikTok. Investigamos Claw3D, Three.js y Spline, y construimos nuestro propio motor 3D isométrico a 60 FPS con éxito total."
+      },
+      {
+        date: "Ayer, 20:15",
+        topic: "Heavy Stack: Crawl4AI + Playwright + Scrapy",
+        summary: "Definición del pipeline de scraping pesado: Requests para sitios estáticos, Crawl4AI para LLMs y Playwright para SPAs dinámicas complejas."
+      },
+      {
+        date: "Hace 3 días",
+        topic: "Arquitectura Ecuación X ($1,500 USD / mes)",
+        summary: "Meta establecida: 3 a 4 clientes de $450-$650 con 4 horas diarias de dedicación, dejando el monitoreo y alertas 24/7 a los subagentes."
+      },
+      {
+        date: "Hace 1 semana",
+        topic: "Clonación Fractal & ShopDigital",
+        summary: "Creación del protocolo de clonación fractal y siembra hiperrealista para desplegar instancias de e-commerce aisladas y réplicas exactas."
+      }
+    ];
+
+    // Master Agents Database
     const AGENTS = {
       'walter': {
         name: 'Walter C.',
@@ -386,13 +394,24 @@
         badge: 'HUMAN LEAD',
         icon: '👨‍💻',
         pos3d: { x: -16, y: 1.2, z: -10 },
+        isExecutive: true,
+        lastTask: {
+          title: "Aprobación de Arquitectura 3D WebGL para Oficina Virtual",
+          date: "Hoy, 18:30:15",
+          status: "COMPLETADA",
+          result: "Migración a Three.js 3D aprobada y desplegada en producción a 60 FPS."
+        },
+        pendingTasks: [
+          { title: "Definir oferta de retainers para Upwork ($450 - $650 USD)", project: "RADAR B2B", priority: "ALTA", date: "Emitida: Hoy, 17:10", progress: 80 },
+          { title: "Validar prototipo de gestor multiagente con inversionistas", project: "ORQUESTADORA CENTRAL LUZ", priority: "ESTRATÉGICA", date: "Emitida: Hoy, 19:15", progress: 90 },
+          { title: "Revisar entorno de staging y clonación fractal", project: "LAB- SHOPDIGITAL", priority: "MEDIA", date: "Emitida: Hace 2 días", progress: 65 }
+        ],
         mission: 'Liderazgo supremo del laboratorio Radar B2B. Aprobación de presupuestos, cierre de clientes clave, validación de calidad de datasets y guardian de la Ecuación X ($1,500 USD/mes con 4h/día).',
         stack: ['Dirección General', 'Validación Humana', 'Ecuación X', 'Upwork Enterprise', 'Negociación B2B'],
         metric1Label: 'Objetivo Q4',
         metric1Val: '$1,500 USD',
         metric2Label: 'Jornada Foco',
-        metric2Val: '4h / día',
-        taskLog: 'Supervisando la orquestación general. Todos los departamentos reportando al 100% de operatividad.'
+        metric2Val: '4h / día'
       },
       'luz': {
         name: 'Luz (Antigravity Ops)',
@@ -401,13 +420,24 @@
         badge: 'AI ORCHESTRATOR',
         icon: '🤖',
         pos3d: { x: -11, y: 1.2, z: -10 },
+        isExecutive: true,
+        lastTask: {
+          title: "Orquestación & Despliegue de Motor 3D Isométrico con Three.js",
+          date: "Hoy, 18:22:45",
+          status: "COMPLETADA",
+          result: "Compilación de Three.js, shaders, avatares 3D y despliegue en Vercel con HTTP 200."
+        },
+        pendingTasks: [
+          { title: "Construir Gestor Táctico de Tareas & Avances Flotante", project: "RADAR B2B", priority: "CRÍTICA", date: "Emitida: Hoy, 19:15", progress: 95 },
+          { title: "Sincronizar telemetría de subagentes en tiempo real", project: "ORQUESTADORA CENTRAL LUZ", priority: "ALTA", date: "Emitida: Hoy, 18:00", progress: 75 },
+          { title: "Supervisar alertas del bot de Telegram @Walys2b2_bot", project: "AGENTES-INTERNOS", priority: "ALTA", date: "Emitida: Hoy, 12:00", progress: 100 }
+        ],
         mission: 'Co-piloto estratégica y orquestadora central. Traduce las visiones de Walter en código ejecutable, selecciona las mejores herramientas open-source (Tool Router) y supervisa a los subagentes 24/7.',
         stack: ['DeepMind Antigravity', 'Python 3.12', 'Tool Router', 'Memanto Memory', 'Codebase Memory', 'Three.js 3D'],
         metric1Label: 'Agentes a Cargo',
         metric1Val: '10 Subagentes',
         metric2Label: 'Disponibilidad',
-        metric2Val: '24/7 Activa',
-        taskLog: 'Orquestando pipeline de extracción y sincronización con Telegram. Memoria persistente sincronizada.'
+        metric2Val: '24/7 Activa'
       },
       'crawl4ai': {
         name: 'Crawl4AI Sentinel',
@@ -416,13 +446,22 @@
         badge: 'ANTI-BOT BYPASS',
         icon: '🕷️',
         pos3d: { x: 9, y: 1.2, z: -15 },
+        lastTask: {
+          title: "Extracción profunda de catálogo competidor (1,420 SKUs)",
+          date: "Hoy, 17:45:10",
+          status: "ÉXITO 100%",
+          result: "1,420 productos raspados en Markdown limpio. Bypass antibot superado en 3.2s sin bloqueos."
+        },
+        pendingTasks: [
+          { title: "Auditar catálogo de repuestos de refrigeración", project: "RADAR B2B", priority: "ALTA", date: "Emitida: Hoy, 16:30", progress: 40 },
+          { title: "Actualizar proxies residenciales de rotación", project: "ORQUESTADORA CENTRAL LUZ", priority: "MEDIA", date: "Emitida: Ayer", progress: 100 }
+        ],
         mission: 'Extracción profunda y sigilosa de catálogos web complejos. Convierte sitios caóticos en Markdown estructurado limpio para que los modelos LLM extraigan precios y stock sin alucinaciones.',
         stack: ['crawl4ai 0.9.4', 'Chromium Headless', 'Proxy Rotation', 'Markdown Cleaner', 'Python 3.12'],
         metric1Label: 'SKUs Raspados',
         metric1Val: '1,420 hoy',
         metric2Label: 'Tasa Bypass',
-        metric2Val: '99.4%',
-        taskLog: 'Auditoría completada en catálogo de retail competidor. 84 cambios de precio catalogados en 3.2s.'
+        metric2Val: '99.4%'
       },
       'playwright': {
         name: 'Playwright Stealth',
@@ -431,13 +470,21 @@
         badge: 'BROWSER ENGINE',
         icon: '🎭',
         pos3d: { x: 17, y: 1.2, z: -15 },
+        lastTask: {
+          title: "Navegación SPA y auditoría de stock en carrito",
+          date: "Hoy, 18:10:22",
+          status: "ÉXITO 100%",
+          result: "Simulación de clic en 32 variantes de talles/colores. Stock real verificado en base de datos."
+        },
+        pendingTasks: [
+          { title: "Automatizar extracción en marketplace con Cloudflare Turnstile", project: "RADAR B2B", priority: "ALTA", date: "Emitida: Hoy, 15:00", progress: 60 }
+        ],
         mission: 'Manejo de sitios con JavaScript pesado, simulación de clics en carritos de compra, selección de variantes (talles/colores) y descarga de datos dinámicos simulando navegación humana.',
         stack: ['Playwright 1.63', 'Patchright Stealth', 'Async Python', 'Cookie Session Injector'],
         metric1Label: 'Interacciones SPA',
         metric1Val: '450 / hora',
         metric2Label: 'Detección Bot',
-        metric2Val: '0%',
-        taskLog: 'Navegando checkout de marketplace rival. Validando existencia física de stock en depósito.'
+        metric2Val: '0%'
       },
       'tool-router': {
         name: 'Tool Router Core',
@@ -446,13 +493,21 @@
         badge: 'OPTIMIZER',
         icon: '🔀',
         pos3d: { x: 9, y: 1.2, z: -7 },
+        lastTask: {
+          title: "Enrutamiento inteligente de 45 URLs entrantes",
+          date: "Hoy, 18:55:04",
+          status: "ÉXITO 100%",
+          result: "30 asignadas a Scrapy (alta velocidad), 12 a Crawl4AI (LLM), 3 a Playwright (JS dinámico)."
+        },
+        pendingTasks: [
+          { title: "Optimizar heurística de selección de librerías Python", project: "ORQUESTADORA CENTRAL LUZ", priority: "MEDIA", date: "Emitida: Ayer", progress: 90 }
+        ],
         mission: 'Evalúa la dificultad del sitio objetivo y selecciona automáticamente el arma más eficiente: Requests para sitios estáticos, Crawl4AI para LLMs o Playwright para aplicaciones interactivas complejas.',
         stack: ['Python Tool Router', 'Benchmarking Heurístico', 'UncleCode LiteLLM', 'Cost Optimizer'],
         metric1Label: 'Latencia Decisión',
         metric1Val: '0.02s',
         metric2Label: 'Ahorro Cómputo',
-        metric2Val: '68%',
-        taskLog: 'Ruta asignada: Sitio estático detectado -> Despachado a Scrapy para máxima velocidad.'
+        metric2Val: '68%'
       },
       'scrapy': {
         name: 'Scrapy Pipeline',
@@ -461,13 +516,21 @@
         badge: 'BULK EXTRACTOR',
         icon: '⚡',
         pos3d: { x: 17, y: 1.2, z: -7 },
+        lastTask: {
+          title: "Extracción masiva de 12,000 URLs industriales",
+          date: "Hoy, 16:20:18",
+          status: "ÉXITO 100%",
+          result: "Descarga a 50 req/s. CSV generado y validado con 0% de campos vacíos."
+        },
+        pendingTasks: [
+          { title: "Generar dump semanal de distribuidores mayoristas", project: "RADAR B2B", priority: "MEDIA", date: "Emitida: Hoy, 14:00", progress: 20 }
+        ],
         mission: 'Descarga y procesamiento paralelo de miles de páginas por minuto. Limpia texto sucio, elimina duplicados y normaliza monedas (ARS, USD, EUR) directo a CSV o JSON.',
         stack: ['Scrapy Twisted', 'BeautifulSoup4', 'Regex Engine', 'JSONL Streamer'],
         metric1Label: 'Velocidad',
         metric1Val: '50 req / seg',
         metric2Label: 'Calidad Data',
-        metric2Val: '100% Clean',
-        taskLog: 'Procesando dump masivo de 12,000 URLs de repuestos industriales. Exportación a CSV completada.'
+        metric2Val: '100% Clean'
       },
       'telegram-bot': {
         name: 'Telegram Dispatcher',
@@ -476,13 +539,21 @@
         badge: 'PUSH DISPATCHER',
         icon: '🤖',
         pos3d: { x: -17, y: -0.3, z: 9 },
+        lastTask: {
+          title: "Envío de Alerta Push: 'Baja de precio -$99 USD'",
+          date: "Hoy, 18:48:33",
+          status: "ÉXITO 100%",
+          result: "Mensaje enriquecido entregado al celular de Walter vía @Walys2b2_bot en 1.8 segundos."
+        },
+        pendingTasks: [
+          { title: "Configurar canal VIP de alertas para cliente de prueba 48hs", project: "RADAR B2B", priority: "ALTA", date: "Emitida: Hoy, 17:00", progress: 50 }
+        ],
         mission: 'Conectado a @Walys2b2_bot para avisarle a Walter y a sus clientes al instante en su celular cuando un rival baja el precio o se queda sin stock, en menos de 24 segundos.',
         stack: ['Telegram Bot API', 'Python Asyncio', 'Webhook Dispatcher', 'Rich Markdown Formatter'],
         metric1Label: 'Tiempo Alerta',
         metric1Val: '< 24 segundos',
         metric2Label: 'Alertas Enviadas',
-        metric2Val: '154 este mes',
-        taskLog: 'Alerta enviada a Walter: "Notebook Lenovo bajó -$99 USD en Amazon Retail". Entregada con 2 ticks.'
+        metric2Val: '154 este mes'
       },
       'sheets-sync': {
         name: 'Sheets Auto-Sync',
@@ -491,13 +562,21 @@
         badge: 'ZERO DATA ENTRY',
         icon: '📊',
         pos3d: { x: -9, y: -0.3, z: 9 },
+        lastTask: {
+          title: "Sincronización matutina de Google Sheets (5 columnas)",
+          date: "Hoy, 08:00:05",
+          status: "ÉXITO 100%",
+          result: "Planilla de cliente actualizada sin copiar y pegar. Colores condicionales aplicados."
+        },
+        pendingTasks: [
+          { title: "Añadir fórmula de proyección de margen protegido en Sheets", project: "RADAR B2B", priority: "NORMAL", date: "Emitida: Hoy, 11:00", progress: 85 }
+        ],
         mission: 'Elimina para siempre el copiar y pegar a mano. Cada mañana a las 8 AM la planilla de Google Sheets del cliente amanece con los precios, stock y competidores auditados.',
         stack: ['Google Sheets API v4', 'OAuth Service Account', 'Pandas DataFrame', 'Auto-Formatting'],
         metric1Label: 'Sincronización',
         metric1Val: 'Diaria 08:00 AM',
         metric2Label: 'Horas Ahorradas',
-        metric2Val: '45h / cliente',
-        taskLog: 'Sincronización matutina exitosa: 5 columnas formateadas, colores condicionales aplicados en Sheets.'
+        metric2Val: '45h / cliente'
       },
       'price-sentinel': {
         name: 'Price War Sentinel',
@@ -506,13 +585,21 @@
         badge: 'PROFIT DEFENDER',
         icon: '📉',
         pos3d: { x: -17, y: -0.3, z: 17 },
+        lastTask: {
+          title: "Detección de quiebre de stock en Smart TV 50\"",
+          date: "Hoy, 17:15:40",
+          status: "ÉXITO 100%",
+          result: "Rival agotó existencias. Oportunidad de captura calculada en +$18,450 USD de margen."
+        },
+        pendingTasks: [
+          { title: "Escanear fluctuaciones de precios en categoría electrodomésticos", project: "RADAR B2B", priority: "ALTA", date: "Emitida: Hoy, 18:00", progress: 30 }
+        ],
         mission: 'Monitorea las variaciones matemáticas entre tiendas rivales. Calcula el margen de ganancia protegido y proyecta pérdidas potenciales antes de que el cliente pierda ventas.',
         stack: ['Algoritmo Delta %', 'Protección de Margen', 'Alerta Sniper Quiebre', 'Calculadora ROI'],
         metric1Label: 'Margen Protegido',
         metric1Val: '+$18,450 USD',
         metric2Label: 'Quiebres Rival',
-        metric2Val: '14 detectados',
-        taskLog: 'Alerta Sniper disparada: Rival líder se quedó sin stock en Smart TV 50". Oportunidad de captura abierta.'
+        metric2Val: '14 detectados'
       },
       'ari-agent': {
         name: 'Ari Web Assistant',
@@ -521,13 +608,21 @@
         badge: 'LEAD MAGNET',
         icon: '💬',
         pos3d: { x: -9, y: -0.3, z: 17 },
+        lastTask: {
+          title: "Atención de prospecto web y captura de lead para prueba 48hs",
+          date: "Hoy, 18:35:12",
+          status: "ÉXITO 100%",
+          result: "Prospecto solicitó monitoreo para 5 tiendas de calzado. Datos derivados a Telegram."
+        },
+        pendingTasks: [
+          { title: "Presentar escalera de 4 precios a visitantes calificados", project: "RADAR B2B", priority: "ALTA", date: "Emitida: Permanente", progress: 100 }
+        ],
         mission: 'Reside en radarb2b.site. Atiende visitantes, responde dudas técnicas en lenguaje claro, cotiza según la escalera de 4 precios y capta solicitudes para la prueba gratis de 48 horas.',
         stack: ['JavaScript Vanilla', 'Telegram Lead Forwarder', 'Landy Knowledge Base', 'Session Storage'],
         metric1Label: 'Conversaciones',
         metric1Val: '38 esta semana',
         metric2Label: 'Pruebas 48h',
-        metric2Val: '7 solicitadas',
-        taskLog: 'Visitante consultó por monitoreo de 5 tiendas de calzado. Datos capturados y enviados a Telegram.'
+        metric2Val: '7 solicitadas'
       },
       'upwork-hunter': {
         name: 'Upwork Job Hunter',
@@ -536,13 +631,21 @@
         badge: 'OPPORTUNITY RADAR',
         icon: '🎯',
         pos3d: { x: 10, y: -0.3, z: 13 },
+        lastTask: {
+          title: "Escaneo de Upwork: 'Python Scraping for E-commerce ($500 USD)'",
+          date: "Hoy, 18:12:00",
+          status: "ÉXITO 100%",
+          result: "Trabajo filtrado con cliente verificado y menos de 5 propuestas enviadas."
+        },
+        pendingTasks: [
+          { title: "Monitorear contratos de $45-$65/hr en Upwork y Contra", project: "RADAR B2B", priority: "ALTA", date: "Emitida: Permanente", progress: 90 }
+        ],
         mission: 'Escanea cada 30 minutos las publicaciones de Upwork y Contra filtrando clientes con pago verificado, presupuestos superiores a $45/hr o proyectos de $150-$650 con menos de 5 propuestas.',
         stack: ['Upwork RSS / Scraping', 'Filtro Semántico', 'Scoring de Clientes', 'Notificador Táctico'],
         metric1Label: 'Trabajos Filtrados',
         metric1Val: '12 / día',
         metric2Label: 'Calidad Match',
-        metric2Val: '92%',
-        taskLog: 'Nueva oportunidad detectada en Upwork: "Python Web Scraping for E-commerce Price Comparison ($500 USD)".'
+        metric2Val: '92%'
       },
       'proposal-architect': {
         name: 'Proposal Architect',
@@ -551,13 +654,21 @@
         badge: 'COPY EXPERT',
         icon: '✍️',
         pos3d: { x: 18, y: -0.3, z: 13 },
+        lastTask: {
+          title: "Redacción de propuesta personalizada con Anzuelo de 48hs",
+          date: "Hoy, 18:15:30",
+          status: "ÉXITO 100%",
+          result: "Pitch generado en 15 segundos incluyendo enlace a radarb2b.site y prueba gratis."
+        },
+        pendingTasks: [
+          { title: "Generar 3 variantes de propuesta para clientes de EE.UU.", project: "RADAR B2B", priority: "MEDIA", date: "Emitida: Hoy, 16:00", progress: 70 }
+        ],
         mission: 'Redacta propuestas personalizadas usando el "Anzuelo Irresistible": ofrece la prueba gratis de 48hs en 3 URLs y linkea a radarb2b.site como respaldo de autoridad técnica.',
         stack: ['Copywriting B2B', 'Plantillas de Conversión', 'Personalización Dinámica', 'Anzuelo 48hs'],
         metric1Label: 'Tasa Respuesta',
         metric1Val: '28%',
         metric2Label: 'Tiempo Redacción',
-        metric2Val: '15 segundos',
-        taskLog: 'Propuesta generada para cliente de EE.UU. enfocada en monitoreo continuo con prueba de 3 URLs.'
+        metric2Val: '15 segundos'
       }
     };
 
@@ -655,7 +766,7 @@
       controls = new THREE.OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       controls.dampingFactor = 0.08;
-      controls.maxPolarAngle = Math.PI / 2.25; // Don't go below floor
+      controls.maxPolarAngle = Math.PI / 2.25;
       controls.minPolarAngle = Math.PI / 8;
       controls.enableRotate = true;
       controls.enablePan = true;
@@ -663,10 +774,10 @@
       controls.zoomSpeed = 1.2;
       controls.target.set(0, 0, 0);
 
-      // 5. Lighting Setup (Luxury Warm Tech Atmosphere)
+      // 5. Lighting Setup
       setupLighting();
 
-      // 6. Build the 3D World
+      // 6. Build 3D World
       buildEnvironment();
 
       // 7. Spawn Avatars
@@ -689,11 +800,9 @@
     }
 
     function setupLighting() {
-      // Soft Slate Ambient Fill
       const ambientLight = new THREE.AmbientLight(0x232d4b, 1.2);
       scene.add(ambientLight);
 
-      // Main Sun / Key Light with Soft Shadows
       const dirLight = new THREE.DirectionalLight(0xfff7ec, 1.4);
       dirLight.position.set(35, 60, 30);
       dirLight.castShadow = true;
@@ -709,29 +818,24 @@
       dirLight.shadow.bias = -0.0005;
       scene.add(dirLight);
 
-      // Warm Interior Lights for Rooms
-      // Dirección: Warm Amber/Gold
+      // Room Accent Spotlights
       const dirPoint = new THREE.PointLight(0xffaa44, 1.8, 30);
       dirPoint.position.set(-14, 8, -10);
       scene.add(dirPoint);
 
-      // Scraping Lab: Cyan/Neon Glow
       const scrapPoint = new THREE.PointLight(0x00f2fe, 1.6, 32);
       scrapPoint.position.set(13, 8, -11);
       scene.add(scrapPoint);
 
-      // Operaciones: Emerald Mission Control Glow
       const opsPoint = new THREE.PointLight(0x10b981, 1.5, 30);
       opsPoint.position.set(-13, 7, 13);
       scene.add(opsPoint);
 
-      // Hub Comercial: Warm Amber Luxury Glow
       const salesPoint = new THREE.PointLight(0xf59e0b, 1.4, 28);
       salesPoint.position.set(14, 7, 13);
       scene.add(salesPoint);
     }
 
-    // Procedural Grid Texture for Tech Floors
     function createGridTexture(lineColor = '#1e293b', bgColor = '#090d1c') {
       const canvas = document.createElement('canvas');
       canvas.width = 128;
@@ -750,7 +854,6 @@
       return texture;
     }
 
-    // Procedural Wood Parquet Texture for Executive Suite
     function createWoodTexture() {
       const canvas = document.createElement('canvas');
       canvas.width = 256;
@@ -759,7 +862,6 @@
       ctx.fillStyle = '#2c1810';
       ctx.fillRect(0, 0, 256, 256);
       
-      // Planks
       for (let i = 0; i < 8; i++) {
         const y = i * 32;
         ctx.fillStyle = i % 2 === 0 ? '#381f14' : '#27140c';
@@ -775,7 +877,7 @@
     }
 
     function buildEnvironment() {
-      // 1. BASE VOID GROUND
+      // 1. Ground plane
       const groundGeo = new THREE.PlaneGeometry(160, 160);
       const groundMat = new THREE.MeshStandardMaterial({
         color: 0x03050c,
@@ -788,34 +890,29 @@
       ground.receiveShadow = true;
       scene.add(ground);
 
-      // Subtle Tech Floor Grid
       const grid = new THREE.GridHelper(120, 60, 0x00f2fe, 0x111827);
       grid.position.y = -2.98;
       grid.material.opacity = 0.2;
       grid.material.transparent = true;
       scene.add(grid);
 
-      // 2. ROOM PLATFORMS
-      // Sala 1: Dirección General (Top-Left, Y=0)
+      // 2. Room Platforms
       createPlatform(-14, 0, -10, 20, 18, 1.2, 0xffaa44, 'wood');
       buildExecutiveFurniture(-14, 0.6, -10);
 
-      // Sala 2: Laboratorio de Scraping (Top-Right, Y=0)
       createPlatform(13, 0, -11, 22, 19, 1.2, 0x00f2fe, 'tech');
       buildScrapingLabFurniture(13, 0.6, -11);
 
-      // Sala 3: Operaciones & Alertas (Bottom-Left, Y=-1.2 - Lower Level)
       createPlatform(-13, -1.2, 13, 22, 18, 1.2, 0x10b981, 'ops');
       buildOperationsFurniture(-13, -0.6, 13);
 
-      // Sala 4: Hub Comercial & Crecimiento (Bottom-Right, Y=-1.2)
       createPlatform(14, -1.2, 13, 20, 18, 1.2, 0xf59e0b, 'sales');
       buildCommercialFurniture(14, -0.6, 13);
 
-      // 3. Central Mezzanine Stairs & Walkways
+      // 3. Stairs & Walkways
       buildStairsAndWalkways();
 
-      // 4. Perimeter Modern Plants & Pots
+      // 4. Plants
       createPlant(-23, 0.6, -18);
       createPlant(-5, 0.6, -18);
       createPlant(23, 0.6, -19);
@@ -828,7 +925,6 @@
       const group = new THREE.Group();
       group.position.set(x, y, z);
 
-      // Main Beveled Platform
       const geo = new THREE.BoxGeometry(width, height, depth);
       let mat;
 
@@ -866,7 +962,7 @@
       border.position.y = height / 2 + 0.05;
       group.add(border);
 
-      // Back Wall with Glass & Wood Paneling
+      // Back Wall
       const wallGeo = new THREE.BoxGeometry(width, 4, 0.4);
       const wallMat = new THREE.MeshStandardMaterial({
         color: 0x070a16,
@@ -879,7 +975,7 @@
       wall.receiveShadow = true;
       group.add(wall);
 
-      // Glass Railing along front
+      // Glass Railing
       buildGlassRailing(group, width, height / 2, depth / 2 - 0.2);
 
       scene.add(group);
@@ -900,7 +996,6 @@
       glass.position.set(0, y + 0.6, z);
       parent.add(glass);
 
-      // Top Railing Metal Tube
       const railGeo = new THREE.CylinderGeometry(0.05, 0.05, width * 0.95, 8);
       const railMat = new THREE.MeshStandardMaterial({ color: 0x111827, metalness: 0.8, roughness: 0.3 });
       const rail = new THREE.Mesh(railGeo, railMat);
@@ -929,7 +1024,6 @@
         step.receiveShadow = true;
         stairsGroup.add(step);
 
-        // LED Strip Under Step
         const ledGeo = new THREE.BoxGeometry(stepWidth - 0.2, 0.04, 0.04);
         const ledMat = new THREE.MeshBasicMaterial({ color: 0x00f2fe });
         const led = new THREE.Mesh(ledGeo, ledMat);
@@ -939,7 +1033,6 @@
       scene.add(stairsGroup);
     }
 
-    // 3D FURNITURE BUILDERS
     function createDesk(x, y, z, rotY = 0, agentId = null, monitorColor = 0x00f2fe) {
       const deskGroup = new THREE.Group();
       deskGroup.position.set(x, y, z);
@@ -958,7 +1051,7 @@
       top.receiveShadow = true;
       deskGroup.add(top);
 
-      // Legs / Metal Frame
+      // Legs
       const legGeo = new THREE.BoxGeometry(0.12, 1.1, 1.6);
       const legMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.8, roughness: 0.3 });
       
@@ -970,7 +1063,7 @@
       rightLeg.position.set(1.6, 0.55, 0);
       deskGroup.add(rightLeg);
 
-      // Front Modesty Panel with Soft Amber Glow
+      // Modesty Panel
       const panelGeo = new THREE.BoxGeometry(3.2, 0.7, 0.05);
       const panelMat = new THREE.MeshStandardMaterial({ color: 0x1f140d, roughness: 0.6 });
       const panel = new THREE.Mesh(panelGeo, panelMat);
@@ -979,14 +1072,12 @@
 
       // Dual Monitors
       for (let m = -0.7; m <= 0.7; m += 1.4) {
-        // Monitor Stand
         const standGeo = new THREE.CylinderGeometry(0.05, 0.05, 0.3, 8);
         const standMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.8 });
         const stand = new THREE.Mesh(standGeo, standMat);
         stand.position.set(m, 1.25, -0.4);
         deskGroup.add(stand);
 
-        // Screen Bezel
         const screenGeo = new THREE.BoxGeometry(1.2, 0.75, 0.06);
         const screenMat = new THREE.MeshStandardMaterial({ color: 0x050711, roughness: 0.4 });
         const screen = new THREE.Mesh(screenGeo, screenMat);
@@ -995,7 +1086,6 @@
         screen.castShadow = true;
         deskGroup.add(screen);
 
-        // Screen Display Surface with Glowing Emissive Color
         const displayGeo = new THREE.PlaneGeometry(1.1, 0.65);
         const displayMat = new THREE.MeshBasicMaterial({ color: monitorColor });
         const display = new THREE.Mesh(displayGeo, displayMat);
@@ -1016,7 +1106,7 @@
       mouse.position.set(0.7, 1.19, 0.2);
       deskGroup.add(mouse);
 
-      // Ergonomic Chair
+      // Chair
       createChair(deskGroup, 0, 0, 1.1, Math.PI);
 
       if (agentId) {
@@ -1033,27 +1123,23 @@
       chair.position.set(x, y, z);
       chair.rotation.y = rotY;
 
-      // Base with wheels
       const baseGeo = new THREE.CylinderGeometry(0.35, 0.35, 0.08, 6);
       const baseMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.7 });
       const base = new THREE.Mesh(baseGeo, baseMat);
       base.position.y = 0.15;
       chair.add(base);
 
-      // Stem
       const stemGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.5, 8);
       const stem = new THREE.Mesh(stemGeo, baseMat);
       stem.position.y = 0.45;
       chair.add(stem);
 
-      // Seat Cushion
       const seatGeo = new THREE.BoxGeometry(0.9, 0.12, 0.9);
       const seatMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.8 });
       const seat = new THREE.Mesh(seatGeo, seatMat);
       seat.position.y = 0.72;
       chair.add(seat);
 
-      // Backrest
       const backGeo = new THREE.BoxGeometry(0.85, 1.1, 0.1);
       const back = new THREE.Mesh(backGeo, seatMat);
       back.position.set(0, 1.35, -0.4);
@@ -1067,7 +1153,6 @@
       const plant = new THREE.Group();
       plant.position.set(x, y, z);
 
-      // Ceramic Pot
       const potGeo = new THREE.CylinderGeometry(0.6, 0.45, 1.1, 12);
       const potMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.3 });
       const pot = new THREE.Mesh(potGeo, potMat);
@@ -1075,7 +1160,6 @@
       pot.castShadow = true;
       plant.add(pot);
 
-      // Leaves
       const leafMat = new THREE.MeshStandardMaterial({ color: 0x15803d, roughness: 0.6 });
       for (let i = 0; i < 7; i++) {
         const leafGeo = new THREE.SphereGeometry(0.45, 6, 6);
@@ -1092,11 +1176,9 @@
     }
 
     function buildExecutiveFurniture(cx, cy, cz) {
-      // Big Executive Double Desk for Walter & Luz
       createDesk(cx - 3, cy, cz, 0, 'walter', 0x00f2fe);
       createDesk(cx + 3, cy, cz, 0, 'luz', 0x8b5cf6);
 
-      // Executive Leather Sofa
       const sofa = new THREE.Group();
       sofa.position.set(cx - 4, cy, cz + 6);
       sofa.rotation.y = Math.PI / 2;
@@ -1113,10 +1195,8 @@
       sofaBack.position.set(0, 1.0, -0.6);
       sofaBack.castShadow = true;
       sofa.add(sofaBack);
-
       scene.add(sofa);
 
-      // Big Dashboard on Wall ("Visión del Equipo")
       const boardGeo = new THREE.BoxGeometry(9.0, 3.2, 0.1);
       const boardMat = new THREE.MeshBasicMaterial({ color: 0x0f172a });
       const board = new THREE.Mesh(boardGeo, boardMat);
@@ -1131,13 +1211,11 @@
     }
 
     function buildScrapingLabFurniture(cx, cy, cz) {
-      // 4 Workstations
       createDesk(cx - 4, cy, cz - 4, 0, 'crawl4ai', 0x00f2fe);
       createDesk(cx + 4, cy, cz - 4, 0, 'playwright', 0x6366f1);
       createDesk(cx - 4, cy, cz + 4, Math.PI, 'tool-router', 0x10b981);
       createDesk(cx + 4, cy, cz + 4, Math.PI, 'scrapy', 0xf59e0b);
 
-      // 3 Tall Server Racks against wall
       for (let i = -2; i <= 2; i += 2) {
         const rackGeo = new THREE.BoxGeometry(1.6, 4.5, 1.2);
         const rackMat = new THREE.MeshStandardMaterial({ color: 0x090d1c, metalness: 0.9, roughness: 0.2 });
@@ -1146,7 +1224,6 @@
         rack.castShadow = true;
         scene.add(rack);
 
-        // Blinking LEDs
         for (let l = 0; l < 8; l++) {
           const ledGeo = new THREE.BoxGeometry(1.3, 0.06, 0.05);
           const ledMat = new THREE.MeshBasicMaterial({ color: l % 2 === 0 ? 0x00f2fe : 0x10b981 });
@@ -1169,15 +1246,12 @@
       createDesk(cx + 4, cy, cz, 0, 'proposal-architect', 0x6366f1);
     }
 
-    // ==============================================
     // 3D CHARACTER AVATAR GENERATOR
-    // ==============================================
     function createCharacter(agentId, config) {
       const char = new THREE.Group();
       const pos = config.pos3d;
       char.position.set(pos.x, pos.y, pos.z);
 
-      // Root hit target for raycasting
       const hitBox = new THREE.Mesh(
         new THREE.BoxGeometry(1.8, 3.2, 1.8),
         new THREE.MeshBasicMaterial({ visible: false })
@@ -1198,7 +1272,7 @@
       head.castShadow = true;
       char.add(head);
 
-      // Hair / Tech Visor
+      // Hair
       const hairGeo = new THREE.SphereGeometry(0.41, 10, 10);
       const hairMat = new THREE.MeshStandardMaterial({
         color: config.hairColor || 0x1e293b,
@@ -1209,7 +1283,7 @@
       hair.scale.set(1.02, 0.95, 1.05);
       char.add(hair);
 
-      // Torso / Jacket
+      // Torso
       const torsoGeo = new THREE.BoxGeometry(0.85, 1.05, 0.55);
       const jacketMat = new THREE.MeshStandardMaterial({
         color: config.jacketColor || 0x0f172a,
@@ -1249,9 +1323,7 @@
       rightShoe.position.set(0.22, 0.09, 0.08);
       char.add(rightShoe);
 
-      // Special Accessories
       if (agentId === 'luz') {
-        // Glowing Cyan Halo / Tech Visor
         const ringGeo = new THREE.TorusGeometry(0.48, 0.04, 8, 24);
         const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f2fe });
         const ring = new THREE.Mesh(ringGeo, ringMat);
@@ -1259,7 +1331,6 @@
         ring.position.y = 2.95;
         char.add(ring);
 
-        // Glowing Hologram Tablet in Hand
         const tabGeo = new THREE.BoxGeometry(0.5, 0.35, 0.04);
         const tabMat = new THREE.MeshBasicMaterial({ color: 0x00f2fe });
         const tab = new THREE.Mesh(tabGeo, tabMat);
@@ -1279,37 +1350,32 @@
     }
 
     function spawnCharacters() {
-      // 1. Walter (Comandante en Dirección)
       createCharacter('walter', {
         pos3d: AGENTS['walter'].pos3d,
         jacketColor: 0x111827,
-        pantsColor: 0x1e3a5f, // Denim
+        pantsColor: 0x1e3a5f,
         hairColor: 0x1a1a1a,
         skinColor: 0xe2b998
       });
 
-      // 2. Luz (Socia Orquestadora con acentos cian)
       createCharacter('luz', {
         pos3d: AGENTS['luz'].pos3d,
         jacketColor: 0x0f172a,
         pantsColor: 0x0284c7,
-        hairColor: 0x00f2fe, // Cyan cyber hair
+        hairColor: 0x00f2fe,
         skinColor: 0xf8d7c4
       });
 
-      // 3. Scraping Lab Agents
       createCharacter('crawl4ai', { pos3d: AGENTS['crawl4ai'].pos3d, jacketColor: 0x047857 });
       createCharacter('playwright', { pos3d: AGENTS['playwright'].pos3d, jacketColor: 0x4338ca });
       createCharacter('tool-router', { pos3d: AGENTS['tool-router'].pos3d, jacketColor: 0x0d9488 });
       createCharacter('scrapy', { pos3d: AGENTS['scrapy'].pos3d, jacketColor: 0xd97706 });
 
-      // 4. Operations Agents
       createCharacter('telegram-bot', { pos3d: AGENTS['telegram-bot'].pos3d, jacketColor: 0x0284c7 });
       createCharacter('sheets-sync', { pos3d: AGENTS['sheets-sync'].pos3d, jacketColor: 0x16a34a });
       createCharacter('price-sentinel', { pos3d: AGENTS['price-sentinel'].pos3d, jacketColor: 0xe11d48 });
       createCharacter('ari-agent', { pos3d: AGENTS['ari-agent'].pos3d, jacketColor: 0x7c3aed });
 
-      // 5. Commercial Agents
       createCharacter('upwork-hunter', { pos3d: AGENTS['upwork-hunter'].pos3d, jacketColor: 0xb45309 });
       createCharacter('proposal-architect', { pos3d: AGENTS['proposal-architect'].pos3d, jacketColor: 0x4f46e5 });
     }
@@ -1328,9 +1394,7 @@
       scene.add(selectionRing);
     }
 
-    // ==============================================
     // 3D TO 2D SCREEN PROJECTION (HTML FLOATING BADGES)
-    // ==============================================
     function createFloatingBadges() {
       const overlay = document.getElementById('badges-overlay');
       overlay.innerHTML = '';
@@ -1354,7 +1418,7 @@
         badge.addEventListener('click', (e) => {
           e.stopPropagation();
           playBeep(900, 0.09);
-          selectAgent(id);
+          selectAgentAndOpenModal(id);
         });
 
         overlay.appendChild(badge);
@@ -1375,7 +1439,6 @@
         tempV.set(pos.x, pos.y + 3.1, pos.z);
         tempV.project(camera);
 
-        // Check if point is inside view frustum
         if (tempV.z < 1) {
           const x = (tempV.x * 0.5 + 0.5) * width;
           const y = (-(tempV.y * 0.5) + 0.5) * height;
@@ -1389,9 +1452,7 @@
       }
     }
 
-    // ==============================================
-    // RAYCASTING & INTERACTION
-    // ==============================================
+    // RAYCASTING
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
@@ -1413,27 +1474,23 @@
           }
           if (target && target.userData.agentId) {
             playBeep(850, 0.08);
-            selectAgent(target.userData.agentId);
+            selectAgentAndOpenModal(target.userData.agentId);
           }
         }
       });
     }
 
-    function selectAgent(agentId) {
+    function selectAgentAndOpenModal(agentId) {
       const data = AGENTS[agentId];
       if (!data) return;
 
-      // Position Ring on Floor Under Agent
       if (selectionRing) {
         selectionRing.position.set(data.pos3d.x, data.pos3d.y + 0.05, data.pos3d.z);
         selectionRing.visible = true;
       }
 
-      // Smoothly target camera to agent
       flyToCoordinates(data.pos3d.x, data.pos3d.y, data.pos3d.z, 1.8);
-
-      // Open Drawer
-      openAgentDrawer(agentId);
+      openTacticalModal(agentId);
     }
 
     function flyToCoordinates(x, y, z, zoom = 1.5) {
@@ -1460,14 +1517,13 @@
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     }
 
-    // RENDER LOOP
+    // ANIMATE LOOP
     const clock = new THREE.Clock();
     function animate() {
       requestAnimationFrame(animate);
 
       const elapsedTime = clock.getElapsedTime();
 
-      // Smooth Camera & Target Lerping
       controls.target.x += (targetCamera.x - controls.target.x) * 0.07;
       controls.target.y += (targetCamera.y - controls.target.y) * 0.07;
       controls.target.z += (targetCamera.z - controls.target.z) * 0.07;
@@ -1480,7 +1536,6 @@
 
       controls.update();
 
-      // Subtle Idle Character Breathing / Swaying
       for (const [id, item] of Object.entries(characterMeshes)) {
         const time = elapsedTime * 2.2 + item.seed;
         item.mesh.position.y = item.initialY + Math.sin(time) * 0.04;
@@ -1489,32 +1544,549 @@
         }
       }
 
-      // Selection Ring Pulsing
       if (selectionRing && selectionRing.visible) {
         selectionRing.rotation.z += 0.02;
         const scale = 1.0 + Math.sin(elapsedTime * 4) * 0.08;
         selectionRing.scale.set(scale, scale, scale);
       }
 
-      // Render Scene
       renderer.render(scene, camera);
-
-      // Update 2D Floating Badges
       updateBadgePositions();
     }
 
-    // Initialize 3D Engine on DOM Loaded
     window.addEventListener('DOMContentLoaded', () => {
       init3D();
     });
   </script>
 
+  <!-- ============================================================== -->
+  <!-- TACTICAL MODAL CONTROLLER & MULTI-AGENT TASK MANAGER ENGINE -->
+  <!-- ============================================================== -->
+  <script>
+    let currentModalAgentId = null;
+    let activeModalTab = 'tasks';
+
+    // Local Storage Task Store for dynamically assigned tasks by Walter
+    function getStoredTasks() {
+      try {
+        const data = localStorage.getItem('radarb2b_community_tasks');
+        return data ? JSON.parse(data) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveStoredTasks(tasks) {
+      try {
+        localStorage.setItem('radarb2b_community_tasks', JSON.stringify(tasks));
+      } catch (e) {}
+    }
+
+    const modal = document.getElementById('tactical-modal');
+    const modalCard = document.getElementById('modal-card');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const modalTabsNav = document.getElementById('modal-tabs-nav');
+    const modalTabBody = document.getElementById('modal-tab-body');
+    const modalFooterAction = document.getElementById('modal-footer-action');
+
+    function openTacticalModal(agentId) {
+      const data = AGENTS[agentId];
+      if (!data) return;
+
+      currentModalAgentId = agentId;
+      activeModalTab = data.isExecutive ? 'projects-tasks' : 'last-task';
+
+      // Header Info
+      document.getElementById('modal-agent-icon').textContent = data.icon;
+      document.getElementById('modal-agent-name').textContent = data.name;
+      document.getElementById('modal-agent-role').textContent = `${data.role} · ${data.dept}`;
+      document.getElementById('modal-agent-badge').textContent = data.badge;
+
+      renderModalTabs(data);
+      renderModalContent(data);
+
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        modalCard.classList.remove('scale-95');
+        modalCard.classList.add('scale-100');
+      }, 10);
+    }
+
+    function closeTacticalModal() {
+      modalCard.classList.remove('scale-100');
+      modalCard.classList.add('scale-95');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        currentModalAgentId = null;
+      }, 150);
+    }
+
+    closeModalBtn.addEventListener('click', closeTacticalModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeTacticalModal();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+        closeTacticalModal();
+      }
+    });
+
+    // RENDER TABS
+    function renderModalTabs(agent) {
+      modalTabsNav.innerHTML = '';
+      let tabs = [];
+
+      if (agent.isExecutive) {
+        tabs = [
+          { id: 'projects-tasks', label: '📋 Tareas & Proyectos', count: '5' },
+          { id: 'dialogues', label: '💬 Diálogos en Trinchera', count: EXECUTIVE_DIALOGUES.length },
+          { id: 'new-task', label: '➕ Asignar Tarea' },
+          { id: 'investors', label: '📈 Métricas & Inversores' }
+        ];
+      } else {
+        tabs = [
+          { id: 'last-task', label: '⚡ Última Tarea' },
+          { id: 'sub-tasks', label: '📌 Tareas a Completar', count: agent.pendingTasks.length },
+          { id: 'metrics', label: '📊 Telemetría en Vivo' },
+          { id: 'deploy', label: '🚀 Desplegar Agente' }
+        ];
+      }
+
+      tabs.forEach(tab => {
+        const btn = document.createElement('button');
+        const isActive = activeModalTab === tab.id;
+        btn.className = `px-3.5 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 whitespace-nowrap ${
+          isActive
+            ? 'bg-cyan-500/15 border-cyan-500/40 text-cyan-300 font-bold shadow-lg shadow-cyan-500/10'
+            : 'bg-white/[0.03] border-white/10 text-slate-400 hover:text-slate-200 hover:bg-white/[0.06]'
+        }`;
+        btn.innerHTML = `
+          <span>${tab.label}</span>
+          ${tab.count ? `<span class="px-1.5 py-0.2 text-[9px] rounded-full bg-white/10 font-mono">${tab.count}</span>` : ''}
+        `;
+        btn.addEventListener('click', () => {
+          activeModalTab = tab.id;
+          playBeep(650, 0.05);
+          renderModalTabs(agent);
+          renderModalContent(agent);
+        });
+        modalTabsNav.appendChild(btn);
+      });
+    }
+
+    // RENDER CONTENT BODY
+    function renderModalContent(agent) {
+      modalTabBody.innerHTML = '';
+      modalFooterAction.innerHTML = '';
+
+      if (agent.isExecutive) {
+        // EXECUTIVE VIEWS (Walter & Luz)
+        if (activeModalTab === 'projects-tasks') {
+          renderExecutiveTasksView(agent);
+        } else if (activeModalTab === 'dialogues') {
+          renderDialoguesView();
+        } else if (activeModalTab === 'new-task') {
+          renderNewTaskForm(agent);
+        } else if (activeModalTab === 'investors') {
+          renderInvestorsPitchView(agent);
+        }
+      } else {
+        // SUBAGENT SPECIALIST VIEWS
+        if (activeModalTab === 'last-task') {
+          renderSubagentLastTask(agent);
+        } else if (activeModalTab === 'sub-tasks') {
+          renderSubagentPendingTasks(agent);
+        } else if (activeModalTab === 'metrics') {
+          renderSubagentMetrics(agent);
+        } else if (activeModalTab === 'deploy') {
+          renderSubagentDeploy(agent);
+        }
+      }
+    }
+
+    // 1. EXECUTIVE TASKS & PROJECTS VIEW
+    function renderExecutiveTasksView(agent) {
+      const stored = getStoredTasks();
+      const allTasks = [...stored, ...agent.pendingTasks];
+
+      let html = `
+        <div class="space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-white/10">
+            <span class="text-slate-400 text-[11px] uppercase tracking-wider">Avances de la Comunidad Multiagéntica</span>
+            <span class="text-cyan-400 font-bold">${allTasks.length} Tareas Activas</span>
+          </div>
+      `;
+
+      allTasks.forEach(task => {
+        html += `
+          <div class="bg-black/50 border border-white/10 rounded-2xl p-4 hover:border-cyan-500/40 transition-all space-y-2">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <span class="px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-300 text-[9px] font-bold border border-cyan-500/20">
+                  ${task.project || 'RADAR B2B'}
+                </span>
+                <h4 class="font-bold text-white text-xs mt-1.5">${task.title}</h4>
+              </div>
+              <span class="px-2 py-0.5 rounded-full ${
+                task.priority === 'CRÍTICA' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+              } text-[9px] font-bold shrink-0">
+                ${task.priority || 'ALTA'}
+              </span>
+            </div>
+            
+            <div class="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-white/5">
+              <span>📅 ${task.date || 'Emitida: Hoy'}</span>
+              <span class="text-emerald-400 font-bold">${task.progress || 85}% COMPLETADO</span>
+            </div>
+            
+            <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+              <div class="bg-gradient-to-r from-cyan-400 to-emerald-400 h-full rounded-full" style="width: ${task.progress || 85}%"></div>
+            </div>
+          </div>
+        `;
+      });
+
+      html += `</div>`;
+      modalTabBody.innerHTML = html;
+
+      modalFooterAction.innerHTML = `
+        <button id="quick-add-task-btn" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-slate-950 font-bold text-xs hover:opacity-90 transition-all flex items-center gap-1.5">
+          <span>➕</span><span>Nueva Tarea</span>
+        </button>
+      `;
+
+      document.getElementById('quick-add-task-btn').addEventListener('click', () => {
+        activeModalTab = 'new-task';
+        renderModalTabs(agent);
+        renderModalContent(agent);
+      });
+    }
+
+    // 2. DIALOGUES VIEW (CONVERSATION ADVANCES)
+    function renderDialoguesView() {
+      let html = `
+        <div class="space-y-4">
+          <div class="p-3 bg-cyan-500/10 border border-cyan-500/20 rounded-2xl text-[11px] text-cyan-200 leading-relaxed">
+            💡 <b>Bitácora de Trincheras:</b> Decisiones estratégicas y saltos técnicos acordados entre el Comandante Walter y Luz.
+          </div>
+      `;
+
+      EXECUTIVE_DIALOGUES.forEach(dialogue => {
+        html += `
+          <div class="relative pl-5 pb-4 border-l-2 border-cyan-500/30 space-y-1.5">
+            <span class="absolute -left-[7px] top-0 w-3 h-3 rounded-full bg-cyan-400 shadow-md shadow-cyan-400/50"></span>
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-white text-xs">${dialogue.topic}</span>
+              <span class="text-[10px] text-slate-400 font-mono">${dialogue.date}</span>
+            </div>
+            <p class="text-slate-300 text-[11px] leading-relaxed font-light">
+              ${dialogue.summary}
+            </p>
+          </div>
+        `;
+      });
+
+      html += `</div>`;
+      modalTabBody.innerHTML = html;
+    }
+
+    // 3. NEW TASK FORM (INTERACTIVE ASSIGNMENT)
+    function renderNewTaskForm(agent) {
+      let html = `
+        <form id="new-task-form" class="space-y-4">
+          <div>
+            <label class="block text-[10px] font-mono text-slate-400 uppercase mb-1">Título de la Tarea / Misión:</label>
+            <input type="text" id="task-title-input" required placeholder="Ej: Proyecto Radar B2B: Mejorar Frontend y métricas de scraping" class="w-full bg-black/60 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors font-mono">
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[10px] font-mono text-slate-400 uppercase mb-1">Proyecto Asignado:</label>
+              <select id="task-project-select" class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-cyan-300 focus:outline-none focus:border-cyan-400 font-mono">
+                ${COMMUNITY_PROJECTS.map(p => `<option value="${p.name}">${p.name}</option>`).join('')}
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[10px] font-mono text-slate-400 uppercase mb-1">Agente Responsable:</label>
+              <select id="task-agent-select" class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400 font-mono">
+                <option value="luz">Luz (Chief AI Officer)</option>
+                <option value="crawl4ai">Crawl4AI Sentinel</option>
+                <option value="playwright">Playwright Stealth</option>
+                <option value="telegram-bot">Telegram Dispatcher</option>
+                <option value="ari-agent">Ari Assistant</option>
+                <option value="proposal-architect">Proposal Architect</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[10px] font-mono text-slate-400 uppercase mb-1">Nivel de Prioridad:</label>
+            <div class="flex gap-2">
+              <label class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 border border-white/10 cursor-pointer text-xs text-rose-300">
+                <input type="radio" name="priority" value="CRÍTICA" checked class="text-cyan-500">
+                <span>Crítica</span>
+              </label>
+              <label class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 border border-white/10 cursor-pointer text-xs text-amber-300">
+                <input type="radio" name="priority" value="ALTA" class="text-cyan-500">
+                <span>Alta</span>
+              </label>
+              <label class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 border border-white/10 cursor-pointer text-xs text-slate-300">
+                <input type="radio" name="priority" value="NORMAL" class="text-cyan-500">
+                <span>Normal</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-950 font-bold text-xs font-mono shadow-lg shadow-cyan-500/20 transition-all flex items-center justify-center gap-2">
+              <span>🚀</span>
+              <span>Emitir Tarea y Despachar a la Comunidad</span>
+            </button>
+          </div>
+        </form>
+      `;
+
+      modalTabBody.innerHTML = html;
+
+      document.getElementById('new-task-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const title = document.getElementById('task-title-input').value.trim();
+        const project = document.getElementById('task-project-select').value;
+        const assignedAgent = document.getElementById('task-agent-select').value;
+        const priority = document.querySelector('input[name="priority"]:checked').value;
+
+        if (!title) return;
+
+        const newTask = {
+          title: title,
+          project: project,
+          assignedTo: assignedAgent,
+          priority: priority,
+          date: `Emitida: Hoy, ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`,
+          progress: 10
+        };
+
+        const currentTasks = getStoredTasks();
+        currentTasks.unshift(newTask);
+        saveStoredTasks(currentTasks);
+
+        playBeep(1100, 0.15, 'triangle');
+
+        // Switch to Tasks Tab
+        activeModalTab = 'projects-tasks';
+        renderModalTabs(agent);
+        renderModalContent(agent);
+      });
+    }
+
+    // 4. INVESTOR SHOWCASE VIEW
+    function renderInvestorsPitchView(agent) {
+      let html = `
+        <div class="space-y-4">
+          <div class="bg-gradient-to-br from-indigo-950/60 to-cyan-950/40 p-4 rounded-2xl border border-cyan-500/30 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-cyan-400 font-bold text-xs uppercase tracking-wider">Propuesta de Valor & Tracción</span>
+              <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[9px] font-bold">MODELO VALIDADO</span>
+            </div>
+            <p class="text-slate-200 text-xs leading-relaxed font-light">
+              Radar B2B opera como una <b>empresa autónoma impulsada por agentes de IA</b>. Un único líder humano (Walter) orquesta a 10 agentes especializados que extraen, auditan y alertan variaciones de precios de retail en tiempo real.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-black/50 p-3.5 rounded-2xl border border-white/5 space-y-1">
+              <span class="text-slate-400 text-[10px]">Ecuación X (Rentabilidad)</span>
+              <div class="text-lg font-bold text-emerald-400 font-mono">$1,500 USD / mes</div>
+              <span class="text-[9px] text-slate-500 block">Con solo 4 horas diarias de supervisión humana</span>
+            </div>
+
+            <div class="bg-black/50 p-3.5 rounded-2xl border border-white/5 space-y-1">
+              <span class="text-slate-400 text-[10px]">Retainers Mensuales</span>
+              <div class="text-lg font-bold text-cyan-400 font-mono">$450 - $650 USD</div>
+              <span class="text-[9px] text-slate-500 block">Por cliente de e-commerce retail</span>
+            </div>
+
+            <div class="bg-black/50 p-3.5 rounded-2xl border border-white/5 space-y-1">
+              <span class="text-slate-400 text-[10px]">Velocidad de Alerta Push</span>
+              <div class="text-lg font-bold text-white font-mono">&lt; 24 Segundos</div>
+              <span class="text-[9px] text-slate-500 block">Detección de quiebres directo a Telegram</span>
+            </div>
+
+            <div class="bg-black/50 p-3.5 rounded-2xl border border-white/5 space-y-1">
+              <span class="text-slate-400 text-[10px]">Capacidad de Raspado</span>
+              <div class="text-lg font-bold text-amber-400 font-mono">50 req / seg</div>
+              <span class="text-[9px] text-slate-500 block">Pipeline Scrapy + Crawl4AI + Playwright</span>
+            </div>
+          </div>
+        </div>
+      `;
+
+      modalTabBody.innerHTML = html;
+    }
+
+    // 5. SUBAGENT SPECIALIST VIEWS
+    function renderSubagentLastTask(agent) {
+      const task = agent.lastTask;
+      let html = `
+        <div class="space-y-4">
+          <div class="bg-black/60 border border-white/10 rounded-2xl p-4 space-y-3">
+            <div class="flex items-center justify-between border-b border-white/5 pb-2">
+              <span class="text-slate-400 text-[10px] uppercase">Registro de Misión</span>
+              <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[9px] font-bold border border-emerald-500/30">
+                ${task.status}
+              </span>
+            </div>
+
+            <div>
+              <span class="text-[10px] text-slate-400 block mb-0.5">Misión Ejecutada:</span>
+              <h4 class="font-bold text-white text-xs leading-snug">${task.title}</h4>
+            </div>
+
+            <div class="bg-black/50 p-3 rounded-xl border border-white/5 space-y-1 text-[11px] font-mono text-slate-300">
+              <span class="text-slate-500 text-[9px] block">RESULTADO TELEMÉTRICO:</span>
+              <div>${task.result}</div>
+            </div>
+
+            <div class="text-[10px] text-slate-500 font-mono">
+              📅 Fecha de Emisión & Cierre: <b class="text-cyan-400">${task.date}</b>
+            </div>
+          </div>
+        </div>
+      `;
+
+      modalTabBody.innerHTML = html;
+
+      modalFooterAction.innerHTML = `
+        <button id="re-run-task-btn" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-slate-950 font-bold text-xs hover:opacity-90 transition-all flex items-center gap-1.5">
+          <span>⚡</span><span>Forzar Re-ejecución</span>
+        </button>
+      `;
+
+      document.getElementById('re-run-task-btn').addEventListener('click', () => {
+        triggerSimulatedSubagentTask(agent);
+      });
+    }
+
+    function renderSubagentPendingTasks(agent) {
+      let html = `<div class="space-y-3">`;
+
+      if (agent.pendingTasks.length === 0) {
+        html += `<div class="p-6 text-center text-slate-500">No hay tareas pendientes en la cola.</div>`;
+      } else {
+        agent.pendingTasks.forEach(task => {
+          html += `
+            <div class="bg-black/50 border border-white/10 rounded-2xl p-4 space-y-2">
+              <div class="flex items-start justify-between">
+                <div>
+                  <span class="px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-300 text-[9px] font-bold border border-cyan-500/20">
+                    ${task.project}
+                  </span>
+                  <h4 class="font-bold text-white text-xs mt-1">${task.title}</h4>
+                </div>
+                <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[9px] font-bold">
+                  ${task.priority}
+                </span>
+              </div>
+              <div class="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-white/5">
+                <span>📅 ${task.date}</span>
+                <span class="text-cyan-400 font-bold">${task.progress}%</span>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      html += `</div>`;
+      modalTabBody.innerHTML = html;
+    }
+
+    function renderSubagentMetrics(agent) {
+      let html = `
+        <div class="space-y-4">
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-white/[0.03] p-4 rounded-2xl border border-white/5 space-y-1">
+              <span class="text-slate-400 text-[10px]">${agent.metric1Label}</span>
+              <div class="text-lg font-bold text-white font-mono">${agent.metric1Val}</div>
+            </div>
+            <div class="bg-white/[0.03] p-4 rounded-2xl border border-white/5 space-y-1">
+              <span class="text-slate-400 text-[10px]">${agent.metric2Label}</span>
+              <div class="text-lg font-bold text-cyan-400 font-mono">${agent.metric2Val}</div>
+            </div>
+          </div>
+
+          <div>
+            <span class="text-[10px] text-slate-400 uppercase tracking-wider block mb-2">Herramientas & Heavy Stack:</span>
+            <div class="flex flex-wrap gap-1.5">
+              ${agent.stack.map(s => `<span class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-mono text-cyan-300">${s}</span>`).join('')}
+            </div>
+          </div>
+
+          <div class="bg-black/50 p-4 rounded-2xl border border-white/5">
+            <span class="text-[10px] text-slate-400 uppercase block mb-1">Misión Permanente:</span>
+            <p class="text-slate-300 text-xs leading-relaxed font-light">${agent.mission}</p>
+          </div>
+        </div>
+      `;
+      modalTabBody.innerHTML = html;
+    }
+
+    function renderSubagentDeploy(agent) {
+      let html = `
+        <div class="space-y-4 text-center py-4">
+          <div class="w-16 h-16 rounded-3xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-3xl mx-auto shadow-lg shadow-cyan-500/20">
+            ${agent.icon}
+          </div>
+          <div>
+            <h3 class="font-bold text-white text-base font-mono">Despliegue Operativo Inmediato</h3>
+            <p class="text-slate-400 text-xs mt-1 max-w-md mx-auto font-light">
+              Asigna una misión prioritaria en tiempo real a este agente. Se conectará con el motor de inferencia y ejecutará su tarea de scraping/alerta en el visor 3D.
+            </p>
+          </div>
+
+          <button id="deploy-mission-btn" class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-bold text-xs font-mono shadow-lg shadow-cyan-500/20 transition-all transform hover:scale-[1.03] inline-flex items-center gap-2">
+            <span>⚡</span>
+            <span>Lanzar Misión Inmediata</span>
+          </button>
+        </div>
+      `;
+
+      modalTabBody.innerHTML = html;
+
+      document.getElementById('deploy-mission-btn').addEventListener('click', () => {
+        triggerSimulatedSubagentTask(agent);
+      });
+    }
+
+    function triggerSimulatedSubagentTask(agent) {
+      playBeep(1200, 0.18, 'triangle');
+      const btn = document.getElementById('deploy-mission-btn') || document.getElementById('re-run-task-btn');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span>⏳</span><span>Ejecutando en 3D...</span>`;
+      }
+
+      setTimeout(() => {
+        playBeep(900, 0.1);
+      }, 600);
+
+      setTimeout(() => {
+        playBeep(1350, 0.25);
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<span>✅</span><span>Misión Completada con Éxito</span>`;
+        }
+        // Update last task time
+        agent.lastTask.date = `Hoy, ${new Date().toLocaleTimeString()}`;
+      }, 1500);
+    }
+  </script>
+
   <!-- ============================================== -->
-  <!-- UI CONTROLLER & EVENT LISTENERS -->
+  <!-- TOP BAR & CONTROLS SCRIPT -->
   <!-- ============================================== -->
   <script>
-    let activeAgentId = null;
-
     // Secret Bunker Easter Egg: 4 clicks on logo
     let bunkerClicks = 0;
     const logoTrigger = document.getElementById('secret-bunker-logo');
@@ -1586,80 +2158,6 @@
         playBeep(750, 0.1, 'sawtooth');
         flyToCoordinates(target.x, target.y, target.z, target.zoom);
       });
-    });
-
-    // AGENT DRAWER
-    const drawer = document.getElementById('agent-drawer');
-    const backdrop = document.getElementById('drawer-backdrop');
-    const closeBtn = document.getElementById('close-drawer-btn');
-
-    function openAgentDrawer(agentId) {
-      const data = AGENTS[agentId];
-      if (!data) return;
-
-      activeAgentId = agentId;
-
-      document.getElementById('drawer-agent-icon').textContent = data.icon;
-      document.getElementById('drawer-agent-name').textContent = data.name;
-      document.getElementById('drawer-agent-role').textContent = data.role;
-      document.getElementById('drawer-agent-dept').textContent = data.dept;
-      document.getElementById('drawer-agent-badge').textContent = data.badge;
-      document.getElementById('drawer-agent-mission').textContent = data.mission;
-
-      document.getElementById('drawer-metric-label-1').textContent = data.metric1Label;
-      document.getElementById('drawer-metric-val-1').textContent = data.metric1Val;
-      document.getElementById('drawer-metric-label-2').textContent = data.metric2Label;
-      document.getElementById('drawer-metric-val-2').textContent = data.metric2Val;
-
-      document.getElementById('drawer-terminal-log').textContent = `> ${data.taskLog}`;
-
-      const stackContainer = document.getElementById('drawer-agent-stack');
-      stackContainer.innerHTML = data.stack.map(s => `
-        <span class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-mono text-cyan-300">
-          ${s}
-        </span>
-      `).join('');
-
-      drawer.classList.remove('translate-x-full');
-      backdrop.classList.remove('hidden');
-    }
-
-    function closeAgentDrawer() {
-      drawer.classList.add('translate-x-full');
-      backdrop.classList.add('hidden');
-      activeAgentId = null;
-    }
-
-    closeBtn.addEventListener('click', closeAgentDrawer);
-    backdrop.addEventListener('click', closeAgentDrawer);
-
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeAgentDrawer();
-    });
-
-    // SIMULATED TASK EXECUTION
-    const triggerBtn = document.getElementById('trigger-agent-task-btn');
-    triggerBtn.addEventListener('click', () => {
-      if (!activeAgentId) return;
-
-      const terminalLog = document.getElementById('drawer-terminal-log');
-      triggerBtn.disabled = true;
-      triggerBtn.innerHTML = `<span>⏳</span><span>Ejecutando Tarea en 3D...</span>`;
-      playBeep(1100, 0.15, 'triangle');
-
-      terminalLog.innerHTML = `<span class="text-amber-400">> [${new Date().toLocaleTimeString()}] Tarea iniciada por Comandante Walter...</span>`;
-
-      setTimeout(() => {
-        playBeep(950, 0.1);
-        terminalLog.innerHTML += `<br><span class="text-cyan-300">> [${new Date().toLocaleTimeString()}] Disparando subagentes y motor de inferencia...</span>`;
-      }, 700);
-
-      setTimeout(() => {
-        playBeep(1200, 0.25);
-        triggerBtn.disabled = false;
-        triggerBtn.innerHTML = `<span>⚡</span><span>Simular Otra Tarea</span>`;
-        terminalLog.innerHTML += `<br><span class="text-emerald-400 font-bold">> [${new Date().toLocaleTimeString()}] ¡Misión cumplida! Datos procesados y sincronizados sin errores.</span>`;
-      }, 1600);
     });
   </script>
 </body>
