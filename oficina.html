@@ -221,6 +221,17 @@
 
     <!-- RIGHT QUICK ACTIONS & MODE TOGGLE -->
     <div class="flex items-center gap-3">
+      <!-- SELECTOR DE DOBLE PLANO: LABORATORIO VS PRODUCCIÓN -->
+      <div id="dual-plane-selector" class="hidden md:flex items-center bg-[#090D1C] p-1 rounded-2xl border border-white/10 text-xs font-mono">
+        <button id="plane-lab-btn" class="px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-amber-300 bg-amber-500/15 border border-amber-500/30 font-bold transition-all shadow-sm shadow-amber-500/10" title="Plano Laboratorio: I+D, Staging, Google AI Studio y Stitch">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+          <span>🧪 Laboratorio</span>
+        </button>
+        <button id="plane-prod-btn" class="px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-slate-400 hover:text-emerald-300 hover:bg-white/5 transition-all" title="Plano Producción: Deploy en Vivo Vercel y Clientes Reales">
+          <span>🚀 Producción</span>
+        </button>
+      </div>
+
       <!-- Audio Toggle -->
       <button id="audio-toggle-btn" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 flex items-center justify-center text-xs transition-colors" title="Sonido FX On/Off">
         🔊
@@ -353,19 +364,27 @@
   <!-- AGENTS & COMMUNITY DATA SPECIFICATION -->
   <!-- ============================================== -->
   <script>
-    // Projects from Walter's multi-agent directory
+    // Projects from Walter's multi-agent directory (Exact hierarchy from Antigravity IDE)
     const COMMUNITY_PROJECTS = [
-      { id: 'orquestadora', name: 'ORQUESTADORA CENTRAL LUZ', tag: 'Core', lastActive: 'hace 40m', progress: 95 },
-      { id: 'radarb2b', name: 'PROYECTO RADAR B2B', tag: 'Producción', lastActive: 'hace 10m', progress: 92 },
-      { id: 'shopdigital', name: 'LAB- SHOPDIGITAL', tag: 'Staging', lastActive: 'hace 2d', progress: 85 },
-      { id: 'auditoria', name: 'AUDITORIA-GENERAL', tag: 'QA', lastActive: 'hace 5d', progress: 100 },
-      { id: 'internos', name: 'AGENTES-INTERNOS', tag: 'Ecosistema', lastActive: 'hace 1d', progress: 90 },
-      { id: 'fundacion', name: 'FUNDACION- VALLE DE LUZ', tag: 'Comunidad', lastActive: 'hace 14d', progress: 60 },
-      { id: 'ministerio', name: 'MINISTERIO CAMINOS DE FE', tag: 'Comunidad', lastActive: 'hace 24d', progress: 50 },
+      { id: 'orquestadora', name: 'ORQUESTADORA CENTRAL LUZ', task: 'Coordinación Central De Agentes', plane: 'Gobernanza', tag: 'Core Master', lastActive: 'hace 5m', progress: 98 },
+      { id: 'radarb2b', name: 'PROYECTO RADAR B2B', task: 'SaaS Data Automation & 3D Live', plane: 'Producción', tag: 'Producción', lastActive: 'En Vivo', progress: 95 },
+      { id: 'shopdigital', name: 'LAB- SHOPDIGITAL', task: 'Configuración De Entorno Staging', plane: 'Laboratorio', tag: 'Staging I+D', lastActive: 'hace 1d', progress: 85 },
+      { id: 'fundacion', name: 'FUNDACION- VALLE DE LUZ', task: 'Fundación valle de luz', plane: 'Laboratorio', tag: 'Comunidad', lastActive: 'hace 14d', progress: 65 },
+      { id: 'ministerio', name: 'MINISTERIO CAMINOS DE FE', task: 'Ministerio Caminos De Fe', plane: 'Laboratorio', tag: 'Comunidad', lastActive: 'hace 24d', progress: 55 },
+      { id: 'comunidad', name: 'COMUNIDAD-FARO DE LUZ', task: 'PAGE-FARO DE LUZ', plane: 'Laboratorio', tag: 'Comunidad', lastActive: 'hace 27d', progress: 70 },
+      { id: 'internos', name: 'AGENTES -INTERNOS', task: 'Ari · Sub-Agentes · Jarvis-OS Luz 01', plane: 'Ecosistema', tag: 'Ecosistema', lastActive: 'En Línea', progress: 95 },
+      { id: 'auditoria', name: 'AUDITORIA-GENERAL', task: 'Nos encargamos del buen funcionamiento', plane: 'Gobernanza', tag: 'QA Master', lastActive: 'hace 5d', progress: 100 },
+      { id: 'informes', name: 'INFORMES GENERALES', task: 'Gestión De Informes Técnicos', plane: 'Gobernanza', tag: 'Docs', lastActive: 'hace 2m', progress: 90 },
+      { id: 'qa-shopdigital', name: 'EL-QA/CONTROL DE CALIDAD', task: 'Arquitectura Técnica ShopDigital', plane: 'Laboratorio', tag: 'QA Staging', lastActive: 'hace 2m', progress: 80 }
     ];
 
     // Executive Dialogues between Walter & Luz
     const EXECUTIVE_DIALOGUES = [
+      {
+        date: "Hoy, 21:15",
+        topic: "Arquitectura Maestra de Enjambre: Doble Plano (Lab vs Prod) & Obsidian",
+        summary: "Inauguración histórica: División estricta en dos planos (Laboratorio vs Producción). Ningún agente toca producción sin aprobación de Walter y pase seguro ejecutado por Luz (custodia de las llaves). Integración de NotebookLM con Gemi, sandboxes con Eve de Vercel y cerebros aislados en Obsidian."
+      },
       {
         date: "Hoy, 18:40",
         topic: "Ingeniería Inversa Oficina 3D & Three.js",
@@ -2025,22 +2044,67 @@
       const allTasks = [...stored, ...agent.pendingTasks];
 
       let html = `
-        <div class="space-y-3">
-          <div class="flex items-center justify-between pb-2 border-b border-white/10">
-            <span class="text-slate-400 text-[11px] uppercase tracking-wider">Avances de la Comunidad Multiagéntica</span>
-            <span class="text-cyan-400 font-bold">${allTasks.length} Tareas Activas</span>
+        <div class="space-y-4">
+          <!-- BANNER GOBERNANZA DOBLE PLANO -->
+          <div class="bg-gradient-to-r from-amber-950/40 via-purple-950/30 to-cyan-950/40 border border-amber-500/30 rounded-2xl p-3.5 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
+                <span>⚖️</span><span>ARQUITECTURA DE DOBLE PLANO (LABORATORIO VS PRODUCCIÓN)</span>
+              </span>
+              <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[9px] font-bold border border-emerald-500/30">
+                🛡️ GATEKEEPER: LUZ
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-300 leading-relaxed font-light">
+              Ningún agente puede tocar ni romper producción. Todo cambio se prototipa y evalúa primero en el <b>Laboratorio</b> (AI Studio · Stitch · Sandboxes). Solo cuando Walter y Luz validan la excelencia, Luz ejecuta el pase a <b>Producción</b>.
+            </p>
           </div>
+
+          <!-- PROYECTOS DEL ECOSISTEMA (DIRECTORIO WALTER) -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between pb-1 border-b border-white/10">
+              <span class="text-slate-400 text-[10px] uppercase tracking-wider">Directorio de Proyectos del Ecosistema</span>
+              <span class="text-cyan-400 font-bold text-[10px]">${COMMUNITY_PROJECTS.length} Proyectos Activos</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              ${COMMUNITY_PROJECTS.map(p => `
+                <div class="bg-black/50 border border-white/10 rounded-xl p-2.5 hover:border-cyan-500/40 transition-all space-y-1.5">
+                  <div class="flex items-start justify-between gap-1">
+                    <span class="font-bold text-white text-[11px] truncate">${p.name}</span>
+                    <span class="px-1.5 py-0.2 rounded text-[8px] font-mono shrink-0 ${
+                      p.plane === 'Producción' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' :
+                      p.plane === 'Laboratorio' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' :
+                      'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                    }">${p.plane || p.tag}</span>
+                  </div>
+                  <div class="text-[10px] text-slate-400 truncate">${p.task}</div>
+                  <div class="flex items-center justify-between text-[9px] text-slate-500 font-mono pt-1 border-t border-white/5">
+                    <span>${p.lastActive}</span>
+                    <span class="text-cyan-400 font-bold">${p.progress}%</span>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- TAREAS ASIGNADAS Y ACTIVAS -->
+          <div class="space-y-2 pt-2">
+            <div class="flex items-center justify-between pb-1 border-b border-white/10">
+              <span class="text-slate-400 text-[10px] uppercase tracking-wider">Misiones Específicas Asignadas</span>
+              <span class="text-cyan-400 font-bold text-[10px]">${allTasks.length} Tareas</span>
+            </div>
       `;
 
       allTasks.forEach(task => {
         html += `
-          <div class="bg-black/50 border border-white/10 rounded-2xl p-4 hover:border-cyan-500/40 transition-all space-y-2">
+          <div class="bg-black/50 border border-white/10 rounded-2xl p-3.5 hover:border-cyan-500/40 transition-all space-y-2">
             <div class="flex items-start justify-between gap-3">
               <div>
                 <span class="px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-300 text-[9px] font-bold border border-cyan-500/20">
                   ${task.project || 'RADAR B2B'}
                 </span>
-                <h4 class="font-bold text-white text-xs mt-1.5">${task.title}</h4>
+                <h4 class="font-bold text-white text-xs mt-1">${task.title}</h4>
               </div>
               <span class="px-2 py-0.5 rounded-full ${
                 task.priority === 'CRÍTICA' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
@@ -2061,7 +2125,7 @@
         `;
       });
 
-      html += `</div>`;
+      html += `</div></div>`;
       modalTabBody.innerHTML = html;
 
       modalFooterAction.innerHTML = `
@@ -2473,6 +2537,51 @@
         flyToCoordinates(target.x, target.y, target.z, target.zoom);
       });
     });
+
+    // Dual Plane Toggle Controller (Laboratorio vs Producción)
+    const planeLabBtn = document.getElementById('plane-lab-btn');
+    const planeProdBtn = document.getElementById('plane-prod-btn');
+
+    if (planeLabBtn && planeProdBtn) {
+      planeLabBtn.addEventListener('click', () => {
+        playBeep(850, 0.1, 'triangle');
+        planeLabBtn.className = 'px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-amber-300 bg-amber-500/15 border border-amber-500/30 font-bold transition-all shadow-sm shadow-amber-500/10';
+        planeLabBtn.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span><span>🧪 Laboratorio</span>';
+        
+        planeProdBtn.className = 'px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-slate-400 hover:text-emerald-300 hover:bg-white/5 transition-all';
+        planeProdBtn.innerHTML = '<span>🚀 Producción</span>';
+        showToast('🧪 <b>PLANO LABORATORIO ACTIVO:</b> Entorno de I+D, Staging y Prototipado seguro (Google AI Studio · Stitch · Sandboxes). Cero riesgo para clientes.');
+      });
+
+      planeProdBtn.addEventListener('click', () => {
+        playBeep(1100, 0.12, 'sawtooth');
+        planeProdBtn.className = 'px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 font-bold transition-all shadow-sm shadow-emerald-500/10';
+        planeProdBtn.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span>🚀 Producción</span>';
+
+        planeLabBtn.className = 'px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-slate-400 hover:text-amber-300 hover:bg-white/5 transition-all';
+        planeLabBtn.innerHTML = '<span>🧪 Laboratorio</span>';
+        showToast('🛡️ <b>GATEKEEPER PRODUCCIÓN:</b> Luz custodia las llaves de todas las oficinas. Los cambios de Laboratorio solo pasan a Producción bajo orden explícita de Walter.');
+      });
+    }
+
+    // Floating Tactical Toast Notification
+    function showToast(message) {
+      let toast = document.getElementById('tactical-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'tactical-toast';
+        toast.className = 'fixed top-24 left-1/2 transform -translate-x-1/2 z-50 px-5 py-3 rounded-2xl bg-[#080C1E]/95 border border-cyan-500/40 text-xs font-mono text-cyan-200 shadow-2xl backdrop-blur-2xl transition-all duration-300 pointer-events-none opacity-0 translate-y-2 max-w-lg text-center';
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = message;
+      toast.classList.remove('opacity-0', 'translate-y-2');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      clearTimeout(toast._timeout);
+      toast._timeout = setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-2');
+      }, 4500);
+    }
   </script>
 
   <!-- SUPABASE JS CDN -->

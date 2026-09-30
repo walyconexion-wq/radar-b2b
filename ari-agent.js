@@ -100,6 +100,24 @@
     {
       keywords: ['metodo de pago', 'como pago', 'paypal', 'tarjeta', 'transferencia', 'crypto', 'usdt'],
       reply: 'Aceptamos pagos internacionales de forma muy sencilla:\n• Tarjetas de crédito/débito vía Stripe y PayPal.\n• Transferencias bancarias directas de EE.UU. (ACH) y Europa (SEPA).\n• Criptomonedas estables (USDT / USDC).'
+    },
+
+    // 13. DOBLE PLANO: LABORATORIO VS PRODUCCIÓN (GOBERNANZA MASTER)
+    {
+      keywords: ['doble plano', 'laboratorio', 'produccion', 'staging', 'gatekeeper', 'pase a produccion', 'romper', 'riesgo', 'seguridad', 'evaluar'],
+      reply: 'Nuestro ecosistema opera con una estricta **Arquitectura de Doble Plano** para garantizar cero riesgo en clientes:\n\n• **🧪 1. Plano Laboratorio (Staging/Dev):** Espacio seguro donde Walter y Luz evaluamos prototipos, nuevos componentes de frontend (vía Google AI Studio y Stitch MCP), backend y seguridad sin riesgo alguno. Ningún agente puede tocar producción directamente.\n• **🚀 2. Plano Producción (En Vivo):** El entorno blindado que ven los clientes e inversores.\n• **🛡️ Protocolo Gatekeeper:** Luz custodia las llaves de todas las oficinas. Solo cuando Walter audita y da la orden explícita, Luz ejecuta el pase técnico a producción.'
+    },
+
+    // 14. NUTRICIÓN DE CONTEXTO: NOTEBOOKLM, GEMI & EVE
+    {
+      keywords: ['cuaderno', 'cuadernos', 'notebooklm', 'gemi', 'eve', 'nutrir', 'fuentes', 'agente externo', 'sandboxes', 'contexto'],
+      reply: 'Para que los agentes no alucinen ni trabajen con datos desactualizados, implementamos un flujo de nutrición continua:\n\n• **📚 Cuadernos NotebookLM:** Centralizan las fuentes vivas, normativas y código base de cada proyecto.\n• **👩‍🔬 Agente Gemi:** Es la curadora de contexto dentro de los cuadernos, destilando resúmenes de alta fidelidad para el enjambre.\n• **⚡ Agente Eve de Vercel:** Gestiona sandboxes efímeros Firecracker cuando colaboramos con desarrolladores o agentes externos, nutriendo los cuadernos sin tocar el núcleo de producción.'
+    },
+
+    // 15. SEGUNDO CEREBRO EN OBSIDIAN (MEMORIA AISLADA)
+    {
+      keywords: ['obsidian', 'segundo cerebro', 'boveda', 'cerebro', 'aislado', 'no mezclar', 'arsenal', 'memoria'],
+      reply: 'Cada iniciativa (**Radar B2B**, **Lab ShopDigital**, **Comunidad Faro de Luz**, **Fundación Valle de Luz**, **Ministerio Caminos de Fe**) posee su **propia carpeta y cerebro aislado en Obsidian Vault** para no mezclar directivas.\n\nAl mismo tiempo, todos los agentes tienen acceso al **Arsenal Compartido de Superpoderes** (Skills de Antigravity, MCPs y Heavy Stack) administrado por Luz.'
     }
   ];
 
@@ -123,14 +141,14 @@
         <button class="ari-chip px-3 py-1.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/20 text-[11px] transition-colors">
           ⚡ ¿Cómo va el proyecto de Scraping?
         </button>
+        <button class="ari-chip px-3 py-1.5 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 border border-indigo-500/20 text-[11px] transition-colors">
+          ⚖️ Doble Plano: Lab vs Prod
+        </button>
+        <button class="ari-chip px-3 py-1.5 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/20 text-[11px] transition-colors">
+          📚 Cuadernos NotebookLM & Gemi
+        </button>
         <button class="ari-chip px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/20 text-[11px] transition-colors">
           🤖 ¿Qué agentes colaboran hoy?
-        </button>
-        <button class="ari-chip px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-[11px] transition-colors">
-          📈 Estado de Proyectos
-        </button>
-        <button class="ari-chip px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-[11px] transition-colors">
-          👑 Ecuación X de Walter
         </button>
         <button class="ari-chip px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/20 text-[11px] transition-colors">
           🚀 Pedir prueba 48hs gratis
